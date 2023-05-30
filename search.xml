@@ -267,103 +267,6 @@ NS图，流程图            工具Dia</p>
       </tags>
   </entry>
   <entry>
-    <title>Linux常用命令</title>
-    <url>/2023/05/29/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
-<span id="more"></span>
-<hr />
-<h3 id="file"><a class="markdownIt-Anchor" href="#file"></a> File</h3>
-<ul>
-<li>ls /etc/a*.conf (匹配查找文件)</li>
-<li>grep “#define container_of” -R .(当前目录递归查找)</li>
-<li>diff /etc/service tmp (比较文件的差异)</li>
-<li>cat tmp</li>
-<li>tail -n 10 out.log (-f 动态模式)</li>
-<li>chmod a+x a.out (更改文件的权限 常用权限664可读可写可执行)</li>
-<li>chown root a.out（将 a.out文件的所有者更改为 root 用户）</li>
-<li>./a.out -&gt; sudo !! (当执行a.out 没有权限时可以使用 sudo !! 获得权限执行)</li>
-<li>chmod u+s mysu
-<blockquote>
-<p>设置文件或目录的 setuid 位。当一个带有 setuid 位的文件或目录被执行时，它会以该文件或目录的所有者的权限而不是执行它的用户的权限来运行。这对于需要以提升的权限运行但不能作为 root 运行的程序非常有用。如果您想允许用户运行需要 root 权限的程序而不给他们访问 root 帐户，可以在程序文件上设置 setuid 位。</p>
-</blockquote>
-</li>
-<li>du abc.c/directory (分析文件/目录占用磁盘空间大小 默认是以k字节为单位)</li>
-<li>primer0 | wc -l (统计primer0执行输出结果的行数)</li>
-<li>cat file | wc -l (统计file文件内容的行数)</li>
-<li>file a.out (查看文件的类型)</li>
-</ul>
-<hr />
-<h3 id="system"><a class="markdownIt-Anchor" href="#system"></a> System</h3>
-<ul>
-<li>ulimit -a (查看当前用户的资源限制，如最大打开文件数、最大进程数等等)</li>
-<li>strace ./a.out (看可执行文件的系统调用是如何发生的)</li>
-<li>time ./a.out (查看调用时间)</li>
-<li>export (显示所有的环境变量)</li>
-<li>ps axf（显示进程,及进程下子进程）</li>
-<li>ps axm（显示进程不显示递进关系）</li>
-<li>ps axj（显示进程的状态信息，包括进程的 PID、PPID、CPU 占用率、内存占用率等等）</li>
-<li>ps ax -L（显示进程和线程）</li>
-<li>pstree (打印系统进程树)</li>
-<li>pmap p_id（查看程序的进程空间的分布）</li>
-<li>kill -l（list all signal）</li>
-<li>kill pid（杀死进程）</li>
-</ul>
-<hr />
-<h3 id="network"><a class="markdownIt-Anchor" href="#network"></a> Network</h3>
-<ul>
-<li>source &lt;(curl -sL <a href="https://multi.netlify.app/v2ray.sh">https://multi.netlify.app/v2ray.sh</a>) --zh（安装v2ray）</li>
-<li>systemctl stop firewalld.service  （关闭防火墙）</li>
-<li>systemctl disable firewalld.service</li>
-<li>ip addr (查看网络环境)</li>
-<li>ip add sh(查看网卡信息)</li>
-<li>ip ro sh(查看ip路由表的命令)</li>
-<li>ip ro add default via 192.168.1.125（添加默认路由）</li>
-<li>ipcs（显示系统IPC）</li>
-<li>netstat -anu(local pc udp info)</li>
-<li>netstat -ant(local pc tcp info)</li>
-</ul>
-<hr />
-<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> GCC</h3>
-<ul>
-<li>gcc -E hello.c</li>
-<li>gcc -E hello.c &gt; hello.i</li>
-<li>gcc -S hello.i</li>
-<li>gcc -c hello.s</li>
-<li>gcc hello.o -o hello</li>
-<li>gcc hello.c</li>
-<li>gcc hello.c -o myhello</li>
-<li>make hello</li>
-<li>objdump -d a.out （反汇编 汇编码-d）</li>
-<li>strace -f gcc a.c (追踪gcc a.c 的过程，包括gcc 启动的其他程序) strace -f gcc a.c 2&gt;&amp;1 | grep execve</li>
-<li>strip test_sqlist (移除调试信息)</li>
-</ul>
-<hr />
-<h3 id="gdb"><a class="markdownIt-Anchor" href="#gdb"></a> GDB</h3>
-<ul>
-<li>gdb a.out(载入程序)</li>
-<li>starti (运行第一条指令)</li>
-<li>layout asm (查看汇编代码)</li>
-<li>si (单步查看-&gt;汇编单步)</li>
-<li>info registers (查看寄存器代码)</li>
-<li>bt (打印系统调用栈)</li>
-<li>info inferiors（打印可执行程序的进程号）</li>
-<li>print/p $rdx (打印寄存器rdx的值)</li>
-<li>target record-full (开始记录)</li>
-<li>watch $rax（观察寄存器rax的值）</li>
-<li>watch *0x7c00 (在地址7c00处设置监视点)</li>
-<li>rsi (单步回退查看-&gt;汇编单步)</li>
-<li>layout src(调试源代码)</li>
-<li>set scheduler-locking on (可以使其他处理器（线程)不要干扰）</li>
-<li>thread 1（switching to thread 1）</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>CS</tag>
-        <tag>Linux</tag>
-        <tag>工具命令</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux基础</title>
     <url>/2023/05/29/Linux%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p>前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。</p>
@@ -992,6 +895,103 @@ fflush();
         <tag>CS</tag>
         <tag>Linux</tag>
         <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux常用命令</title>
+    <url>/2023/05/29/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
+<span id="more"></span>
+<hr />
+<h3 id="file"><a class="markdownIt-Anchor" href="#file"></a> File</h3>
+<ul>
+<li>ls /etc/a*.conf (匹配查找文件)</li>
+<li>grep “#define container_of” -R .(当前目录递归查找)</li>
+<li>diff /etc/service tmp (比较文件的差异)</li>
+<li>cat tmp</li>
+<li>tail -n 10 out.log (-f 动态模式)</li>
+<li>chmod a+x a.out (更改文件的权限 常用权限664可读可写可执行)</li>
+<li>chown root a.out（将 a.out文件的所有者更改为 root 用户）</li>
+<li>./a.out -&gt; sudo !! (当执行a.out 没有权限时可以使用 sudo !! 获得权限执行)</li>
+<li>chmod u+s mysu
+<blockquote>
+<p>设置文件或目录的 setuid 位。当一个带有 setuid 位的文件或目录被执行时，它会以该文件或目录的所有者的权限而不是执行它的用户的权限来运行。这对于需要以提升的权限运行但不能作为 root 运行的程序非常有用。如果您想允许用户运行需要 root 权限的程序而不给他们访问 root 帐户，可以在程序文件上设置 setuid 位。</p>
+</blockquote>
+</li>
+<li>du abc.c/directory (分析文件/目录占用磁盘空间大小 默认是以k字节为单位)</li>
+<li>primer0 | wc -l (统计primer0执行输出结果的行数)</li>
+<li>cat file | wc -l (统计file文件内容的行数)</li>
+<li>file a.out (查看文件的类型)</li>
+</ul>
+<hr />
+<h3 id="system"><a class="markdownIt-Anchor" href="#system"></a> System</h3>
+<ul>
+<li>ulimit -a (查看当前用户的资源限制，如最大打开文件数、最大进程数等等)</li>
+<li>strace ./a.out (看可执行文件的系统调用是如何发生的)</li>
+<li>time ./a.out (查看调用时间)</li>
+<li>export (显示所有的环境变量)</li>
+<li>ps axf（显示进程,及进程下子进程）</li>
+<li>ps axm（显示进程不显示递进关系）</li>
+<li>ps axj（显示进程的状态信息，包括进程的 PID、PPID、CPU 占用率、内存占用率等等）</li>
+<li>ps ax -L（显示进程和线程）</li>
+<li>pstree (打印系统进程树)</li>
+<li>pmap p_id（查看程序的进程空间的分布）</li>
+<li>kill -l（list all signal）</li>
+<li>kill pid（杀死进程）</li>
+</ul>
+<hr />
+<h3 id="network"><a class="markdownIt-Anchor" href="#network"></a> Network</h3>
+<ul>
+<li>source &lt;(curl -sL <a href="https://multi.netlify.app/v2ray.sh">https://multi.netlify.app/v2ray.sh</a>) --zh（安装v2ray）</li>
+<li>systemctl stop firewalld.service  （关闭防火墙）</li>
+<li>systemctl disable firewalld.service</li>
+<li>ip addr (查看网络环境)</li>
+<li>ip add sh(查看网卡信息)</li>
+<li>ip ro sh(查看ip路由表的命令)</li>
+<li>ip ro add default via 192.168.1.125（添加默认路由）</li>
+<li>ipcs（显示系统IPC）</li>
+<li>netstat -anu(local pc udp info)</li>
+<li>netstat -ant(local pc tcp info)</li>
+</ul>
+<hr />
+<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> GCC</h3>
+<ul>
+<li>gcc -E hello.c</li>
+<li>gcc -E hello.c &gt; hello.i</li>
+<li>gcc -S hello.i</li>
+<li>gcc -c hello.s</li>
+<li>gcc hello.o -o hello</li>
+<li>gcc hello.c</li>
+<li>gcc hello.c -o myhello</li>
+<li>make hello</li>
+<li>objdump -d a.out （反汇编 汇编码-d）</li>
+<li>strace -f gcc a.c (追踪gcc a.c 的过程，包括gcc 启动的其他程序) strace -f gcc a.c 2&gt;&amp;1 | grep execve</li>
+<li>strip test_sqlist (移除调试信息)</li>
+</ul>
+<hr />
+<h3 id="gdb"><a class="markdownIt-Anchor" href="#gdb"></a> GDB</h3>
+<ul>
+<li>gdb a.out(载入程序)</li>
+<li>starti (运行第一条指令)</li>
+<li>layout asm (查看汇编代码)</li>
+<li>si (单步查看-&gt;汇编单步)</li>
+<li>info registers (查看寄存器代码)</li>
+<li>bt (打印系统调用栈)</li>
+<li>info inferiors（打印可执行程序的进程号）</li>
+<li>print/p $rdx (打印寄存器rdx的值)</li>
+<li>target record-full (开始记录)</li>
+<li>watch $rax（观察寄存器rax的值）</li>
+<li>watch *0x7c00 (在地址7c00处设置监视点)</li>
+<li>rsi (单步回退查看-&gt;汇编单步)</li>
+<li>layout src(调试源代码)</li>
+<li>set scheduler-locking on (可以使其他处理器（线程)不要干扰）</li>
+<li>thread 1（switching to thread 1）</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>CS</tag>
+        <tag>Linux</tag>
+        <tag>工具命令</tag>
       </tags>
   </entry>
   <entry>
