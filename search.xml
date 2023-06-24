@@ -946,6 +946,7 @@ fflush();
 <li>source &lt;(curl -sL <a href="https://multi.netlify.app/v2ray.sh">https://multi.netlify.app/v2ray.sh</a>) --zh（安装v2ray）</li>
 <li>systemctl stop firewalld.service  （关闭防火墙）</li>
 <li>systemctl disable firewalld.service</li>
+<li>sudo ufw disable (禁用ufw防火墙)</li>
 <li>ip addr (查看网络环境)</li>
 <li>ip add sh(查看网卡信息)</li>
 <li>ip ro sh(查看ip路由表的命令)</li>
@@ -994,6 +995,122 @@ fflush();
         <tag>CS</tag>
         <tag>Linux</tag>
         <tag>工具命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统-南大</title>
+    <url>/2023/05/29/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%8D%97%E5%A4%A7/</url>
+    <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
+<span id="more"></span>
+<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
+<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
+<p>重走从无到有的发现过程</p>
+<ul>
+<li>基本思想、基本方法、里程碑、走过的弯路</li>
+<li>最终目的：应用/创新</li>
+<li>操作系统带你补完编程的技术体系</li>
+<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
+</ul>
+<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
+<p>理解操作系统:</p>
+<blockquote>
+<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
+</blockquote>
+<ul>
+<li>1950s的操作系统</li>
+<li>操作(operate)任务(jobs)的系统(system)</li>
+<li>批处理系统 = 程序自动切换+库函数API</li>
+<li>Disk Operating System(DOS)</li>
+<li>操作系统开始出现设备，文件，任务等对象和API</li>
+</ul>
+<blockquote>
+<p>今天的操作系统</p>
+</blockquote>
+<ul>
+<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
+</ul>
+<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
+<blockquote>
+<p>学习操作系统：现代方法</p>
+</blockquote>
+<ol>
+<li>读得懂的教科书和阅读材料</li>
+</ol>
+<ul>
+<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
+</ul>
+<ol start="2">
+<li>问题驱动，用代码说话</li>
+</ol>
+<ul>
+<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
+<li>xv6-risv, AbstractMachine</li>
+<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
+</ul>
+<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
+<blockquote>
+<p>计算机专业学生必须具备的核心素质。</p>
+</blockquote>
+<ul>
+<li>是一个合格的操作系统用户</li>
+<li>会 STFW/RTFM 自己动手解决问题</li>
+<li>不怕使用任何命令行工具</li>
+<li>vim, tmux, grep, gcc, binutils, …</li>
+<li>不怕写代码</li>
+<li>能管理一定规模 (数千行) 的代码</li>
+<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
+<li>然后开始用正确的工具/方法调试</li>
+</ul>
+<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
+<blockquote>
+<p>Academic integrity 不是底线，而是 “自发的要求”</p>
+</blockquote>
+<ul>
+<li>对 “不应该做的事情” 有清楚的认识</li>
+<li>不将代码上传到互联网</li>
+<li>主动不参考别人完成的实验代码</li>
+<li>不使用他人测试用例 (depends)</li>
+<li>有些行为可能使你得到分数，但失去应有的训练</li>
+</ul>
+<blockquote>
+<p>一些过去的例子</p>
+</blockquote>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
+<li>我们也在 Academic Integrity 方面有一些考虑</li>
+</ul>
+<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
+<blockquote>
+<p>感到 Linux/PowerShell/… 很难用？</p>
+</blockquote>
+<ul>
+<li>没有建立信心、没有理解基本逻辑
+<ul>
+<li>计算机科学自学指南</li>
+<li>没有找对材料/没有多问 “能不能再做点什么”</li>
+<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
+<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
+<li>过了入门阶段，都会好起来</li>
+</ul>
+</li>
+<li>本章代码请参考github: <a href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
+</ul>
+<hr />
+<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
+<blockquote>
+<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
+</blockquote>
+<ul>
+<li>什么是软件 (程序)？</li>
+<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
+<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>CS</tag>
+        <tag>Linux</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -1536,122 +1653,6 @@ IEEE 754浮点数的格式如下：</p>
       <tags>
         <tag>CS</tag>
         <tag>计组</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统-南大</title>
-    <url>/2023/05/29/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%8D%97%E5%A4%A7/</url>
-    <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
-<span id="more"></span>
-<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
-<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
-<p>重走从无到有的发现过程</p>
-<ul>
-<li>基本思想、基本方法、里程碑、走过的弯路</li>
-<li>最终目的：应用/创新</li>
-<li>操作系统带你补完编程的技术体系</li>
-<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
-</ul>
-<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
-<p>理解操作系统:</p>
-<blockquote>
-<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
-</blockquote>
-<ul>
-<li>1950s的操作系统</li>
-<li>操作(operate)任务(jobs)的系统(system)</li>
-<li>批处理系统 = 程序自动切换+库函数API</li>
-<li>Disk Operating System(DOS)</li>
-<li>操作系统开始出现设备，文件，任务等对象和API</li>
-</ul>
-<blockquote>
-<p>今天的操作系统</p>
-</blockquote>
-<ul>
-<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
-</ul>
-<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
-<blockquote>
-<p>学习操作系统：现代方法</p>
-</blockquote>
-<ol>
-<li>读得懂的教科书和阅读材料</li>
-</ol>
-<ul>
-<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
-</ul>
-<ol start="2">
-<li>问题驱动，用代码说话</li>
-</ol>
-<ul>
-<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
-<li>xv6-risv, AbstractMachine</li>
-<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
-</ul>
-<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
-<blockquote>
-<p>计算机专业学生必须具备的核心素质。</p>
-</blockquote>
-<ul>
-<li>是一个合格的操作系统用户</li>
-<li>会 STFW/RTFM 自己动手解决问题</li>
-<li>不怕使用任何命令行工具</li>
-<li>vim, tmux, grep, gcc, binutils, …</li>
-<li>不怕写代码</li>
-<li>能管理一定规模 (数千行) 的代码</li>
-<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
-<li>然后开始用正确的工具/方法调试</li>
-</ul>
-<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
-<blockquote>
-<p>Academic integrity 不是底线，而是 “自发的要求”</p>
-</blockquote>
-<ul>
-<li>对 “不应该做的事情” 有清楚的认识</li>
-<li>不将代码上传到互联网</li>
-<li>主动不参考别人完成的实验代码</li>
-<li>不使用他人测试用例 (depends)</li>
-<li>有些行为可能使你得到分数，但失去应有的训练</li>
-</ul>
-<blockquote>
-<p>一些过去的例子</p>
-</blockquote>
-<ul>
-<li><a href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
-<li>我们也在 Academic Integrity 方面有一些考虑</li>
-</ul>
-<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
-<blockquote>
-<p>感到 Linux/PowerShell/… 很难用？</p>
-</blockquote>
-<ul>
-<li>没有建立信心、没有理解基本逻辑
-<ul>
-<li>计算机科学自学指南</li>
-<li>没有找对材料/没有多问 “能不能再做点什么”</li>
-<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
-<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
-<li>过了入门阶段，都会好起来</li>
-</ul>
-</li>
-<li>本章代码请参考github: <a href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
-</ul>
-<hr />
-<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
-<blockquote>
-<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
-</blockquote>
-<ul>
-<li>什么是软件 (程序)？</li>
-<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
-<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>CS</tag>
-        <tag>Linux</tag>
-        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
