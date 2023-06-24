@@ -946,7 +946,7 @@ fflush();
 <li>source &lt;(curl -sL <a href="https://multi.netlify.app/v2ray.sh">https://multi.netlify.app/v2ray.sh</a>) --zh（安装v2ray）</li>
 <li>systemctl stop firewalld.service  （关闭防火墙）</li>
 <li>systemctl disable firewalld.service</li>
-<li>sudo ufw disable (禁用ufw防火墙)</li>
+<li>sudo ufw disable (Debian禁用ufw防火墙)</li>
 <li>ip addr (查看网络环境)</li>
 <li>ip add sh(查看网卡信息)</li>
 <li>ip ro sh(查看ip路由表的命令)</li>
