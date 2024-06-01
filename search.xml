@@ -269,14 +269,14 @@ NS图，流程图            工具Dia</p>
   <entry>
     <title>Lambda-expression</title>
     <url>/2024/01/02/Lambda-expression/</url>
-    <content><![CDATA[<p>前言：Lambda表达式是现代编程语言的一个基础特性，比如LISP、Python、C#等都具备该该特性。<strong>C++11</strong>标准为我们提供Lambda表达式的支持，而且语法非常简洁明了。</p>
+    <content><![CDATA[<p>前言：Lambda表达式是现代编程语言的一个基础特性，比如LISP、Python、C#等都具备该该特性。<em>C++11</em>标准为我们提供Lambda表达式的支持，而且语法非常简洁明了。</p>
 <span id="more"></span>
 <h2 id="lambda表达式的语法"><a class="markdownIt-Anchor" href="#lambda表达式的语法"></a> Lambda表达式的语法</h2>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[captures](params) specifiers exception -&gt; ret &#123; body &#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>[captures]—捕获列表，捕获列表中的变量存在于两个作用域，一是lambda表达式定义的函数作用域。二是lambda表达式函数体中的作用域。前者是为了捕获变量后者是为了使用变量。标准还规定，捕获变量必须是自动存储的类型，简单说就是非静态的局部变量。</li>
 <li>(params) —可选参数列表，语法和普通函数一样，在不需要参数的时候可以省略。</li>
-<li>specifiers — 可选限定符。<strong>C++11</strong>中可以mutable，它允许我们在lambda表达式函数体内改变值捕获的变量，或调用非const的成员函数。</li>
+<li>specifiers — 可选限定符。<em>C++11</em>中可以mutable，它允许我们在lambda表达式函数体内改变值捕获的变量，或调用非const的成员函数。</li>
 <li>exception — 可选异常说明符。noexcept来指明lambda不抛出异常</li>
 <li>ret — 可选的返回类型</li>
 <li>{body} — lambda表达式的函数体。</li>
@@ -287,7 +287,7 @@ NS图，流程图            工具Dia</p>
 <p><strong>注意：捕获值的变量在lambda表达式定义的时候已经固定下来了，无论函数在lambda表达式后如何修改外部变量的值，lambda表达式捕获的值都不会变。</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5, y = 8;</span><br><span class="line">    auto foo = [x, &amp;y]() mutable &#123;</span><br><span class="line">        x += 1;</span><br><span class="line">        y += 2;</span><br><span class="line">        std::cout &lt;&lt; &quot;lambda x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">        return x * y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    x = 9;</span><br><span class="line">    y = 20;</span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call1  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">    //结果如下：</span><br><span class="line">    lambda x = 6, y = 22</span><br><span class="line">    call1  x = 9, y = 22</span><br></pre></td></tr></table></figure>
 <h3 id="广义捕获"><a class="markdownIt-Anchor" href="#广义捕获"></a> 广义捕获</h3>
-<p>说明：<strong>C++14</strong>标准定义了广义捕获，其实是两种捕获方式，一种是<strong>C++11</strong>中定义的。第二种，初始化捕获。<br />
+<p>说明：<em>C++14</em>标准定义了广义捕获，其实是两种捕获方式，一种是<em>C++11</em>中定义的。第二种，初始化捕获。<br />
 初始化捕获的代码如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5;</span><br><span class="line">auto foo = [r = x + 1] &#123; return r; &#125;;</span><br><span class="line">std::string y = &quot;hello, c++&quot;;</span><br><span class="line">auto foo1 = [y = std::move(y)] &#123; return y + &quot;world!&quot;; &#125;;</span><br></pre></td></tr></table></figure>
 <p>初始化捕获的第二场景：</p>
@@ -295,13 +295,13 @@ NS图，流程图            工具Dia</p>
 <p>注意：第二场景实在异步调用时复制this对象，防止lambda表达式被调用时因原始this 对象被析构造成未定义的行为。</p>
 <h3 id="常量lambda表达式和捕获this"><a class="markdownIt-Anchor" href="#常量lambda表达式和捕获this"></a> 常量lambda表达式和捕获*this</h3>
 <ul>
-<li><strong>C++17</strong>开始，lambda表达式在条件允许的情况下都会隐式声明为constexpr.</li>
-<li><strong>C++17</strong>在捕获列表直接[*this]来简化<strong>C++14</strong>初始化[tmp = *this]的用法，[*this]的语法让程序生成了一个*this的对象的副本并存储在lambda表达式内，可以在lambda表达式内直接访问这个复制对象的成员，消除了通过tmp访问对象成员的尴尬。</li>
+<li><em>C++17</em>开始，lambda表达式在条件允许的情况下都会隐式声明为constexpr.</li>
+<li><em>C++17</em>在捕获列表直接[*this]来简化<em>C++14</em>初始化[tmp = *this]的用法，[*this]的语法让程序生成了一个*this的对象的副本并存储在lambda表达式内，可以在lambda表达式内直接访问这个复制对象的成员，消除了通过tmp访问对象成员的尴尬。</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class work</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    work() : value_(42) &#123;&#125;</span><br><span class="line">    std::future&lt;int&gt; spawn()</span><br><span class="line">    &#123;</span><br><span class="line">        return std::async([=, *this]() &#123; return value_; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    int value_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="捕获-this"><a class="markdownIt-Anchor" href="#捕获-this"></a> 捕获[=, this]</h3>
 <ul>
-<li><strong>C++20</strong>标准中，[=, this]捕获this指针的语法，它实际上表达的意思和[=]相同，目的是让程序员区分他与[=, *this]的不同；</li>
+<li><em>C++20</em>标准中，[=, this]捕获this指针的语法，它实际上表达的意思和[=]相同，目的是让程序员区分他与[=, *this]的不同；</li>
 </ul>
 ]]></content>
       <tags>
@@ -942,122 +942,6 @@ fflush();
       </tags>
   </entry>
   <entry>
-    <title>操作系统-南大</title>
-    <url>/2023/05/29/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%8D%97%E5%A4%A7/</url>
-    <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
-<span id="more"></span>
-<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
-<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
-<p>重走从无到有的发现过程</p>
-<ul>
-<li>基本思想、基本方法、里程碑、走过的弯路</li>
-<li>最终目的：应用/创新</li>
-<li>操作系统带你补完编程的技术体系</li>
-<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
-</ul>
-<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
-<p>理解操作系统:</p>
-<blockquote>
-<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
-</blockquote>
-<ul>
-<li>1950s的操作系统</li>
-<li>操作(operate)任务(jobs)的系统(system)</li>
-<li>批处理系统 = 程序自动切换+库函数API</li>
-<li>Disk Operating System(DOS)</li>
-<li>操作系统开始出现设备，文件，任务等对象和API</li>
-</ul>
-<blockquote>
-<p>今天的操作系统</p>
-</blockquote>
-<ul>
-<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
-</ul>
-<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
-<blockquote>
-<p>学习操作系统：现代方法</p>
-</blockquote>
-<ol>
-<li>读得懂的教科书和阅读材料</li>
-</ol>
-<ul>
-<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
-</ul>
-<ol start="2">
-<li>问题驱动，用代码说话</li>
-</ol>
-<ul>
-<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
-<li>xv6-risv, AbstractMachine</li>
-<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
-</ul>
-<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
-<blockquote>
-<p>计算机专业学生必须具备的核心素质。</p>
-</blockquote>
-<ul>
-<li>是一个合格的操作系统用户</li>
-<li>会 STFW/RTFM 自己动手解决问题</li>
-<li>不怕使用任何命令行工具</li>
-<li>vim, tmux, grep, gcc, binutils, …</li>
-<li>不怕写代码</li>
-<li>能管理一定规模 (数千行) 的代码</li>
-<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
-<li>然后开始用正确的工具/方法调试</li>
-</ul>
-<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
-<blockquote>
-<p>Academic integrity 不是底线，而是 “自发的要求”</p>
-</blockquote>
-<ul>
-<li>对 “不应该做的事情” 有清楚的认识</li>
-<li>不将代码上传到互联网</li>
-<li>主动不参考别人完成的实验代码</li>
-<li>不使用他人测试用例 (depends)</li>
-<li>有些行为可能使你得到分数，但失去应有的训练</li>
-</ul>
-<blockquote>
-<p>一些过去的例子</p>
-</blockquote>
-<ul>
-<li><a href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
-<li>我们也在 Academic Integrity 方面有一些考虑</li>
-</ul>
-<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
-<blockquote>
-<p>感到 Linux/PowerShell/… 很难用？</p>
-</blockquote>
-<ul>
-<li>没有建立信心、没有理解基本逻辑
-<ul>
-<li>计算机科学自学指南</li>
-<li>没有找对材料/没有多问 “能不能再做点什么”</li>
-<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
-<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
-<li>过了入门阶段，都会好起来</li>
-</ul>
-</li>
-<li>本章代码请参考github: <a href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
-</ul>
-<hr />
-<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
-<blockquote>
-<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
-</blockquote>
-<ul>
-<li>什么是软件 (程序)？</li>
-<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
-<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>CS</tag>
-        <tag>Linux</tag>
-        <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux常用命令</title>
     <url>/2023/05/29/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
@@ -1362,6 +1246,122 @@ fflush();
         <tag>C++</tag>
         <tag>Qt</tag>
         <tag>计算机图形学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统-南大</title>
+    <url>/2023/05/29/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%8D%97%E5%A4%A7/</url>
+    <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
+<span id="more"></span>
+<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
+<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
+<p>重走从无到有的发现过程</p>
+<ul>
+<li>基本思想、基本方法、里程碑、走过的弯路</li>
+<li>最终目的：应用/创新</li>
+<li>操作系统带你补完编程的技术体系</li>
+<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
+</ul>
+<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
+<p>理解操作系统:</p>
+<blockquote>
+<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
+</blockquote>
+<ul>
+<li>1950s的操作系统</li>
+<li>操作(operate)任务(jobs)的系统(system)</li>
+<li>批处理系统 = 程序自动切换+库函数API</li>
+<li>Disk Operating System(DOS)</li>
+<li>操作系统开始出现设备，文件，任务等对象和API</li>
+</ul>
+<blockquote>
+<p>今天的操作系统</p>
+</blockquote>
+<ul>
+<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
+</ul>
+<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
+<blockquote>
+<p>学习操作系统：现代方法</p>
+</blockquote>
+<ol>
+<li>读得懂的教科书和阅读材料</li>
+</ol>
+<ul>
+<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
+</ul>
+<ol start="2">
+<li>问题驱动，用代码说话</li>
+</ol>
+<ul>
+<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
+<li>xv6-risv, AbstractMachine</li>
+<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
+</ul>
+<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
+<blockquote>
+<p>计算机专业学生必须具备的核心素质。</p>
+</blockquote>
+<ul>
+<li>是一个合格的操作系统用户</li>
+<li>会 STFW/RTFM 自己动手解决问题</li>
+<li>不怕使用任何命令行工具</li>
+<li>vim, tmux, grep, gcc, binutils, …</li>
+<li>不怕写代码</li>
+<li>能管理一定规模 (数千行) 的代码</li>
+<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
+<li>然后开始用正确的工具/方法调试</li>
+</ul>
+<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
+<blockquote>
+<p>Academic integrity 不是底线，而是 “自发的要求”</p>
+</blockquote>
+<ul>
+<li>对 “不应该做的事情” 有清楚的认识</li>
+<li>不将代码上传到互联网</li>
+<li>主动不参考别人完成的实验代码</li>
+<li>不使用他人测试用例 (depends)</li>
+<li>有些行为可能使你得到分数，但失去应有的训练</li>
+</ul>
+<blockquote>
+<p>一些过去的例子</p>
+</blockquote>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
+<li>我们也在 Academic Integrity 方面有一些考虑</li>
+</ul>
+<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
+<blockquote>
+<p>感到 Linux/PowerShell/… 很难用？</p>
+</blockquote>
+<ul>
+<li>没有建立信心、没有理解基本逻辑
+<ul>
+<li>计算机科学自学指南</li>
+<li>没有找对材料/没有多问 “能不能再做点什么”</li>
+<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
+<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
+<li>过了入门阶段，都会好起来</li>
+</ul>
+</li>
+<li>本章代码请参考github: <a href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
+</ul>
+<hr />
+<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
+<blockquote>
+<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
+</blockquote>
+<ul>
+<li>什么是软件 (程序)？</li>
+<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
+<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>CS</tag>
+        <tag>Linux</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
