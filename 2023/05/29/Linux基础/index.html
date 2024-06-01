@@ -30,8 +30,10 @@
 <meta property="og:image" content="https://lsqyling.github.io/images/fd_desc.png">
 <meta property="og:image" content="https://lsqyling.github.io/images/c_program_layout.png">
 <meta property="og:image" content="https://lsqyling.github.io/images/process_mask_pending.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/big_endian.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/little_endian.png">
 <meta property="article:published_time" content="2023-05-29T01:05:52.000Z">
-<meta property="article:modified_time" content="2023-05-30T07:54:35.352Z">
+<meta property="article:modified_time" content="2024-01-07T03:44:11.470Z">
 <meta property="article:author" content="lsqyling">
 <meta property="article:tag" content="CS">
 <meta property="article:tag" content="Linux">
@@ -223,7 +225,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-30 15:54:35" itemprop="dateModified" datetime="2023-05-30T15:54:35+08:00">2023-05-30</time>
+                <time title="Modified: 2024-01-07 11:44:11" itemprop="dateModified" datetime="2024-01-07T11:44:11+08:00">2024-01-07</time>
               </span>
 
           
@@ -804,8 +806,10 @@ fflush();
             主机字节序：host
             网络字节序：network
             解决：_to__: htons, htols, ntohs, ntohs
-
-        2 对齐：
+</code></pre>
+<p><img src="/images/big_endian.png" alt="大端存储" /><br />
+<img src="/images/little_endian.png" alt="小端存储" /></p>
+<pre><code>        2 对齐：
             <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> f;</span><br><span class="line">    <span class="type">char</span> ch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
             解决：不对齐（让编译器不对齐）
 

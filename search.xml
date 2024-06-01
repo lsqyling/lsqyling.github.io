@@ -269,14 +269,14 @@ NS图，流程图            工具Dia</p>
   <entry>
     <title>Lambda-expression</title>
     <url>/2024/01/02/Lambda-expression/</url>
-    <content><![CDATA[<p>前言：Lambda表达式是现代编程语言的一个基础特性，比如LISP、Python、C#等都具备该该特性。C++11标准为我们提供Lambda表达式的支持，而且语法非常简洁明了。</p>
+    <content><![CDATA[<p>前言：Lambda表达式是现代编程语言的一个基础特性，比如LISP、Python、C#等都具备该该特性。<strong>C++11</strong>标准为我们提供Lambda表达式的支持，而且语法非常简洁明了。</p>
 <span id="more"></span>
 <h2 id="lambda表达式的语法"><a class="markdownIt-Anchor" href="#lambda表达式的语法"></a> Lambda表达式的语法</h2>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[captures](params) specifiers exception -&gt; ret &#123; body &#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>[captures]—捕获列表，捕获列表中的变量存在于两个作用域，一是lambda表达式定义的函数作用域。二是lambda表达式函数体中的作用域。前者是为了捕获变量后者是为了使用变量。标准还规定，捕获变量必须是自动存储的类型，简单说就是非静态的局部变量。</li>
 <li>(params) —可选参数列表，语法和普通函数一样，在不需要参数的时候可以省略。</li>
-<li>specifiers — 可选限定符。C++11中可以mutable，它允许我们在lambda表达式函数体内改变值捕获的变量，或调用非const的成员函数。</li>
+<li>specifiers — 可选限定符。<strong>C++11</strong>中可以mutable，它允许我们在lambda表达式函数体内改变值捕获的变量，或调用非const的成员函数。</li>
 <li>exception — 可选异常说明符。noexcept来指明lambda不抛出异常</li>
 <li>ret — 可选的返回类型</li>
 <li>{body} — lambda表达式的函数体。</li>
@@ -287,7 +287,7 @@ NS图，流程图            工具Dia</p>
 <p><strong>注意：捕获值的变量在lambda表达式定义的时候已经固定下来了，无论函数在lambda表达式后如何修改外部变量的值，lambda表达式捕获的值都不会变。</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5, y = 8;</span><br><span class="line">    auto foo = [x, &amp;y]() mutable &#123;</span><br><span class="line">        x += 1;</span><br><span class="line">        y += 2;</span><br><span class="line">        std::cout &lt;&lt; &quot;lambda x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">        return x * y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    x = 9;</span><br><span class="line">    y = 20;</span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call1  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">    //结果如下：</span><br><span class="line">    lambda x = 6, y = 22</span><br><span class="line">    call1  x = 9, y = 22</span><br></pre></td></tr></table></figure>
 <h3 id="广义捕获"><a class="markdownIt-Anchor" href="#广义捕获"></a> 广义捕获</h3>
-<p>说明：C<ins>14标准定义了广义捕获，其实是两种捕获方式，一种是C</ins>11中定义的。第二种，初始化捕获。<br />
+<p>说明：<strong>C++14</strong>标准定义了广义捕获，其实是两种捕获方式，一种是<strong>C++11</strong>中定义的。第二种，初始化捕获。<br />
 初始化捕获的代码如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5;</span><br><span class="line">auto foo = [r = x + 1] &#123; return r; &#125;;</span><br><span class="line">std::string y = &quot;hello, c++&quot;;</span><br><span class="line">auto foo1 = [y = std::move(y)] &#123; return y + &quot;world!&quot;; &#125;;</span><br></pre></td></tr></table></figure>
 <p>初始化捕获的第二场景：</p>
@@ -295,13 +295,13 @@ NS图，流程图            工具Dia</p>
 <p>注意：第二场景实在异步调用时复制this对象，防止lambda表达式被调用时因原始this 对象被析构造成未定义的行为。</p>
 <h3 id="常量lambda表达式和捕获this"><a class="markdownIt-Anchor" href="#常量lambda表达式和捕获this"></a> 常量lambda表达式和捕获*this</h3>
 <ul>
-<li>C++17开始，lambda表达式在条件允许的情况下都会隐式声明为constexpr.</li>
-<li>C<ins>17在捕获列表直接[*this]来简化C</ins>14初始化[tmp = *this]的用法，[*this]的语法让程序生成了一个*this的对象的副本并存储在lambda表达式内，可以在lambda表达式内直接访问这个复制对象的成员，消除了通过tmp访问对象成员的尴尬。</li>
+<li><strong>C++17</strong>开始，lambda表达式在条件允许的情况下都会隐式声明为constexpr.</li>
+<li><strong>C++17</strong>在捕获列表直接[*this]来简化<strong>C++14</strong>初始化[tmp = *this]的用法，[*this]的语法让程序生成了一个*this的对象的副本并存储在lambda表达式内，可以在lambda表达式内直接访问这个复制对象的成员，消除了通过tmp访问对象成员的尴尬。</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class work</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    work() : value_(42) &#123;&#125;</span><br><span class="line">    std::future&lt;int&gt; spawn()</span><br><span class="line">    &#123;</span><br><span class="line">        return std::async([=, *this]() &#123; return value_; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    int value_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="捕获-this"><a class="markdownIt-Anchor" href="#捕获-this"></a> 捕获[=, this]</h3>
 <ul>
-<li>C++20标准中，[=, this]捕获this指针的语法，它实际上表达的意思和[=]相同，目的是让程序员区分他与[=, *this]的不同；</li>
+<li><strong>C++20</strong>标准中，[=, this]捕获this指针的语法，它实际上表达的意思和[=]相同，目的是让程序员区分他与[=, *this]的不同；</li>
 </ul>
 ]]></content>
       <tags>
@@ -878,8 +878,10 @@ fflush();
             主机字节序：host
             网络字节序：network
             解决：_to__: htons, htols, ntohs, ntohs
-
-        2 对齐：
+</code></pre>
+<p><img src="/images/big_endian.png" alt="大端存储" /><br />
+<img src="/images/little_endian.png" alt="小端存储" /></p>
+<pre><code>        2 对齐：
             <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> f;</span><br><span class="line">    <span class="type">char</span> ch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
             解决：不对齐（让编译器不对齐）
 
