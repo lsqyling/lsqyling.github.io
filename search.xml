@@ -873,7 +873,7 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
 <li><strong>属相</strong>：兔（1987年）</li>
 <li><strong>身高</strong>：170cm</li>
 <li><strong>体重</strong>：76kg</li>
-<li><strong>籍贯</strong>：南阳市桐柏县新集乡</li>
+<li><strong>籍贯</strong>：南阳市桐柏县</li>
 <li><strong>学历</strong>：本科</li>
 <li><strong>毕业院校</strong>：郑州信息科技职业学院 + 郑州大学</li>
 <li><strong>联系方式</strong>：free_qing2015</li>
@@ -914,6 +914,274 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
       <tags>
         <tag>相亲</tag>
         <tag>简历</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Coroutine-协程</title>
+    <url>/2025/03/03/coroutine/</url>
+    <content><![CDATA[<p>前言：协程（Coroutine）是一种计算机程序组件，它与子例程（即通常所说的函数或过程）类似，但其执行方式更为灵活。不同于传统的线程和进程，协程允许在特定的地方暂停执行，并能在之后从暂停的地方恢复执行。这种特性使得协程在处理异步编程、并发操作以及I/O密集型任务时特别有用。</p>
+<span id="more"></span>
+<h2 id="什么是协程"><a class="markdownIt-Anchor" href="#什么是协程"></a> 什么是协程</h2>
+<ul>
+<li>核心：<strong>是能够暂停和恢复的函数</strong>。</li>
+<li>能被多次调用的函数，每次只运行协程代码的一部分</li>
+<li>每次调用之间本地变量和参数都会被保存，生命周期与调用者无关</li>
+<li>与线程的区别：线程会互相争抢，（同一个线程上运行的）协程只会在主动让出控制权时切换，不同线程上得协程也会相会争抢</li>
+</ul>
+<h2 id="为什么需要协程"><a class="markdownIt-Anchor" href="#为什么需要协程"></a> 为什么需要协程</h2>
+<ol>
+<li>异步操作</li>
+<li>生成器</li>
+</ol>
+<p><img src="/images/fun_coroutine.png" alt="普通函数和协程得区别" /></p>
+<h2 id="协程有什么用"><a class="markdownIt-Anchor" href="#协程有什么用"></a> 协程有什么用</h2>
+<ul>
+<li>使得异步IO代码的实现变得简单，容易维护</li>
+<li>例子：<code>boost</code>不同版本的异步<code>IO echo server</code></li>
+</ul>
+<h2 id="c20协程机制-关键对象"><a class="markdownIt-Anchor" href="#c20协程机制-关键对象"></a> C++20协程机制－关键对象</h2>
+<ol>
+<li><code>promise_type</code></li>
+</ol>
+<ul>
+<li>对协程行为的配置 (比如是否在协程入口处挂起)</li>
+<li>用于调用者与协程之间的数据传递</li>
+<li>可以对协程对象增加一些自定义数据结构(用于实现调度器)</li>
+</ul>
+<ol start="2">
+<li><code>std:coroutine_handle&lt;promise_type&gt;</code></li>
+</ol>
+<ul>
+<li>外部操作协程的接口 (本质上是一个指针)</li>
+</ul>
+<ol start="3">
+<li><code>coroutine_interface</code></li>
+</ol>
+<ul>
+<li><code>coroutine</code>的返回对象</li>
+<li>对<code>coroutine_handle</code>的封装</li>
+<li>在<code>coroutine_handle</code>的基础上再实现一些用户自定义的接口，比如获取返回值等</li>
+</ul>
+<ol start="3">
+<li><code>awaitor</code></li>
+</ol>
+<ul>
+<li>控制协程在挂起时的行为</li>
+<li>决定是否挂起</li>
+<li>决把控制权交给谁</li>
+<li>配置在控制器返回时做什么</li>
+</ul>
+<h2 id="协程定义方法"><a class="markdownIt-Anchor" href="#协程定义方法"></a> 协程定义方法</h2>
+<ul>
+<li>定义一个函数，只要里面出现<code>co_await</code>,<code>co_yield</code>,<code>co_return</code>中的任意一个，就是定义了一个协程</li>
+<li>协程的返回值必须是一个<code>coroutine_interface</code>对象</li>
+</ul>
+<h2 id="c20协程机制-关键字"><a class="markdownIt-Anchor" href="#c20协程机制-关键字"></a> C++20协程机制-关键字</h2>
+<ol>
+<li><code>co_await</code><br />
+<img src="/images/co_await.png" alt="co_await" /></li>
+<li><code>co_yield expr</code></li>
+</ol>
+<ul>
+<li>往<code>promise</code>中写值</li>
+<li>等价于<code>co_await promise.yield_value(expr)</code></li>
+</ul>
+<ol start="3">
+<li><code>co_return expr</code></li>
+</ol>
+<ul>
+<li>结束<code>coroutine</code></li>
+<li>如果<code>expr</code>为空，或者为<code>void</code>,并且<code>promise</code>定义了<code>return_void()</code>,则调用 <code>return_void()</code></li>
+<li>如果<code>expr</code>不为空，且<code>promise</code>定义了<code>return_value(value)</code>，则调用 <code>return_value(expr)</code></li>
+<li><code>return_void</code>和<code>return_value</code>只能定义其中一个</li>
+</ul>
+<h2 id="用c协程实现异步操作"><a class="markdownIt-Anchor" href="#用c协程实现异步操作"></a> 用C++协程实现异步操作</h2>
+<p>用<code>C++</code>协程实现异步操作：理解 <code>co_await</code> 和 <code>Awaitable</code>.<br />
+在<code>C++</code>中，只要函数体内出现了 <code>co_await</code>, <code>co_yield</code> 或 <code>co_return</code> 这三个关键字之一，这个函数就自动变成了协程。<br />
+我们先聚焦在<code>co_await</code>上，弄清楚它是怎么工作的，以及如何让它真正跑起来。</p>
+<ol>
+<li><code>co_await</code>是什么?<br />
+<code>co_await</code>的作用是让协程<strong>暂停一下</strong>,等待某个操作（比如网络请求或文件读取）完成后，再继续执行。<code>co_await</code>就是这个<strong>等一等</strong>的动作，暂停协程，干别的事，等条件满足再回来。</li>
+</ol>
+<blockquote>
+<p>但问题来了:如果你直接对一个自定义类型用<code>co_await</code>，比如<code>co_await IntReader&#123;&#125;</code>，编译器会一脸懵逼。它不知道这个类型啥时候算“完成”，也不知道结果在哪儿。为了让<br />
+<code>co_await</code>能用，我们需要让自定义类型遵守一个规则，这个规则叫 <code>Awaitable</code>.</p>
+</blockquote>
+<ol start="2">
+<li><code>Awaitable</code>:<br />
+<code>Awaitable</code> 就像一份“协程使用说明书”，告诉编译器怎么处理暂停和恢复。它要求你的类型实现三个关键函数：</li>
+</ol>
+<ul>
+<li><strong><code>await_ready（）</code></strong>：告诉协程“现在能不能直接执行？”</li>
+<li><strong><code>await_suspend（）</code></strong>：如果要暂停，接下来该干啥?</li>
+<li><strong><code>await_resume（）</code></strong>：恢复时，返回什么结果？<br />
+这三个函数一起合作，让<code>co_await</code>知道如何暂停、等待和继续。下面我们一步步拆解。</li>
+</ul>
+<ol start="3">
+<li><code>Awaitable</code>的三个函数详解<br />
+<strong><code>await_ready（）</code>：操作完成了吗？</strong></li>
+</ol>
+<ul>
+<li>返回类型：<code>bool</code></li>
+<li>作用：在执行<code>co_await</code>时，协程先问问这个函数：“操作是不是已经好了？”如果返回<code>true</code>，协程就不用暂停，直接往下跑；如果返回<code>false</code>，就得暂停等着。</li>
+</ul>
+<blockquote>
+<p>为什么要有这个函数？<br />
+异步操作的时间不确定。假设你在<code>co_await</code>之前已经偷偷启动了一个任务(比如线程或网络请求)，到<code>co_await</code>时可能已经完成了。如果完成了，就没必要暂停，直接用结果多好！<code>await_ready()</code>就是用来检查这种情况的。</p>
+</blockquote>
+<p><strong><code>await_suspend（）</code>：暂停时做什么？</strong></p>
+<ul>
+<li>参数：<code>std::coroutine_handle&lt;&gt;</code>(协程的“遥控器&quot;)</li>
+<li>返回类型：通常是<code>void</code>，也可以是<code>bool</code></li>
+<li>作用：如果<code>await_ready（）</code>返回<code>false</code>，协程要暂停，这时会调用 <code>await_suspend()</code>。<br />
+这个函数拿到一个协程句柄（<code>std::coroutine_handle&lt;&gt;</code>），可以用它在未来某个时候“唤醒”协程。</li>
+</ul>
+<blockquote>
+<p>什么是协程句柄？<br />
+它就像协程的身份证，指向当前暂停的协程实例。调用<code>handle.resume() </code>就能让协程从暂停的地方继续跑。<br />
+返回值的妙用：</p>
+</blockquote>
+<ul>
+<li>返回<code>void</code>：正常暂停，没啥说的。</li>
+<li>返回<code>bool</code>：如果返回<code>false</code>，协程不会暂停(相当于给了第二次取消暂停的机会); 返回<code>true</code>(或没返回值时默认)，就真的暂停了。注意这里和<code>await_ready（）</code>的逻辑是反的。</li>
+</ul>
+<p><strong><code>await_resume（）</code>&quot;：恢复后给我什么？</strong></p>
+<ul>
+<li>返回类型：可以是void，也可以是具体类型</li>
+<li>作用：当协程恢复执行（或者压根没暂停）时，这个函数被调用。它的返回值就是 <code>co_await</code>表达式的结果。</li>
+</ul>
+<h2 id="co_return-与-promise_type"><a class="markdownIt-Anchor" href="#co_return-与-promise_type"></a> <code>co_return</code> 与 <code>promise_type</code></h2>
+<ol>
+<li>协程的返回类型要求<br />
+<code>C++</code>对协程的返回类型只有一个硬性规定：它必须包含一个名为<code>promise_type</code>的内嵌类型。</li>
+<li>当你调用一个协程函数时：</li>
+</ol>
+<ul>
+<li>编译器会在堆上分配空间，保存协程的状态。</li>
+<li>同时创建一个<code>promise_type</code>对象，嵌在返回类型里。</li>
+<li>通过<code>promise_type</code>定义的函数，你可以控制协程的行为，或者与<strong>调用者交换数据</strong>。</li>
+</ul>
+<ol start="3">
+<li>协程执行时序<br />
+<img src="/images/coroutine-seq.png" alt="coroutine" /></li>
+<li><code>task</code>应用</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">IntReader</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">await_ready</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">false</span>;&#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">await_suspend</span><span class="params">(std::coroutine_handle&lt;&gt; handle)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">std::thread <span class="title">thr</span><span class="params">([<span class="keyword">this</span>, handle] &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">            std::this_thread::sleep_for(<span class="number">1000</span>ms);</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">this</span>-&gt;value_ = <span class="number">1</span>;</span></span></span><br><span class="line"><span class="params"><span class="function">            handle.resume();</span></span></span><br><span class="line"><span class="params"><span class="function">        &#125;)</span></span>;</span><br><span class="line">        thr.<span class="built_in">detach</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">await_resume</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value_;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> value_&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">task</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">task</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">promise_type</span>() : <span class="built_in">value_</span>(std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;()) &#123;&#125;</span><br><span class="line">        <span class="function">task <span class="title">get_return_object</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span>  task&#123;value_&#125;;  &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_value</span><span class="params">(<span class="type">int</span> value)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            *value_ = value;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">initial_suspend</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">final_suspend</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        std::shared_ptr&lt;<span class="type">int</span>&gt; value_;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">task</span><span class="params">(std::shared_ptr&lt;<span class="type">int</span>&gt; value)</span> : value_(std::move(value)) &#123;</span>&#125;</span><br><span class="line">    [[<span class="built_in">nodiscard</span>(<span class="string">&quot;?&quot;</span>)]]</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get_value</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> *value_; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::shared_ptr&lt;<span class="type">int</span>&gt; value_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">print_int</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IntReader reader1;</span><br><span class="line">    <span class="type">int</span> total = <span class="keyword">co_await</span> reader1;</span><br><span class="line"></span><br><span class="line">    IntReader reader2;</span><br><span class="line">    total += <span class="keyword">co_await</span> reader2;</span><br><span class="line"></span><br><span class="line">    IntReader reader3;</span><br><span class="line">    total += <span class="keyword">co_await</span> reader3;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">co_return</span> total ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = <span class="built_in">print_int</span>();</span><br><span class="line">    std::string str;</span><br><span class="line">    <span class="keyword">while</span> (std::cin &gt;&gt; str)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; t.<span class="built_in">get_value</span>() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="co_yield"><a class="markdownIt-Anchor" href="#co_yield"></a> <code>co_yield</code></h2>
+<ol>
+<li>用<code>co_yield</code>打造生成器<br />
+在<code>C++</code>的协程（<code>coroutine</code>）,<code>co_yield</code>能让你的函数变成一个“生成器”，每次生成一个值，暂停一下，等调用者需要时再继续生成下一个值。</li>
+<li><code>co_yield</code>是什么?</li>
+</ol>
+<ul>
+<li>生成一个值：把某个值“扔”给调用者。</li>
+<li>暂停执行：生成完值后，协程停下来，等调用者喊“继续”。</li>
+</ul>
+<ol start="3">
+<li><code>generator</code>应用</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">generator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 一开始不暂停</span></span><br><span class="line">        <span class="function">std::suspend_never <span class="title">initial_suspend</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="comment">// 结束时暂停</span></span><br><span class="line">        <span class="function">std::suspend_always <span class="title">final_suspend</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="comment">// 无返回值</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_void</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="function">generator <span class="title">get_return_object</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">generator</span>( std::coroutine_handle&lt;promise_type&gt;::<span class="built_in">from_promise</span>(*<span class="keyword">this</span>) );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">yield_value</span><span class="params">(<span class="type">int</span> value)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            current_value = value;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> current_value&#123;<span class="number">0</span>&#125;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">generator</span><span class="params">(std::coroutine_handle&lt;promise_type&gt; h)</span> : handle(h) &#123;</span>&#125;</span><br><span class="line">    <span class="comment">// 清理协程</span></span><br><span class="line">    ~<span class="built_in">generator</span>() &#123; <span class="keyword">if</span> (handle) handle.<span class="built_in">destroy</span>(); &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取下一个值</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 恢复协程执行</span></span><br><span class="line">        handle.<span class="built_in">resume</span>();</span><br><span class="line">        <span class="comment">// 返回生成值</span></span><br><span class="line">        <span class="keyword">return</span> handle.<span class="built_in">promise</span>().current_value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 检查是否结束</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">done</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> handle.<span class="built_in">done</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::coroutine_handle&lt;promise_type&gt; handle;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">generator <span class="title">fib</span><span class="params">(<span class="type">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, b = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">co_yield</span> a;</span><br><span class="line">        <span class="type">int</span> next = a + b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> g = <span class="built_in">fib</span>(<span class="number">10</span>);</span><br><span class="line">    <span class="keyword">while</span> (!g.<span class="built_in">done</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; g.<span class="built_in">next</span>() &lt;&lt; std::endl;</span><br><span class="line">        std::this_thread::<span class="built_in">sleep_for</span>(<span class="number">1000</span>ms);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="some-slight-improvements"><a class="markdownIt-Anchor" href="#some-slight-improvements"></a> Some Slight Improvements</h2>
+<ol>
+<li>使用 <code>std::optional</code> 来做容器，自动调用正确的构造/析构函数，支持移动语义。(可以进一步改用 <code>std::variant</code>)。</li>
+<li>定义了 <code>Generator</code> 的几个构造和赋值函数，增强了安全性(<code>safety</code>)。</li>
+<li>在 <code>unhandled_exception()</code> 内存放了 <code>std::exception_ptr</code>。</li>
+<li>用例改为稍微复杂一些的字符串生成，里面有一些性能问题，读者有兴趣的可以找找茬。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;optional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coroutine&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">generator</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">generator <span class="title">get_return_object</span><span class="params">()</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> generator&#123; std::coroutine_handle&lt;promise_type&gt;::<span class="built_in">from_promise</span>(*<span class="keyword">this</span>) &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_void</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123;&#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">initial_suspend</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">final_suspend</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function">std::suspend_always <span class="title">yield_value</span><span class="params">(<span class="type">const</span> T &amp;value)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            value_ = value;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">yield_value</span><span class="params">(T &amp;&amp;value)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            value_.<span class="built_in">emplace</span>(std::<span class="built_in">move</span>(value));</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123; exception_ = std::<span class="built_in">current_exception</span>(); &#125;</span><br><span class="line">        <span class="function">T &amp;<span class="title">result</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> *value_; &#125;</span><br><span class="line">        <span class="function"><span class="type">const</span> T &amp;<span class="title">result</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> *value_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        std::optional&lt;T&gt; value_;</span><br><span class="line">        std::exception_ptr exception_;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">generator</span>(std::coroutine_handle&lt;promise_type&gt; handle) : <span class="built_in">handle_</span>(handle) &#123;&#125;</span><br><span class="line">    <span class="built_in">generator</span>(<span class="type">const</span> generator &amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    generator &amp;<span class="keyword">operator</span>=(<span class="type">const</span> generator &amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    generator &amp;<span class="keyword">operator</span>=(generator &amp;&amp;other) <span class="keyword">noexcept</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != std::<span class="built_in">addressof</span>(other))</span><br><span class="line">        &#123;</span><br><span class="line">            handle_ = other.handle_;</span><br><span class="line">            other.handle_ = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">generator</span>() <span class="keyword">noexcept</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (handle_)</span><br><span class="line">            handle_.<span class="built_in">destroy</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123; handle_.<span class="built_in">resume</span>(); &#125;</span><br><span class="line">    <span class="function">T &amp;<span class="title">result</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> handle_.<span class="built_in">promise</span>().<span class="built_in">result</span>(); &#125;</span><br><span class="line">    <span class="function"><span class="type">const</span> T &amp;<span class="title">result</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> handle_.<span class="built_in">promise</span>().<span class="built_in">result</span>(); &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::coroutine_handle&lt;promise_type&gt; handle_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">generator&lt;std::string&gt; <span class="title">lottery</span><span class="params">(<span class="type">size_t</span> size, <span class="type">unsigned</span> <span class="type">int</span> mod)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">std::mt19937 <span class="title">rgn</span><span class="params">(std::random_device&#123;&#125;())</span></span>;</span><br><span class="line">    std::string winning_nums;</span><br><span class="line">    <span class="keyword">co_yield</span> winning_nums += std::<span class="built_in">to_string</span>( <span class="built_in">rgn</span>() % mod );</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">1</span>; i &lt; size; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        winning_nums += <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="keyword">co_yield</span> winning_nums += std::<span class="built_in">to_string</span>(<span class="built_in">rgn</span>() % mod);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">co_return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">generator&lt;<span class="type">int</span>&gt; <span class="title">fibonacci</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, b = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">co_yield</span> a;</span><br><span class="line">        <span class="type">int</span> c = a + b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">co_return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> g = <span class="built_in">lottery</span>(<span class="number">10</span>, <span class="number">256</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        g.<span class="built_in">next</span>();</span><br><span class="line">        std::cout &lt;&lt; g.<span class="built_in">result</span>() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> fib = <span class="built_in">fibonacci</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        fib.<span class="built_in">next</span>();</span><br><span class="line">        std::cout &lt;&lt; fib.<span class="built_in">result</span>() &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>C++</tag>
+        <tag>协程</tag>
+        <tag>网络编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>英语词根记忆法</title>
+    <url>/2025/03/02/english-%E8%AF%8D%E6%A0%B9%E8%AE%B0%E5%BF%86%E6%B3%95/</url>
+    <content><![CDATA[<p>简介：英语词根记忆法是一种通过学习和理解单词的基本构成部分——词根、前缀和后缀来增强词汇量和理解能力的学习策略。这种方法基于许多英语单词都是由拉丁语和希腊语的词根演变而来的事实，因此掌握这些基本组成部分可以帮助学习者更轻松地推测出大量单词的意思。</p>
+<span id="more"></span>
+<h1 id="词缀词根记忆法"><a class="markdownIt-Anchor" href="#词缀词根记忆法"></a> 词缀词根记忆法</h1>
+<h3 id="后缀-cess-cede-ceed-gress-grad-gred"><a class="markdownIt-Anchor" href="#后缀-cess-cede-ceed-gress-grad-gred"></a> 后缀-cess，-cede，-ceed，-gress，-grad，-gred</h3>
+<ul>
+<li>均表示走=to go</li>
+</ul>
+<h3 id="前缀sub-sup-suc-sus-的功能"><a class="markdownIt-Anchor" href="#前缀sub-sup-suc-sus-的功能"></a> 前缀sub-，sup-，suc-，sus-的功能</h3>
+<ul>
+<li>下，向下: subway</li>
+<li>从下往上：submit</li>
+<li>亚于，次于: suburban</li>
+<li>后，后面: subsequent</li>
+</ul>
+<h3 id="com-con-col-cor-co-"><a class="markdownIt-Anchor" href="#com-con-col-cor-co-"></a> com-，con-，col-，cor-，co-</h3>
+<ul>
+<li>=with/together，共同、一起、全部</li>
+<li>intensive，加强语气</li>
+</ul>
+<h3 id="anc-ant-反"><a class="markdownIt-Anchor" href="#anc-ant-反"></a> anc-，ant- 反</h3>
+<ul>
+<li>以前、前、前面、老</li>
+<li>高</li>
+</ul>
+<h3 id="abs-"><a class="markdownIt-Anchor" href="#abs-"></a> abs-</h3>
+<ul>
+<li>=away</li>
+</ul>
+<h3 id="ac-"><a class="markdownIt-Anchor" href="#ac-"></a> ac-</h3>
+<ul>
+<li>=to</li>
+</ul>
+<h3 id="inter-"><a class="markdownIt-Anchor" href="#inter-"></a> inter-</h3>
+<ul>
+<li>xx之间</li>
+</ul>
+<h3 id="se-"><a class="markdownIt-Anchor" href="#se-"></a> se-</h3>
+<ul>
+<li>=apart分开、分离</li>
+</ul>
+<h3 id="di-dis-"><a class="markdownIt-Anchor" href="#di-dis-"></a> di-，dis-</h3>
+<ul>
+<li>=apart分开</li>
+</ul>
+<h3 id="trans-"><a class="markdownIt-Anchor" href="#trans-"></a> trans-</h3>
+<ul>
+<li>转，穿，传</li>
+</ul>
+<h3 id="词根-van-ven-vent-come-go-都表示-来或是走来的含义"><a class="markdownIt-Anchor" href="#词根-van-ven-vent-come-go-都表示-来或是走来的含义"></a> 词根 “-van，-ven，-vent” = come、go 都表示 来或是走来的含义</h3>
+<h3 id="in-im-il-ir-"><a class="markdownIt-Anchor" href="#in-im-il-ir-"></a> in- im- il- ir-</h3>
+<ul>
+<li>not:相反、否定</li>
+<li>=in，进入</li>
+<li>=en，使</li>
+</ul>
+<h3 id="pre-前-提前-pro-forward"><a class="markdownIt-Anchor" href="#pre-前-提前-pro-forward"></a> pre- = 前、提前； pro- = forward</h3>
+<h3 id="-able-ible-ile"><a class="markdownIt-Anchor" href="#-able-ible-ile"></a> -able -ible -ile</h3>
+<ul>
+<li>adj:可以xxx的，能够xxx的</li>
+<li>adj:容易xxx的</li>
+<li>N(少数): vary —&gt; variables 名词后缀 变量</li>
+</ul>
+<h3 id="re-"><a class="markdownIt-Anchor" href="#re-"></a> re-</h3>
+<ul>
+<li>反复、又、再</li>
+<li>返回</li>
+<li>相反</li>
+</ul>
+<h3 id="e-ex-es-"><a class="markdownIt-Anchor" href="#e-ex-es-"></a> e- ex- es-</h3>
+<ul>
+<li>向外、出来</li>
+<li>超出</li>
+<li>ex- 还表示：前 for-example: ex-boyfriend</li>
+</ul>
+<h3 id="ad-"><a class="markdownIt-Anchor" href="#ad-"></a> ad-</h3>
+<ul>
+<li>=to，去</li>
+<li>加强</li>
+</ul>
+<h3 id="词根-vent-ven-van表示来走来"><a class="markdownIt-Anchor" href="#词根-vent-ven-van表示来走来"></a> 词根-<code>vent</code>、-<code>ven</code>-<code>van</code>表示&quot;来，走来</h3>
+]]></content>
+      <tags>
+        <tag>外语</tag>
       </tags>
   </entry>
   <entry>
@@ -2895,186 +3163,6 @@ visibility属性默认值是show，如果设置为hidden，元素会隐藏。<br
       </tags>
   </entry>
   <entry>
-    <title>Coroutine-协程</title>
-    <url>/2025/03/03/coroutine/</url>
-    <content><![CDATA[<p>前言：协程（Coroutine）是一种计算机程序组件，它与子例程（即通常所说的函数或过程）类似，但其执行方式更为灵活。不同于传统的线程和进程，协程允许在特定的地方暂停执行，并能在之后从暂停的地方恢复执行。这种特性使得协程在处理异步编程、并发操作以及I/O密集型任务时特别有用。</p>
-<span id="more"></span>
-<h2 id="什么是协程"><a class="markdownIt-Anchor" href="#什么是协程"></a> 什么是协程</h2>
-<ul>
-<li>核心：<strong>是能够暂停和恢复的函数</strong>。</li>
-<li>能被多次调用的函数，每次只运行协程代码的一部分</li>
-<li>每次调用之间本地变量和参数都会被保存，生命周期与调用者无关</li>
-<li>与线程的区别：线程会互相争抢，（同一个线程上运行的）协程只会在主动让出控制权时切换，不同线程上得协程也会相会争抢</li>
-</ul>
-<h2 id="为什么需要协程"><a class="markdownIt-Anchor" href="#为什么需要协程"></a> 为什么需要协程</h2>
-<ol>
-<li>异步操作</li>
-<li>生成器</li>
-</ol>
-<p><img src="/images/fun_coroutine.png" alt="普通函数和协程得区别" /></p>
-<h2 id="协程有什么用"><a class="markdownIt-Anchor" href="#协程有什么用"></a> 协程有什么用</h2>
-<ul>
-<li>使得异步IO代码的实现变得简单，容易维护</li>
-<li>例子：<code>boost</code>不同版本的异步<code>IO echo server</code></li>
-</ul>
-<h2 id="c20协程机制-关键对象"><a class="markdownIt-Anchor" href="#c20协程机制-关键对象"></a> C++20协程机制－关键对象</h2>
-<ol>
-<li><code>promise_type</code></li>
-</ol>
-<ul>
-<li>对协程行为的配置 (比如是否在协程入口处挂起)</li>
-<li>用于调用者与协程之间的数据传递</li>
-<li>可以对协程对象增加一些自定义数据结构(用于实现调度器)</li>
-</ul>
-<ol start="2">
-<li><code>std:coroutine_handle&lt;promise_type&gt;</code></li>
-</ol>
-<ul>
-<li>外部操作协程的接口 (本质上是一个指针)</li>
-</ul>
-<ol start="3">
-<li><code>coroutine_interface</code></li>
-</ol>
-<ul>
-<li><code>coroutine</code>的返回对象</li>
-<li>对<code>coroutine_handle</code>的封装</li>
-<li>在<code>coroutine_handle</code>的基础上再实现一些用户自定义的接口，比如获取返回值等</li>
-</ul>
-<ol start="3">
-<li><code>awaitor</code></li>
-</ol>
-<ul>
-<li>控制协程在挂起时的行为</li>
-<li>决定是否挂起</li>
-<li>决把控制权交给谁</li>
-<li>配置在控制器返回时做什么</li>
-</ul>
-<h2 id="协程定义方法"><a class="markdownIt-Anchor" href="#协程定义方法"></a> 协程定义方法</h2>
-<ul>
-<li>定义一个函数，只要里面出现<code>co_await</code>,<code>co_yield</code>,<code>co_return</code>中的任意一个，就是定义了一个协程</li>
-<li>协程的返回值必须是一个<code>coroutine_interface</code>对象</li>
-</ul>
-<h2 id="c20协程机制-关键字"><a class="markdownIt-Anchor" href="#c20协程机制-关键字"></a> C++20协程机制-关键字</h2>
-<ol>
-<li><code>co_await</code><br />
-<img src="/images/co_await.png" alt="co_await" /></li>
-<li><code>co_yield expr</code></li>
-</ol>
-<ul>
-<li>往<code>promise</code>中写值</li>
-<li>等价于<code>co_await promise.yield_value(expr)</code></li>
-</ul>
-<ol start="3">
-<li><code>co_return expr</code></li>
-</ol>
-<ul>
-<li>结束<code>coroutine</code></li>
-<li>如果<code>expr</code>为空，或者为<code>void</code>,并且<code>promise</code>定义了<code>return_void()</code>,则调用 <code>return_void()</code></li>
-<li>如果<code>expr</code>不为空，且<code>promise</code>定义了<code>return_value(value)</code>，则调用 <code>return_value(expr)</code></li>
-<li><code>return_void</code>和<code>return_value</code>只能定义其中一个</li>
-</ul>
-<h2 id="用c协程实现异步操作"><a class="markdownIt-Anchor" href="#用c协程实现异步操作"></a> 用C++协程实现异步操作</h2>
-<p>用<code>C++</code>协程实现异步操作：理解 <code>co_await</code> 和 <code>Awaitable</code>.<br />
-在<code>C++</code>中，只要函数体内出现了 <code>co_await</code>, <code>co_yield</code> 或 <code>co_return</code> 这三个关键字之一，这个函数就自动变成了协程。<br />
-我们先聚焦在<code>co_await</code>上，弄清楚它是怎么工作的，以及如何让它真正跑起来。</p>
-<ol>
-<li><code>co_await</code>是什么?<br />
-<code>co_await</code>的作用是让协程<strong>暂停一下</strong>,等待某个操作（比如网络请求或文件读取）完成后，再继续执行。<code>co_await</code>就是这个<strong>等一等</strong>的动作，暂停协程，干别的事，等条件满足再回来。</li>
-</ol>
-<blockquote>
-<p>但问题来了:如果你直接对一个自定义类型用<code>co_await</code>，比如<code>co_await IntReader&#123;&#125;</code>，编译器会一脸懵逼。它不知道这个类型啥时候算“完成”，也不知道结果在哪儿。为了让<br />
-<code>co_await</code>能用，我们需要让自定义类型遵守一个规则，这个规则叫 <code>Awaitable</code>.</p>
-</blockquote>
-<ol start="2">
-<li><code>Awaitable</code>:<br />
-<code>Awaitable</code> 就像一份“协程使用说明书”，告诉编译器怎么处理暂停和恢复。它要求你的类型实现三个关键函数：</li>
-</ol>
-<ul>
-<li><strong><code>await_ready（）</code></strong>：告诉协程“现在能不能直接执行？”</li>
-<li><strong><code>await_suspend（）</code></strong>：如果要暂停，接下来该干啥?</li>
-<li><strong><code>await_resume（）</code></strong>：恢复时，返回什么结果？<br />
-这三个函数一起合作，让<code>co_await</code>知道如何暂停、等待和继续。下面我们一步步拆解。</li>
-</ul>
-<ol start="3">
-<li><code>Awaitable</code>的三个函数详解<br />
-<strong><code>await_ready（）</code>：操作完成了吗？</strong></li>
-</ol>
-<ul>
-<li>返回类型：<code>bool</code></li>
-<li>作用：在执行<code>co_await</code>时，协程先问问这个函数：“操作是不是已经好了？”如果返回<code>true</code>，协程就不用暂停，直接往下跑；如果返回<code>false</code>，就得暂停等着。</li>
-</ul>
-<blockquote>
-<p>为什么要有这个函数？<br />
-异步操作的时间不确定。假设你在<code>co_await</code>之前已经偷偷启动了一个任务(比如线程或网络请求)，到<code>co_await</code>时可能已经完成了。如果完成了，就没必要暂停，直接用结果多好！<code>await_ready()</code>就是用来检查这种情况的。</p>
-</blockquote>
-<p><strong><code>await_suspend（）</code>：暂停时做什么？</strong></p>
-<ul>
-<li>参数：<code>std::coroutine_handle&lt;&gt;</code>(协程的“遥控器&quot;)</li>
-<li>返回类型：通常是<code>void</code>，也可以是<code>bool</code></li>
-<li>作用：如果<code>await_ready（）</code>返回<code>false</code>，协程要暂停，这时会调用 <code>await_suspend()</code>。<br />
-这个函数拿到一个协程句柄（<code>std::coroutine_handle&lt;&gt;</code>），可以用它在未来某个时候“唤醒”协程。</li>
-</ul>
-<blockquote>
-<p>什么是协程句柄？<br />
-它就像协程的身份证，指向当前暂停的协程实例。调用<code>handle.resume() </code>就能让协程从暂停的地方继续跑。<br />
-返回值的妙用：</p>
-</blockquote>
-<ul>
-<li>返回<code>void</code>：正常暂停，没啥说的。</li>
-<li>返回<code>bool</code>：如果返回<code>false</code>，协程不会暂停(相当于给了第二次取消暂停的机会); 返回<code>true</code>(或没返回值时默认)，就真的暂停了。注意这里和<code>await_ready（）</code>的逻辑是反的。</li>
-</ul>
-<p><strong><code>await_resume（）</code>&quot;：恢复后给我什么？</strong></p>
-<ul>
-<li>返回类型：可以是void，也可以是具体类型</li>
-<li>作用：当协程恢复执行（或者压根没暂停）时，这个函数被调用。它的返回值就是 <code>co_await</code>表达式的结果。</li>
-</ul>
-<h2 id="co_return-与-promise_type"><a class="markdownIt-Anchor" href="#co_return-与-promise_type"></a> <code>co_return</code> 与 <code>promise_type</code></h2>
-<ol>
-<li>协程的返回类型要求<br />
-<code>C++</code>对协程的返回类型只有一个硬性规定：它必须包含一个名为<code>promise_type</code>的内嵌类型。</li>
-<li>当你调用一个协程函数时：</li>
-</ol>
-<ul>
-<li>编译器会在堆上分配空间，保存协程的状态。</li>
-<li>同时创建一个<code>promise_type</code>对象，嵌在返回类型里。</li>
-<li>通过<code>promise_type</code>定义的函数，你可以控制协程的行为，或者与<strong>调用者交换数据</strong>。</li>
-</ul>
-<ol start="3">
-<li>协程执行时序<br />
-<img src="/images/coroutine-seq.png" alt="coroutine" /></li>
-<li><code>task</code>应用</li>
-</ol>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">IntReader</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">await_ready</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">false</span>;&#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">await_suspend</span><span class="params">(std::coroutine_handle&lt;&gt; handle)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">std::thread <span class="title">thr</span><span class="params">([<span class="keyword">this</span>, handle] &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">            std::this_thread::sleep_for(<span class="number">1000</span>ms);</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">this</span>-&gt;value_ = <span class="number">1</span>;</span></span></span><br><span class="line"><span class="params"><span class="function">            handle.resume();</span></span></span><br><span class="line"><span class="params"><span class="function">        &#125;)</span></span>;</span><br><span class="line">        thr.<span class="built_in">detach</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">await_resume</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value_;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> value_&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">task</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">task</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">promise_type</span>() : <span class="built_in">value_</span>(std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;()) &#123;&#125;</span><br><span class="line">        <span class="function">task <span class="title">get_return_object</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span>  task&#123;value_&#125;;  &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_value</span><span class="params">(<span class="type">int</span> value)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            *value_ = value;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">initial_suspend</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">final_suspend</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        std::shared_ptr&lt;<span class="type">int</span>&gt; value_;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">task</span><span class="params">(std::shared_ptr&lt;<span class="type">int</span>&gt; value)</span> : value_(std::move(value)) &#123;</span>&#125;</span><br><span class="line">    [[<span class="built_in">nodiscard</span>(<span class="string">&quot;?&quot;</span>)]]</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get_value</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> *value_; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::shared_ptr&lt;<span class="type">int</span>&gt; value_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">print_int</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IntReader reader1;</span><br><span class="line">    <span class="type">int</span> total = <span class="keyword">co_await</span> reader1;</span><br><span class="line"></span><br><span class="line">    IntReader reader2;</span><br><span class="line">    total += <span class="keyword">co_await</span> reader2;</span><br><span class="line"></span><br><span class="line">    IntReader reader3;</span><br><span class="line">    total += <span class="keyword">co_await</span> reader3;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">co_return</span> total ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = <span class="built_in">print_int</span>();</span><br><span class="line">    std::string str;</span><br><span class="line">    <span class="keyword">while</span> (std::cin &gt;&gt; str)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; t.<span class="built_in">get_value</span>() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="co_yield"><a class="markdownIt-Anchor" href="#co_yield"></a> <code>co_yield</code></h2>
-<ol>
-<li>用<code>co_yield</code>打造生成器<br />
-在<code>C++</code>的协程（<code>coroutine</code>）,<code>co_yield</code>能让你的函数变成一个“生成器”，每次生成一个值，暂停一下，等调用者需要时再继续生成下一个值。</li>
-<li><code>co_yield</code>是什么?</li>
-</ol>
-<ul>
-<li>生成一个值：把某个值“扔”给调用者。</li>
-<li>暂停执行：生成完值后，协程停下来，等调用者喊“继续”。</li>
-</ul>
-<ol start="3">
-<li><code>generator</code>应用</li>
-</ol>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">generator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 一开始不暂停</span></span><br><span class="line">        <span class="function">std::suspend_never <span class="title">initial_suspend</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="comment">// 结束时暂停</span></span><br><span class="line">        <span class="function">std::suspend_always <span class="title">final_suspend</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="comment">// 无返回值</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_void</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="function">generator <span class="title">get_return_object</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">generator</span>( std::coroutine_handle&lt;promise_type&gt;::<span class="built_in">from_promise</span>(*<span class="keyword">this</span>) );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">yield_value</span><span class="params">(<span class="type">int</span> value)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            current_value = value;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> current_value&#123;<span class="number">0</span>&#125;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">generator</span><span class="params">(std::coroutine_handle&lt;promise_type&gt; h)</span> : handle(h) &#123;</span>&#125;</span><br><span class="line">    <span class="comment">// 清理协程</span></span><br><span class="line">    ~<span class="built_in">generator</span>() &#123; <span class="keyword">if</span> (handle) handle.<span class="built_in">destroy</span>(); &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取下一个值</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 恢复协程执行</span></span><br><span class="line">        handle.<span class="built_in">resume</span>();</span><br><span class="line">        <span class="comment">// 返回生成值</span></span><br><span class="line">        <span class="keyword">return</span> handle.<span class="built_in">promise</span>().current_value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 检查是否结束</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">done</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> handle.<span class="built_in">done</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::coroutine_handle&lt;promise_type&gt; handle;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">generator <span class="title">fib</span><span class="params">(<span class="type">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, b = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">co_yield</span> a;</span><br><span class="line">        <span class="type">int</span> next = a + b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> g = <span class="built_in">fib</span>(<span class="number">10</span>);</span><br><span class="line">    <span class="keyword">while</span> (!g.<span class="built_in">done</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; g.<span class="built_in">next</span>() &lt;&lt; std::endl;</span><br><span class="line">        std::this_thread::<span class="built_in">sleep_for</span>(<span class="number">1000</span>ms);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="some-slight-improvements"><a class="markdownIt-Anchor" href="#some-slight-improvements"></a> Some Slight Improvements</h2>
-<ol>
-<li>使用 <code>std::optional</code> 来做容器，自动调用正确的构造/析构函数，支持移动语义。(可以进一步改用 <code>std::variant</code>)。</li>
-<li>定义了 <code>Generator</code> 的几个构造和赋值函数，增强了安全性(<code>safety</code>)。</li>
-<li>在 <code>unhandled_exception()</code> 内存放了 <code>std::exception_ptr</code>。</li>
-<li>用例改为稍微复杂一些的字符串生成，里面有一些性能问题，读者有兴趣的可以找找茬。</li>
-</ol>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;optional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coroutine&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">generator</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">generator <span class="title">get_return_object</span><span class="params">()</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> generator&#123; std::coroutine_handle&lt;promise_type&gt;::<span class="built_in">from_promise</span>(*<span class="keyword">this</span>) &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_void</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123;&#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">initial_suspend</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">final_suspend</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function">std::suspend_always <span class="title">yield_value</span><span class="params">(<span class="type">const</span> T &amp;value)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            value_ = value;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">std::suspend_always <span class="title">yield_value</span><span class="params">(T &amp;&amp;value)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            value_.<span class="built_in">emplace</span>(std::<span class="built_in">move</span>(value));</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123; exception_ = std::<span class="built_in">current_exception</span>(); &#125;</span><br><span class="line">        <span class="function">T &amp;<span class="title">result</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> *value_; &#125;</span><br><span class="line">        <span class="function"><span class="type">const</span> T &amp;<span class="title">result</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> *value_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        std::optional&lt;T&gt; value_;</span><br><span class="line">        std::exception_ptr exception_;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">generator</span>(std::coroutine_handle&lt;promise_type&gt; handle) : <span class="built_in">handle_</span>(handle) &#123;&#125;</span><br><span class="line">    <span class="built_in">generator</span>(<span class="type">const</span> generator &amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    generator &amp;<span class="keyword">operator</span>=(<span class="type">const</span> generator &amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    generator &amp;<span class="keyword">operator</span>=(generator &amp;&amp;other) <span class="keyword">noexcept</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != std::<span class="built_in">addressof</span>(other))</span><br><span class="line">        &#123;</span><br><span class="line">            handle_ = other.handle_;</span><br><span class="line">            other.handle_ = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">generator</span>() <span class="keyword">noexcept</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (handle_)</span><br><span class="line">            handle_.<span class="built_in">destroy</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123; handle_.<span class="built_in">resume</span>(); &#125;</span><br><span class="line">    <span class="function">T &amp;<span class="title">result</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> handle_.<span class="built_in">promise</span>().<span class="built_in">result</span>(); &#125;</span><br><span class="line">    <span class="function"><span class="type">const</span> T &amp;<span class="title">result</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> handle_.<span class="built_in">promise</span>().<span class="built_in">result</span>(); &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::coroutine_handle&lt;promise_type&gt; handle_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">generator&lt;std::string&gt; <span class="title">lottery</span><span class="params">(<span class="type">size_t</span> size, <span class="type">unsigned</span> <span class="type">int</span> mod)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">std::mt19937 <span class="title">rgn</span><span class="params">(std::random_device&#123;&#125;())</span></span>;</span><br><span class="line">    std::string winning_nums;</span><br><span class="line">    <span class="keyword">co_yield</span> winning_nums += std::<span class="built_in">to_string</span>( <span class="built_in">rgn</span>() % mod );</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">1</span>; i &lt; size; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        winning_nums += <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="keyword">co_yield</span> winning_nums += std::<span class="built_in">to_string</span>(<span class="built_in">rgn</span>() % mod);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">co_return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">generator&lt;<span class="type">int</span>&gt; <span class="title">fibonacci</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, b = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">co_yield</span> a;</span><br><span class="line">        <span class="type">int</span> c = a + b;</span><br><span class="line">        a = b;</span><br><span class="line">        b = c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">co_return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> g = <span class="built_in">lottery</span>(<span class="number">10</span>, <span class="number">256</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        g.<span class="built_in">next</span>();</span><br><span class="line">        std::cout &lt;&lt; g.<span class="built_in">result</span>() &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> fib = <span class="built_in">fibonacci</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        fib.<span class="built_in">next</span>();</span><br><span class="line">        std::cout &lt;&lt; fib.<span class="built_in">result</span>() &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>C++</tag>
-        <tag>协程</tag>
-        <tag>网络编程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>C语言</title>
     <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
     <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
@@ -3338,94 +3426,6 @@ NS图，流程图            工具Dia</p>
       <tags>
         <tag>C</tag>
         <tag>CS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>英语词根记忆法</title>
-    <url>/2025/03/02/english-%E8%AF%8D%E6%A0%B9%E8%AE%B0%E5%BF%86%E6%B3%95/</url>
-    <content><![CDATA[<p>简介：英语词根记忆法是一种通过学习和理解单词的基本构成部分——词根、前缀和后缀来增强词汇量和理解能力的学习策略。这种方法基于许多英语单词都是由拉丁语和希腊语的词根演变而来的事实，因此掌握这些基本组成部分可以帮助学习者更轻松地推测出大量单词的意思。</p>
-<span id="more"></span>
-<h1 id="词缀词根记忆法"><a class="markdownIt-Anchor" href="#词缀词根记忆法"></a> 词缀词根记忆法</h1>
-<h3 id="后缀-cess-cede-ceed-gress-grad-gred"><a class="markdownIt-Anchor" href="#后缀-cess-cede-ceed-gress-grad-gred"></a> 后缀-cess，-cede，-ceed，-gress，-grad，-gred</h3>
-<ul>
-<li>均表示走=to go</li>
-</ul>
-<h3 id="前缀sub-sup-suc-sus-的功能"><a class="markdownIt-Anchor" href="#前缀sub-sup-suc-sus-的功能"></a> 前缀sub-，sup-，suc-，sus-的功能</h3>
-<ul>
-<li>下，向下: subway</li>
-<li>从下往上：submit</li>
-<li>亚于，次于: suburban</li>
-<li>后，后面: subsequent</li>
-</ul>
-<h3 id="com-con-col-cor-co-"><a class="markdownIt-Anchor" href="#com-con-col-cor-co-"></a> com-，con-，col-，cor-，co-</h3>
-<ul>
-<li>=with/together，共同、一起、全部</li>
-<li>intensive，加强语气</li>
-</ul>
-<h3 id="anc-ant-反"><a class="markdownIt-Anchor" href="#anc-ant-反"></a> anc-，ant- 反</h3>
-<ul>
-<li>以前、前、前面、老</li>
-<li>高</li>
-</ul>
-<h3 id="abs-"><a class="markdownIt-Anchor" href="#abs-"></a> abs-</h3>
-<ul>
-<li>=away</li>
-</ul>
-<h3 id="ac-"><a class="markdownIt-Anchor" href="#ac-"></a> ac-</h3>
-<ul>
-<li>=to</li>
-</ul>
-<h3 id="inter-"><a class="markdownIt-Anchor" href="#inter-"></a> inter-</h3>
-<ul>
-<li>xx之间</li>
-</ul>
-<h3 id="se-"><a class="markdownIt-Anchor" href="#se-"></a> se-</h3>
-<ul>
-<li>=apart分开、分离</li>
-</ul>
-<h3 id="di-dis-"><a class="markdownIt-Anchor" href="#di-dis-"></a> di-，dis-</h3>
-<ul>
-<li>=apart分开</li>
-</ul>
-<h3 id="trans-"><a class="markdownIt-Anchor" href="#trans-"></a> trans-</h3>
-<ul>
-<li>转，穿，传</li>
-</ul>
-<h3 id="词根-van-ven-vent-come-go-都表示-来或是走来的含义"><a class="markdownIt-Anchor" href="#词根-van-ven-vent-come-go-都表示-来或是走来的含义"></a> 词根 “-van，-ven，-vent” = come、go 都表示 来或是走来的含义</h3>
-<h3 id="in-im-il-ir-"><a class="markdownIt-Anchor" href="#in-im-il-ir-"></a> in- im- il- ir-</h3>
-<ul>
-<li>not:相反、否定</li>
-<li>=in，进入</li>
-<li>=en，使</li>
-</ul>
-<h3 id="pre-前-提前-pro-forward"><a class="markdownIt-Anchor" href="#pre-前-提前-pro-forward"></a> pre- = 前、提前； pro- = forward</h3>
-<h3 id="-able-ible-ile"><a class="markdownIt-Anchor" href="#-able-ible-ile"></a> -able -ible -ile</h3>
-<ul>
-<li>adj:可以xxx的，能够xxx的</li>
-<li>adj:容易xxx的</li>
-<li>N(少数): vary —&gt; variables 名词后缀 变量</li>
-</ul>
-<h3 id="re-"><a class="markdownIt-Anchor" href="#re-"></a> re-</h3>
-<ul>
-<li>反复、又、再</li>
-<li>返回</li>
-<li>相反</li>
-</ul>
-<h3 id="e-ex-es-"><a class="markdownIt-Anchor" href="#e-ex-es-"></a> e- ex- es-</h3>
-<ul>
-<li>向外、出来</li>
-<li>超出</li>
-<li>ex- 还表示：前 for-example: ex-boyfriend</li>
-</ul>
-<h3 id="ad-"><a class="markdownIt-Anchor" href="#ad-"></a> ad-</h3>
-<ul>
-<li>=to，去</li>
-<li>加强</li>
-</ul>
-<h3 id="词根-vent-ven-van表示来走来"><a class="markdownIt-Anchor" href="#词根-vent-ven-van表示来走来"></a> 词根-<code>vent</code>、-<code>ven</code>-<code>van</code>表示&quot;来，走来</h3>
-]]></content>
-      <tags>
-        <tag>外语</tag>
       </tags>
   </entry>
   <entry>
@@ -4712,6 +4712,122 @@ fflush();
       </tags>
   </entry>
   <entry>
+    <title>操作系统-南大</title>
+    <url>/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/</url>
+    <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
+<span id="more"></span>
+<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
+<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
+<p>重走从无到有的发现过程</p>
+<ul>
+<li>基本思想、基本方法、里程碑、走过的弯路</li>
+<li>最终目的：应用/创新</li>
+<li>操作系统带你补完编程的技术体系</li>
+<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
+</ul>
+<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
+<p>理解操作系统:</p>
+<blockquote>
+<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
+</blockquote>
+<ul>
+<li>1950s的操作系统</li>
+<li>操作(operate)任务(jobs)的系统(system)</li>
+<li>批处理系统 = 程序自动切换+库函数API</li>
+<li>Disk Operating System(DOS)</li>
+<li>操作系统开始出现设备，文件，任务等对象和API</li>
+</ul>
+<blockquote>
+<p>今天的操作系统</p>
+</blockquote>
+<ul>
+<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
+</ul>
+<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
+<blockquote>
+<p>学习操作系统：现代方法</p>
+</blockquote>
+<ol>
+<li>读得懂的教科书和阅读材料</li>
+</ol>
+<ul>
+<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
+</ul>
+<ol start="2">
+<li>问题驱动，用代码说话</li>
+</ol>
+<ul>
+<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
+<li>xv6-risv, AbstractMachine</li>
+<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
+</ul>
+<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
+<blockquote>
+<p>计算机专业学生必须具备的核心素质。</p>
+</blockquote>
+<ul>
+<li>是一个合格的操作系统用户</li>
+<li>会 STFW/RTFM 自己动手解决问题</li>
+<li>不怕使用任何命令行工具</li>
+<li>vim, tmux, grep, gcc, binutils, …</li>
+<li>不怕写代码</li>
+<li>能管理一定规模 (数千行) 的代码</li>
+<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
+<li>然后开始用正确的工具/方法调试</li>
+</ul>
+<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
+<blockquote>
+<p>Academic integrity 不是底线，而是 “自发的要求”</p>
+</blockquote>
+<ul>
+<li>对 “不应该做的事情” 有清楚的认识</li>
+<li>不将代码上传到互联网</li>
+<li>主动不参考别人完成的实验代码</li>
+<li>不使用他人测试用例 (depends)</li>
+<li>有些行为可能使你得到分数，但失去应有的训练</li>
+</ul>
+<blockquote>
+<p>一些过去的例子</p>
+</blockquote>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
+<li>我们也在 Academic Integrity 方面有一些考虑</li>
+</ul>
+<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
+<blockquote>
+<p>感到 Linux/PowerShell/… 很难用？</p>
+</blockquote>
+<ul>
+<li>没有建立信心、没有理解基本逻辑
+<ul>
+<li>计算机科学自学指南</li>
+<li>没有找对材料/没有多问 “能不能再做点什么”</li>
+<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
+<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
+<li>过了入门阶段，都会好起来</li>
+</ul>
+</li>
+<li>本章代码请参考github: <a href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
+</ul>
+<hr />
+<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
+<blockquote>
+<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
+</blockquote>
+<ul>
+<li>什么是软件 (程序)？</li>
+<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
+<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>CS</tag>
+        <tag>Linux</tag>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>计算机网络</title>
     <url>/2023/05/29/network-%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<p>前言：计算机网络是指将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及网络通信协议的管理和协调下，实现资源共享和信息传递的计算机系统。计算机网络的基础知识，包括TCP / UDP协议、Http协议、Socket等方面。</p>
@@ -5290,328 +5406,6 @@ Internet 协议栈
       <tags>
         <tag>CS</tag>
         <tag>网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统-南大</title>
-    <url>/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/</url>
-    <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
-<span id="more"></span>
-<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
-<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
-<p>重走从无到有的发现过程</p>
-<ul>
-<li>基本思想、基本方法、里程碑、走过的弯路</li>
-<li>最终目的：应用/创新</li>
-<li>操作系统带你补完编程的技术体系</li>
-<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
-</ul>
-<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
-<p>理解操作系统:</p>
-<blockquote>
-<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
-</blockquote>
-<ul>
-<li>1950s的操作系统</li>
-<li>操作(operate)任务(jobs)的系统(system)</li>
-<li>批处理系统 = 程序自动切换+库函数API</li>
-<li>Disk Operating System(DOS)</li>
-<li>操作系统开始出现设备，文件，任务等对象和API</li>
-</ul>
-<blockquote>
-<p>今天的操作系统</p>
-</blockquote>
-<ul>
-<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
-</ul>
-<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
-<blockquote>
-<p>学习操作系统：现代方法</p>
-</blockquote>
-<ol>
-<li>读得懂的教科书和阅读材料</li>
-</ol>
-<ul>
-<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
-</ul>
-<ol start="2">
-<li>问题驱动，用代码说话</li>
-</ol>
-<ul>
-<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
-<li>xv6-risv, AbstractMachine</li>
-<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
-</ul>
-<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
-<blockquote>
-<p>计算机专业学生必须具备的核心素质。</p>
-</blockquote>
-<ul>
-<li>是一个合格的操作系统用户</li>
-<li>会 STFW/RTFM 自己动手解决问题</li>
-<li>不怕使用任何命令行工具</li>
-<li>vim, tmux, grep, gcc, binutils, …</li>
-<li>不怕写代码</li>
-<li>能管理一定规模 (数千行) 的代码</li>
-<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
-<li>然后开始用正确的工具/方法调试</li>
-</ul>
-<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
-<blockquote>
-<p>Academic integrity 不是底线，而是 “自发的要求”</p>
-</blockquote>
-<ul>
-<li>对 “不应该做的事情” 有清楚的认识</li>
-<li>不将代码上传到互联网</li>
-<li>主动不参考别人完成的实验代码</li>
-<li>不使用他人测试用例 (depends)</li>
-<li>有些行为可能使你得到分数，但失去应有的训练</li>
-</ul>
-<blockquote>
-<p>一些过去的例子</p>
-</blockquote>
-<ul>
-<li><a href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
-<li>我们也在 Academic Integrity 方面有一些考虑</li>
-</ul>
-<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
-<blockquote>
-<p>感到 Linux/PowerShell/… 很难用？</p>
-</blockquote>
-<ul>
-<li>没有建立信心、没有理解基本逻辑
-<ul>
-<li>计算机科学自学指南</li>
-<li>没有找对材料/没有多问 “能不能再做点什么”</li>
-<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
-<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
-<li>过了入门阶段，都会好起来</li>
-</ul>
-</li>
-<li>本章代码请参考github: <a href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
-</ul>
-<hr />
-<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
-<blockquote>
-<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
-</blockquote>
-<ul>
-<li>什么是软件 (程序)？</li>
-<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
-<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>CS</tag>
-        <tag>Linux</tag>
-        <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Qt-base</title>
-    <url>/2023/12/22/qt-base/</url>
-    <content><![CDATA[<p>前言：Qt 是一个跨平台的C++ 图形用户界面。它为应用程序开发者提供建立艺术级图形界面所需的所有功能。它是完全面向对象的，很容易扩展，并且允许真正的组件编程。</p>
-<span id="more"></span>
-<h3 id="创建第一个qt程序"><a class="markdownIt-Anchor" href="#创建第一个qt程序"></a> 创建第一个QT程序</h3>
-<ul>
-<li>主要是处理环境的搭建</li>
-<li>main 函数</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    QApplication a(argc, argv);</span><br><span class="line"></span><br><span class="line">    qt5ui_widget widget;</span><br><span class="line">    widget.resize(800, 600);</span><br><span class="line"></span><br><span class="line">    widget.show();</span><br><span class="line">    return QApplication::exec();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>分析：</p>
-<ul>
-<li>QAPPlication a 应用程序对象有且只有一个</li>
-<li>qt5ui_widget widget实例化窗口对象</li>
-<li>widget.show()调用show 函数显示窗口</li>
-<li>return QApplication::exec()让应用程序对象进入消息循环机制中，代码阻塞到当前行</li>
-</ul>
-<h3 id="按钮常用的api"><a class="markdownIt-Anchor" href="#按钮常用的api"></a> 按钮常用的API</h3>
-<ul>
-<li>QPushButton</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">auto *btn = new QPushButton;</span><br><span class="line">    btn-&gt;setParent(this);</span><br><span class="line">    btn-&gt;setText(&quot;第一个按钮&quot;);</span><br><span class="line"></span><br><span class="line">    auto *btn2 = new QPushButton(&quot;第二个按钮&quot;, this);</span><br><span class="line">    btn2-&gt;move(100, 100);</span><br><span class="line">    btn2-&gt;resize(100, 50);</span><br><span class="line"></span><br><span class="line">    auto *my_btn = new my_push_button;</span><br><span class="line">    my_btn-&gt;setParent(this);</span><br><span class="line">    my_btn-&gt;move(200, 0);</span><br><span class="line">    my_btn-&gt;setText(&quot;myselfbutton&quot;);</span><br><span class="line"></span><br><span class="line">    resize(800, 600);</span><br><span class="line">    setFixedSize(400, 400);</span><br><span class="line">    setWindowTitle(&quot;第一个窗口&quot;);</span><br></pre></td></tr></table></figure>
-<h3 id="对象树"><a class="markdownIt-Anchor" href="#对象树"></a> 对象树</h3>
-<ol>
-<li>当创建的对象在堆区时，如果指定它的父类是QObject派生下来的类或者它的子类派生类，可以不用管理释放的操作，将对象放入对象树中，QT自己会释放。</li>
-<li>一定程度上简化了内存回收机制</li>
-</ol>
-<ul>
-<li>窗口坐标系<br />
-以左上角为原点，x 向右为正，y 向下为正方向</li>
-</ul>
-<h3 id="singal-and-slots"><a class="markdownIt-Anchor" href="#singal-and-slots"></a> singal and slots</h3>
-<ol>
-<li>连接函数：connect(my_btn, &amp;QPushButton::clicked, this, &amp;QWidget::close);</li>
-<li>参数解释<br />
-2.1. 参数1 信号的发送者<br />
-2.2. 参数2 发送的信号（函数地址）<br />
-2.3. 参数3 信号接收者<br />
-2.4. 参数4 处理的slot函数（函数地址）</li>
-<li>松散耦合</li>
-</ol>
-<ul>
-<li>自定义信号和槽</li>
-</ul>
-<ol>
-<li>自定义信号</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class teacher : public QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">public:</span><br><span class="line">    explicit teacher(QObject *parent);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 自定义信号 写在signal</span><br><span class="line">// 返回值void 只需写声明无需写实现</span><br><span class="line">// 可以有参可以重载</span><br><span class="line">signals:</span><br><span class="line">    void hungry();</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>自定义槽</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class student : public QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">public:</span><br><span class="line">    explicit student(QObject *parent);</span><br><span class="line"></span><br><span class="line">//  早期QT 必须写到public slots,高级版本写在public 或全局作用域下</span><br><span class="line">//  返回值void 需要声明需要实现</span><br><span class="line">//  可以有参数可以重载</span><br><span class="line">    void treat();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>当自定义的信号和槽出现重载</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    连接代参数的 信号和槽</span><br><span class="line">    void (teacher:: *tc_signal)(QString) = &amp;teacher::hungry;</span><br><span class="line">    void (student:: *stu_slot)(const QString&amp;) = &amp;student::treat;</span><br><span class="line">    connect(tc_, tc_signal, stu_, stu_slot);</span><br><span class="line">    class_over();</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>拓展<br />
-4.1 信号可以连接信号<br />
-4.2 一个信号可以连接多个槽函数<br />
-4.3 多个信号可以连接一个槽函数<br />
-4.4 信号和槽函数参数类型必须类型一致<br />
-4.5 信号参数个数可以多余槽函数参数的个数,剩下参数必须类型一致<br />
-4.6. 信号槽可以断开 disconnect()</li>
-<li>Lambda 表达式</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    lambda</span><br><span class="line">    auto btn5 = new QPushButton(&quot;Lambda&quot;, this);</span><br><span class="line">    btn5-&gt;move(0, 400);</span><br><span class="line">    connect(btn5, &amp;QPushButton::clicked, this, [=]()&#123;</span><br><span class="line">        emit tc_-&gt;hungry(&quot;酸菜鱼&quot;);</span><br><span class="line">        this-&gt;close();</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="qmainwindow"><a class="markdownIt-Anchor" href="#qmainwindow"></a> QMainWindow</h3>
-<ul>
-<li><strong>菜单栏</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    菜单栏 最多只能有一个</span><br><span class="line">    auto bar = menuBar();</span><br><span class="line">//    将菜单栏放入主窗口中</span><br><span class="line">    setMenuBar(bar);</span><br><span class="line">//    创建菜单</span><br><span class="line">    auto file_menu = bar-&gt;addMenu(&quot;文件&quot;);</span><br><span class="line">    auto edit_menu = bar-&gt;addMenu(&quot;编辑&quot;);</span><br><span class="line">//    创建菜单项</span><br><span class="line">    file_menu-&gt;addAction(&quot;新建&quot;);</span><br><span class="line">    file_menu-&gt;addAction(&quot;打开&quot;);</span><br><span class="line">//    添加分割线</span><br><span class="line">    file_menu-&gt;addSeparator();</span><br><span class="line">    file_menu-&gt;addAction(&quot;保存&quot;);</span><br><span class="line">    file_menu-&gt;addAction(&quot;另存为&quot;);</span><br><span class="line">    edit_menu-&gt;addAction(&quot;拷贝&quot;);</span><br><span class="line">    edit_menu-&gt;addAction(&quot;粘贴&quot;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>工具栏</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    工具栏 可以有多个</span><br><span class="line">    auto tool_bar = new QToolBar(this);</span><br><span class="line">    addToolBar(Qt::LeftToolBarArea, tool_bar);</span><br><span class="line">//    设置停靠范围</span><br><span class="line">    tool_bar-&gt;setAllowedAreas(Qt::LeftToolBarArea | Qt::RightToolBarArea);</span><br><span class="line">//    设置浮动</span><br><span class="line">    tool_bar-&gt;setFloatable(false);</span><br><span class="line">//    设置移动</span><br><span class="line">    tool_bar-&gt;setMovable(false);</span><br><span class="line">//    工具栏添加内容</span><br><span class="line">    tool_bar-&gt;addAction(&quot;设置&quot;);</span><br><span class="line">    tool_bar-&gt;addSeparator();</span><br><span class="line">    tool_bar-&gt;addAction(&quot;文本&quot;);</span><br><span class="line">//    工具栏添加控件</span><br><span class="line">    auto btn = new QPushButton(&quot;aaa&quot;, this);</span><br><span class="line">    tool_bar-&gt;addWidget(btn);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>状态栏</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    状态栏 最多只能有一个</span><br><span class="line">    auto status_bar = statusBar();</span><br><span class="line">//    设置到窗口中</span><br><span class="line">    setStatusBar(status_bar);</span><br><span class="line">//    放标签控件</span><br><span class="line">    auto label = new QLabel(&quot;提示&quot;);</span><br><span class="line">    auto label2 = new QLabel(&quot;字数&quot;);</span><br><span class="line">    auto label3 = new QLabel(&quot;统计&quot;);</span><br><span class="line">    status_bar-&gt;addWidget(label);</span><br><span class="line">    status_bar-&gt;addWidget(label2);</span><br><span class="line">    status_bar-&gt;addPermanentWidget(label3);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>浮动窗口</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    铆接部件（浮动窗口）可以有多个</span><br><span class="line">    auto dock_widget = new QDockWidget(&quot;浮动&quot;, this);</span><br><span class="line">    addDockWidget(Qt::BottomDockWidgetArea, dock_widget);</span><br><span class="line">    dock_widget-&gt;setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>中心部件</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    设置中心部件 只有一个</span><br><span class="line">    auto text_edit = new QTextEdit(&quot;中心部件&quot;, this);</span><br><span class="line">    setCentralWidget(text_edit);</span><br></pre></td></tr></table></figure>
-<h3 id="对话框"><a class="markdownIt-Anchor" href="#对话框"></a> 对话框</h3>
-<ul>
-<li>模态对话框</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">   connect(ui-&gt;actionNew, &amp;QAction::triggered, [=]() &#123;</span><br><span class="line">//        对话框 分类</span><br><span class="line">//      模态对话框（不可以对其他对话框操作） 和 非模态对话框（可以对其他对话框操作）</span><br><span class="line">//      模态创建</span><br><span class="line">        QDialog dlg(this);</span><br><span class="line">        dlg.resize(200, 100);</span><br><span class="line">        dlg.exec();</span><br><span class="line">        std::cout &lt;&lt; &quot;模态对话框弹出了&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>非模态对话框</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> connect(ui-&gt;actionSave, &amp;QAction::triggered, [=]() &#123;</span><br><span class="line">//        非模态创建</span><br><span class="line">        auto dlg2 = new QDialog(this);</span><br><span class="line">        dlg2-&gt;setAttribute(Qt::WA_DeleteOnClose);</span><br><span class="line">        dlg2-&gt;resize(200, 100);</span><br><span class="line">        dlg2-&gt;show();</span><br><span class="line">        std::cout &lt;&lt; &quot;非模态对话框弹出了&quot; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>消息对话框</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">connect(ui-&gt;actionItem, &amp;QAction::triggered, [=]() &#123;</span><br><span class="line">//        消息对话框</span><br><span class="line">//        错误对话框</span><br><span class="line">        QMessageBox::critical(this, &quot;critical&quot;, &quot;错误&quot;);</span><br><span class="line">//        信息对话框</span><br><span class="line">        QMessageBox::information(this, &quot;information&quot;, &quot;信息&quot;);</span><br><span class="line">//        提问对话框</span><br><span class="line">//        参数分析：参数1，父亲 参数2 标题 参数3 提示内容 参数4 按键类型 参数5 默认关联回车键</span><br><span class="line">        auto ret = QMessageBox::question(this, &quot;question&quot;, &quot;提问&quot;, QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Cancel);</span><br><span class="line">        if (ret == QMessageBox::Save)</span><br><span class="line">        &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;选择的是保存&quot; &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;选择的取消&quot; &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">//        警告对话框</span><br><span class="line">        QMessageBox::warning(this, &quot;warning&quot;, &quot;警告&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>其他标准对话框</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//        其他标准对话框</span><br><span class="line">//        颜色对话框</span><br><span class="line">        auto color = QColorDialog::getColor(QColor(255, 0, 0));</span><br><span class="line">        fmt::println(&quot;r:&#123;&#125;, g:&#123;&#125;, b:&#123;&#125;&quot;, color.red(), color.green(), color.blue());</span><br><span class="line"></span><br><span class="line">//        文件对话框</span><br><span class="line">        QFileDialog::getOpenFileName(this, &quot;打开文件&quot;, &quot;D:/dev&quot;, &quot;(*.exe)&quot;);</span><br><span class="line">//        字体对话框</span><br><span class="line">        bool flag;</span><br><span class="line">        auto front = QFontDialog::getFont(&amp;flag, this);</span><br><span class="line">        fmt::print(&quot;字体：&#123;&#125;， 字号：&#123;&#125;， 是否加粗：&#123;&#125;， 是否倾斜:&#123;&#125;\n&quot;,</span><br><span class="line">                   front.family().toStdString(), front.pointSize(), front.bold(), front.italic());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="控件布局"><a class="markdownIt-Anchor" href="#控件布局"></a> 控件布局</h3>
-<ul>
-<li>按钮</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    设置默认选中的按钮</span><br><span class="line">    ui-&gt;radioButtion_man-&gt;setChecked(true);</span><br><span class="line">//    设置选中女的响应</span><br><span class="line">    connect(ui-&gt;radioButton_woman, &amp;QRadioButton::clicked, [=]() &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;女的被选中了&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    多选按钮 2选中 0未选 1半选</span><br><span class="line">    connect(ui-&gt;checkBox_5_lady, &amp;QCheckBox::stateChanged, [=](int state) &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;state = &quot; &lt;&lt; state &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//  listWidget</span><br><span class="line">    auto item = new QListWidgetItem(&quot;锄禾日当午&quot;);</span><br><span class="line">    auto item1 = new QListWidgetItem(&quot;汗滴禾下土&quot;);</span><br><span class="line">    auto item2 = new QListWidgetItem(&quot;谁知盘中餐&quot;);</span><br><span class="line">    auto item3 = new QListWidgetItem(&quot;粒粒皆辛苦&quot;);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item1);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item2);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item3);</span><br><span class="line">    item-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    item1-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    item2-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    item3-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line"></span><br><span class="line">    QStringList list;</span><br><span class="line">    list &lt;&lt; &quot;杜甫 登高&quot;</span><br><span class="line">         &lt;&lt; &quot;风急天高猿啸哀，渚清沙白鸟飞回。&quot;</span><br><span class="line">         &lt;&lt; &quot;无边落木萧萧下，不尽长江滚滚来。&quot;</span><br><span class="line">         &lt;&lt; &quot;万里悲秋常作客，百年多病独登台。&quot;</span><br><span class="line">         &lt;&lt; &quot;艰难苦恨繁霜鬓，潦倒新停浊酒杯。&quot;;</span><br><span class="line">    ui-&gt;listWidget-&gt;addItems(list);</span><br><span class="line">    for (int i = 0; i &lt; ui-&gt;listWidget-&gt;count(); ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        ui-&gt;listWidget-&gt;item(i)-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>treeWidget</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    treeWidget</span><br><span class="line">//    设置水平头</span><br><span class="line">    ui-&gt;treeWidget-&gt;setHeaderLabels(QStringList() &lt;&lt; &quot;英雄&quot; &lt;&lt; &quot;英雄介绍&quot;);</span><br><span class="line"></span><br><span class="line">    auto tree_item = new QTreeWidgetItem(QStringList() &lt;&lt; &quot;力量&quot;);</span><br><span class="line">    auto tree_item1 = new QTreeWidgetItem(QStringList() &lt;&lt; &quot;敏捷&quot;);</span><br><span class="line">    auto tree_item2 = new QTreeWidgetItem(QStringList() &lt;&lt; &quot;智力&quot;);</span><br><span class="line"></span><br><span class="line">//    加载顶层的节点</span><br><span class="line">    ui-&gt;treeWidget-&gt;addTopLevelItem(tree_item);</span><br><span class="line">    ui-&gt;treeWidget-&gt;addTopLevelItem(tree_item1);</span><br><span class="line">    ui-&gt;treeWidget-&gt;addTopLevelItem(tree_item2);</span><br><span class="line"></span><br><span class="line">//    追加子节点</span><br><span class="line">    new QTreeWidgetItem(tree_item,</span><br><span class="line">                        QStringList() &lt;&lt; &quot;刚被猪&quot; &lt;&lt; &quot;前排坦克， 能在吸收伤害的同时造成可观的范围输出&quot;);</span><br><span class="line">    new QTreeWidgetItem(tree_item1,</span><br><span class="line">                        QStringList() &lt;&lt; &quot;刚被猪&quot; &lt;&lt; &quot;前排坦克， 能在吸收伤害的同时造成可观的范围输出&quot;);</span><br><span class="line">    new QTreeWidgetItem(tree_item2,</span><br><span class="line">                        QStringList() &lt;&lt; &quot;刚被猪&quot; &lt;&lt; &quot;前排坦克， 能在吸收伤害的同时造成可观的范围输出&quot;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>tableWidget</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">//    TableWidget</span><br><span class="line">//    set column count</span><br><span class="line">    ui-&gt;tableWidget-&gt;setColumnCount(3);</span><br><span class="line">//    set horizontal header</span><br><span class="line">    ui-&gt;tableWidget-&gt;setHorizontalHeaderLabels(QStringList() &lt;&lt; &quot;姓名&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; &quot;年龄&quot;);</span><br><span class="line">//    set row number</span><br><span class="line">    ui-&gt;tableWidget-&gt;setRowCount(5);</span><br><span class="line">//    set content</span><br><span class="line">    QStringList names, sex_list;</span><br><span class="line">    names &lt;&lt; &quot;张三&quot; &lt;&lt; &quot;赵云&quot; &lt;&lt; &quot;张飞&quot; &lt;&lt; &quot;关羽&quot; &lt;&lt; &quot;花木兰&quot;;</span><br><span class="line">    sex_list &lt;&lt; &quot;男&quot; &lt;&lt; &quot;男&quot; &lt;&lt; &quot;男&quot; &lt;&lt; &quot;男&quot; &lt;&lt; &quot;女&quot;;</span><br><span class="line">    for (int i = 0; i &lt; 5; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        int col = 0;</span><br><span class="line">        ui-&gt;tableWidget-&gt;setItem(i, col++, new QTableWidgetItem(names[i]));</span><br><span class="line">        ui-&gt;tableWidget-&gt;setItem(i, col++, new QTableWidgetItem(sex_list[i]));</span><br><span class="line">        ui-&gt;tableWidget-&gt;setItem(i, col++, new QTableWidgetItem(QString::number(18+i)));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>其他控件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    stackWidget</span><br><span class="line">//    set default pos</span><br><span class="line">    ui-&gt;stackedWidget-&gt;setCurrentIndex(1);</span><br><span class="line"></span><br><span class="line">    connect(ui-&gt;pushButtonStack_1, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;stackedWidget-&gt;setCurrentIndex(0);</span><br><span class="line">    &#125;);</span><br><span class="line">    connect(ui-&gt;pushButtonStack_2, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;stackedWidget-&gt;setCurrentIndex(1);</span><br><span class="line">    &#125;);</span><br><span class="line">    connect(ui-&gt;pushButtonStack_3, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;stackedWidget-&gt;setCurrentIndex(2);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    下拉框</span><br><span class="line">    ui-&gt;comboBox-&gt;addItems(QStringList() &lt;&lt; &quot;问界M7&quot; &lt;&lt; &quot;U8&quot; &lt;&lt; &quot;比亚迪&quot;);</span><br><span class="line">    connect(ui-&gt;pushButtonComboBox, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;comboBox-&gt;setCurrentIndex(1);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    QLabel</span><br><span class="line">    ui-&gt;labelPicture-&gt;setPixmap(QPixmap(&quot;../images/panda.jpg&quot;));</span><br><span class="line">//    show .gif</span><br><span class="line">    auto movie = new QMovie(&quot;../images/dog.gif&quot;);</span><br><span class="line">    ui-&gt;labelGif-&gt;setMovie(movie);</span><br><span class="line">    movie-&gt;start();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>自定义控件
-<ol>
-<li>创建自己UI控件类</li>
-<li>在主UI中使用Widget 提升为自己的类</li>
-<li>在创建的类中使用信号槽函数实现相关的功能</li>
-<li>可以在自己实现的类中定义接口</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">small_widget::small_widget(QWidget *parent) :</span><br><span class="line">        QWidget(parent), ui(new Ui::small_widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line">//    spinbox 移动</span><br><span class="line"></span><br><span class="line">    void (QSpinBox:: *spin_signal)(int) = &amp;QSpinBox::valueChanged;</span><br><span class="line">    connect(ui-&gt;spinBox, spin_signal, ui-&gt;horizontalScrollBar, &amp;QScrollBar::setValue);</span><br><span class="line">//    horizontal scroll bar</span><br><span class="line">    connect(ui-&gt;horizontalScrollBar, &amp;QScrollBar::valueChanged, ui-&gt;spinBox, &amp;QSpinBox::setValue);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int small_widget::get_value() const</span><br><span class="line">&#123;</span><br><span class="line">    return ui-&gt;spinBox-&gt;value();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void small_widget::set_value(int num)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;spinBox-&gt;setValue(num);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="qt中的事件"><a class="markdownIt-Anchor" href="#qt中的事件"></a> QT中的事件</h3>
-<ul>
-<li>鼠标事件
-<ol>
-<li>鼠标进入： enterEvent</li>
-<li>鼠标离开：leaveEvent</li>
-<li>按下：mousePressedEvent</li>
-<li>释放：mouseReleaseEvent</li>
-<li>移动：mouseMoveEvent</li>
-<li>ev-&gt;button() 可以判断按键,Qt::LeftButton</li>
-<li>ev-&gt;buttons() 判断组合键 在move 时使用</li>
-</ol>
-</li>
-<li>定时器（timerEvent）<br />
-1.事件 timerEvent(QTimerEvent *ev);<br />
-2. 启动定时器 startTimer(1000)<br />
-3. timerId() 定时器唯一标识<br />
-4. QTimer 类的使用，推荐方式  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    </span><br><span class="line">main_widget::main_widget(QWidget *parent) :</span><br><span class="line">        QWidget(parent), ui(new Ui::main_widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    get</span><br><span class="line">    connect(ui-&gt;pushButtonGetValue, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        std::cout &lt;&lt; ui-&gt;widget-&gt;get_value() &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    set</span><br><span class="line">    connect(ui-&gt;pushButtonHalfValue, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;widget-&gt;set_value(50);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    启动定时器 单位：毫秒ms</span><br><span class="line">    timer_id1 = startTimer(1000);</span><br><span class="line">    timer_id2 = startTimer(2000);</span><br><span class="line">    //    定时器第二种使用方式 推荐的方式</span><br><span class="line">    QTimer *timer = new QTimer(this);</span><br><span class="line">    timer-&gt;start(500);</span><br><span class="line"></span><br><span class="line">    connect(timer, &amp;QTimer::timeout, [=]() &#123;</span><br><span class="line">        static int i = 0;</span><br><span class="line">        ui-&gt;labelTimer3-&gt;setText(QString::number(i++));</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main_widget::~main_widget()</span><br><span class="line">&#123;</span><br><span class="line">    delete ui;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void main_widget::timerEvent(QTimerEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">    if (timer_id1 == event-&gt;timerId())</span><br><span class="line">    &#123;</span><br><span class="line">        static int i = 0;</span><br><span class="line">        ui-&gt;labelTimer1-&gt;setText(QString::number(i++));</span><br><span class="line">    &#125;</span><br><span class="line">    if (timer_id2 == event-&gt;timerId())</span><br><span class="line">    &#123;</span><br><span class="line">        static int j = 0;</span><br><span class="line">        ui-&gt;labelTimer2-&gt;setText(QString::number(j++));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>QEvent
-<ol>
-<li>用于事件的分发</li>
-<li>可以做事件的拦截不建议</li>
-<li>bool event(Qevent *e) 返回值true 代表不向下分发</li>
-<li>e.type() == QEvent::MouseButtonPressed 用于事件判断</li>
-</ol>
-</li>
-<li>eventFilter
-<ol>
-<li>给控件安装事件过滤器</li>
-</ol>
-  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    //    1.安装事件过滤器</span><br><span class="line">    ui-&gt;label-&gt;installEventFilter(this);</span><br><span class="line">//    2. 重写eventFilter</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>重写eventFilter</li>
-</ol>
-  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    bool main_widget::eventFilter(QObject *watched, QEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">    if (watched == ui-&gt;label)</span><br><span class="line">    &#123;</span><br><span class="line">        if (event-&gt;type() == QEvent::MouseButtonPress)</span><br><span class="line">        &#123;</span><br><span class="line">            if (auto ev = dynamic_cast&lt;QMouseEvent*&gt;(event))</span><br><span class="line">            &#123;</span><br><span class="line">                print_helper(&quot;EventFilter: &quot;, ev);</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">//    其他默认处理</span><br><span class="line">    return QObject::eventFilter(watched, event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>QPaint 绘图事件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void paint_widget::paintEvent(QPaintEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">//    实例化画家对象 this 指定绘图设备</span><br><span class="line">    QPainter painter(this);</span><br><span class="line"></span><br><span class="line">//    设置画笔</span><br><span class="line">    QPen pen(QColor(255, 0, 0));</span><br><span class="line">//    设置画笔的宽度</span><br><span class="line">    pen.setWidth(3);</span><br><span class="line">//    设置画笔风格</span><br><span class="line">    pen.setStyle(Qt::DotLine);</span><br><span class="line">    painter.setPen(pen);</span><br><span class="line"></span><br><span class="line">//    设置画刷</span><br><span class="line">    QBrush brush(Qt::cyan);</span><br><span class="line">//    设置画刷的风格</span><br><span class="line">    brush.setStyle(Qt::Dense3Pattern);</span><br><span class="line">//    让画家使用画刷</span><br><span class="line">    painter.setBrush(brush);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    line</span><br><span class="line">    painter.drawLine(0, 0, 500, 500);</span><br><span class="line">//    circle</span><br><span class="line">    painter.drawEllipse(QPoint&#123;200, 200&#125;, 100, 100);</span><br><span class="line">//    矩形</span><br><span class="line">    painter.drawRect(100, 100, 200, 200);</span><br><span class="line">//    矩形文字</span><br><span class="line">    painter.drawText(QRect&#123;10, 400, 200, 50&#125;, &quot;好好学习天天向上&quot;);</span><br><span class="line"></span><br><span class="line">    QWidget::paintEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>QPinter 高级设置</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> //    高级设置</span><br><span class="line">//    抗锯齿的设置</span><br><span class="line">    painter.setRenderHint(QPainter::Antialiasing);</span><br><span class="line"> //    对画家进行移动</span><br><span class="line">    painter.translate(100, 0);</span><br><span class="line">//    保持画家状态</span><br><span class="line">    painter.save();</span><br><span class="line">    painter.drawRect(500, 50, 100, 100);</span><br><span class="line">//    还原画家的状态</span><br><span class="line">    painter.restore();</span><br><span class="line"></span><br><span class="line">    painter.drawRect(600, 50, 100, 100);</span><br><span class="line">    painter.drawPixmap(800, 800, QPixmap(&quot;../images/panda.jpg&quot;));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    移动举行</span><br><span class="line">    painter.drawRect(pos_x, 0, 100, 100);</span><br><span class="line">//    如果超出屏幕从 0 开始重新绘制</span><br><span class="line">    if (pos_x &gt; this-&gt;width())</span><br><span class="line">        pos_x = -100;</span><br><span class="line">    QWidget::paintEvent(event);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">paint_widget::paint_widget(QWidget *parent) :</span><br><span class="line">        QWidget(parent), ui(new Ui::paint_widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line"></span><br><span class="line">    connect(ui-&gt;pushButton, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        pos_x += 20;</span><br><span class="line">        update();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>QPainterDevice<br />
-<strong>分类：QPixmap QImage QBitmap(黑白) QPicture QWidget</strong></li>
-</ul>
-<ol>
-<li>QPixmap 对不同的平台做了显示优化</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    Pixmap 绘图设备,专门为平台做了显示优化</span><br><span class="line">    QPixmap pix(300, 300);</span><br><span class="line">//    填充颜色</span><br><span class="line">    pix.fill(Qt::white);</span><br><span class="line">//    声明画家</span><br><span class="line">    QPainter painter(&amp;pix);</span><br><span class="line">    painter.setPen(QPen(Qt::green));</span><br><span class="line">    painter.drawEllipse(QPoint&#123;150, 150&#125;, 150, 150);</span><br><span class="line"></span><br><span class="line">//    保存</span><br><span class="line">    pix.save(&quot;../images/circle.png&quot;);</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>QImage 可以对像素进行修改</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    QImage 绘图设备,可以对像素进行访问</span><br><span class="line">    QImage img(600, 400, QImage::Format_RGB32);</span><br><span class="line">    img.fill(Qt::white);</span><br><span class="line"></span><br><span class="line">    QPainter painter_img(&amp;img);</span><br><span class="line">    QPen pen_img(Qt::red);</span><br><span class="line">    pen_img.setWidth(3);</span><br><span class="line">    painter_img.setPen(pen_img);</span><br><span class="line">    painter_img.drawEllipse(QPoint&#123;300, 200&#125;, 300, 200);</span><br><span class="line"></span><br><span class="line">    img.save(&quot;../images/eclipse.png&quot;);</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>QPicture 记录和重现绘图指令</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    QPicture 绘图设备，可以记录和重现绘图指令</span><br><span class="line">    QPicture pic;</span><br><span class="line">    QPainter painter_pic;</span><br><span class="line">//    开始绘图</span><br><span class="line">    painter_pic.begin(&amp;pic);</span><br><span class="line">    painter_pic.setPen(QPen(Qt::blue));</span><br><span class="line">    painter_pic.drawEllipse(QPoint&#123;300, 300&#125;, 150, 150);</span><br><span class="line">//    结束绘图</span><br><span class="line">    painter_pic.end();</span><br><span class="line">    pic.save(&quot;../images/pic.data&quot;);</span><br><span class="line"></span><br><span class="line">    //    QPicture 重现绘图指令</span><br><span class="line">    QPicture pic;</span><br><span class="line">    pic.load(&quot;../images/pic.data&quot;);</span><br><span class="line">    painter.drawPicture(300, 300, pic);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="qfile-对文件进行读写"><a class="markdownIt-Anchor" href="#qfile-对文件进行读写"></a> QFile 对文件进行读写</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">QString path = QFileDialog::getOpenFileName(this, &quot;打开文件&quot;, &quot;../&quot;);</span><br><span class="line">//        将路径放入lineEdit中</span><br><span class="line">        ui-&gt;lineEdit-&gt;setText(path);</span><br><span class="line">//        将内容读取到textEdit中</span><br><span class="line">//        QFile 默认格式UTF-8 编码类 QTextCodec</span><br><span class="line">        QFile file(path);</span><br><span class="line">//        设置打开方式</span><br><span class="line">        file.open(QIODevice::ReadOnly);</span><br><span class="line">        auto arr = file.readAll();</span><br><span class="line">//        将数据读取到文本框中</span><br><span class="line">        ui-&gt;textEdit-&gt;setText(arr);</span><br><span class="line">        file.close();</span><br><span class="line"></span><br><span class="line">        file.open(QIODevice::Append);</span><br><span class="line">        file.write(&quot;/**这是一个注释*/&quot;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="qfileinfo-文件信息"><a class="markdownIt-Anchor" href="#qfileinfo-文件信息"></a> QFileInfo 文件信息</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//        文件信息类：QFileInfo</span><br><span class="line">        QFileInfo info(path);</span><br><span class="line">        fmt::print(&quot;大小：&#123;&#125;\n文件名：&#123;&#125;\n文件路径：&#123;&#125;\n后缀名：&#123;&#125;\n&quot;,</span><br><span class="line">                   info.size(), info.fileName().toStdString(),</span><br><span class="line">                   info.filePath().toStdString(), info.suffix().toStdString());</span><br><span class="line">        fmt::print(&quot;创建时间：&#123;&#125;\n最后修改时间：&#123;&#125;\n拥有者: &#123;&#125;\n&quot;,</span><br><span class="line">                   info.birthTime().toString(&quot;yyyy-MM-dd hh:mm:ss&quot;).toStdString(),</span><br><span class="line">                   info.lastModified().toString(&quot;yyyy-MM-dd hh:mm:ss&quot;).toStdString(),</span><br><span class="line">                   info.owner().toStdString());</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>C++</tag>
-        <tag>Qt</tag>
-        <tag>计算机图形学</tag>
       </tags>
   </entry>
   <entry>
@@ -6480,6 +6274,212 @@ flags:</p>
       <tags>
         <tag>工具命令</tag>
         <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Qt-base</title>
+    <url>/2023/12/22/qt-base/</url>
+    <content><![CDATA[<p>前言：Qt 是一个跨平台的C++ 图形用户界面。它为应用程序开发者提供建立艺术级图形界面所需的所有功能。它是完全面向对象的，很容易扩展，并且允许真正的组件编程。</p>
+<span id="more"></span>
+<h3 id="创建第一个qt程序"><a class="markdownIt-Anchor" href="#创建第一个qt程序"></a> 创建第一个QT程序</h3>
+<ul>
+<li>主要是处理环境的搭建</li>
+<li>main 函数</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    QApplication a(argc, argv);</span><br><span class="line"></span><br><span class="line">    qt5ui_widget widget;</span><br><span class="line">    widget.resize(800, 600);</span><br><span class="line"></span><br><span class="line">    widget.show();</span><br><span class="line">    return QApplication::exec();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<ul>
+<li>QAPPlication a 应用程序对象有且只有一个</li>
+<li>qt5ui_widget widget实例化窗口对象</li>
+<li>widget.show()调用show 函数显示窗口</li>
+<li>return QApplication::exec()让应用程序对象进入消息循环机制中，代码阻塞到当前行</li>
+</ul>
+<h3 id="按钮常用的api"><a class="markdownIt-Anchor" href="#按钮常用的api"></a> 按钮常用的API</h3>
+<ul>
+<li>QPushButton</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">auto *btn = new QPushButton;</span><br><span class="line">    btn-&gt;setParent(this);</span><br><span class="line">    btn-&gt;setText(&quot;第一个按钮&quot;);</span><br><span class="line"></span><br><span class="line">    auto *btn2 = new QPushButton(&quot;第二个按钮&quot;, this);</span><br><span class="line">    btn2-&gt;move(100, 100);</span><br><span class="line">    btn2-&gt;resize(100, 50);</span><br><span class="line"></span><br><span class="line">    auto *my_btn = new my_push_button;</span><br><span class="line">    my_btn-&gt;setParent(this);</span><br><span class="line">    my_btn-&gt;move(200, 0);</span><br><span class="line">    my_btn-&gt;setText(&quot;myselfbutton&quot;);</span><br><span class="line"></span><br><span class="line">    resize(800, 600);</span><br><span class="line">    setFixedSize(400, 400);</span><br><span class="line">    setWindowTitle(&quot;第一个窗口&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="对象树"><a class="markdownIt-Anchor" href="#对象树"></a> 对象树</h3>
+<ol>
+<li>当创建的对象在堆区时，如果指定它的父类是QObject派生下来的类或者它的子类派生类，可以不用管理释放的操作，将对象放入对象树中，QT自己会释放。</li>
+<li>一定程度上简化了内存回收机制</li>
+</ol>
+<ul>
+<li>窗口坐标系<br />
+以左上角为原点，x 向右为正，y 向下为正方向</li>
+</ul>
+<h3 id="singal-and-slots"><a class="markdownIt-Anchor" href="#singal-and-slots"></a> singal and slots</h3>
+<ol>
+<li>连接函数：connect(my_btn, &amp;QPushButton::clicked, this, &amp;QWidget::close);</li>
+<li>参数解释<br />
+2.1. 参数1 信号的发送者<br />
+2.2. 参数2 发送的信号（函数地址）<br />
+2.3. 参数3 信号接收者<br />
+2.4. 参数4 处理的slot函数（函数地址）</li>
+<li>松散耦合</li>
+</ol>
+<ul>
+<li>自定义信号和槽</li>
+</ul>
+<ol>
+<li>自定义信号</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class teacher : public QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">public:</span><br><span class="line">    explicit teacher(QObject *parent);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 自定义信号 写在signal</span><br><span class="line">// 返回值void 只需写声明无需写实现</span><br><span class="line">// 可以有参可以重载</span><br><span class="line">signals:</span><br><span class="line">    void hungry();</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>自定义槽</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class student : public QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">public:</span><br><span class="line">    explicit student(QObject *parent);</span><br><span class="line"></span><br><span class="line">//  早期QT 必须写到public slots,高级版本写在public 或全局作用域下</span><br><span class="line">//  返回值void 需要声明需要实现</span><br><span class="line">//  可以有参数可以重载</span><br><span class="line">    void treat();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>当自定义的信号和槽出现重载</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    连接代参数的 信号和槽</span><br><span class="line">    void (teacher:: *tc_signal)(QString) = &amp;teacher::hungry;</span><br><span class="line">    void (student:: *stu_slot)(const QString&amp;) = &amp;student::treat;</span><br><span class="line">    connect(tc_, tc_signal, stu_, stu_slot);</span><br><span class="line">    class_over();</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>拓展<br />
+4.1 信号可以连接信号<br />
+4.2 一个信号可以连接多个槽函数<br />
+4.3 多个信号可以连接一个槽函数<br />
+4.4 信号和槽函数参数类型必须类型一致<br />
+4.5 信号参数个数可以多余槽函数参数的个数,剩下参数必须类型一致<br />
+4.6. 信号槽可以断开 disconnect()</li>
+<li>Lambda 表达式</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    lambda</span><br><span class="line">    auto btn5 = new QPushButton(&quot;Lambda&quot;, this);</span><br><span class="line">    btn5-&gt;move(0, 400);</span><br><span class="line">    connect(btn5, &amp;QPushButton::clicked, this, [=]()&#123;</span><br><span class="line">        emit tc_-&gt;hungry(&quot;酸菜鱼&quot;);</span><br><span class="line">        this-&gt;close();</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="qmainwindow"><a class="markdownIt-Anchor" href="#qmainwindow"></a> QMainWindow</h3>
+<ul>
+<li><strong>菜单栏</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    菜单栏 最多只能有一个</span><br><span class="line">    auto bar = menuBar();</span><br><span class="line">//    将菜单栏放入主窗口中</span><br><span class="line">    setMenuBar(bar);</span><br><span class="line">//    创建菜单</span><br><span class="line">    auto file_menu = bar-&gt;addMenu(&quot;文件&quot;);</span><br><span class="line">    auto edit_menu = bar-&gt;addMenu(&quot;编辑&quot;);</span><br><span class="line">//    创建菜单项</span><br><span class="line">    file_menu-&gt;addAction(&quot;新建&quot;);</span><br><span class="line">    file_menu-&gt;addAction(&quot;打开&quot;);</span><br><span class="line">//    添加分割线</span><br><span class="line">    file_menu-&gt;addSeparator();</span><br><span class="line">    file_menu-&gt;addAction(&quot;保存&quot;);</span><br><span class="line">    file_menu-&gt;addAction(&quot;另存为&quot;);</span><br><span class="line">    edit_menu-&gt;addAction(&quot;拷贝&quot;);</span><br><span class="line">    edit_menu-&gt;addAction(&quot;粘贴&quot;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>工具栏</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    工具栏 可以有多个</span><br><span class="line">    auto tool_bar = new QToolBar(this);</span><br><span class="line">    addToolBar(Qt::LeftToolBarArea, tool_bar);</span><br><span class="line">//    设置停靠范围</span><br><span class="line">    tool_bar-&gt;setAllowedAreas(Qt::LeftToolBarArea | Qt::RightToolBarArea);</span><br><span class="line">//    设置浮动</span><br><span class="line">    tool_bar-&gt;setFloatable(false);</span><br><span class="line">//    设置移动</span><br><span class="line">    tool_bar-&gt;setMovable(false);</span><br><span class="line">//    工具栏添加内容</span><br><span class="line">    tool_bar-&gt;addAction(&quot;设置&quot;);</span><br><span class="line">    tool_bar-&gt;addSeparator();</span><br><span class="line">    tool_bar-&gt;addAction(&quot;文本&quot;);</span><br><span class="line">//    工具栏添加控件</span><br><span class="line">    auto btn = new QPushButton(&quot;aaa&quot;, this);</span><br><span class="line">    tool_bar-&gt;addWidget(btn);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>状态栏</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    状态栏 最多只能有一个</span><br><span class="line">    auto status_bar = statusBar();</span><br><span class="line">//    设置到窗口中</span><br><span class="line">    setStatusBar(status_bar);</span><br><span class="line">//    放标签控件</span><br><span class="line">    auto label = new QLabel(&quot;提示&quot;);</span><br><span class="line">    auto label2 = new QLabel(&quot;字数&quot;);</span><br><span class="line">    auto label3 = new QLabel(&quot;统计&quot;);</span><br><span class="line">    status_bar-&gt;addWidget(label);</span><br><span class="line">    status_bar-&gt;addWidget(label2);</span><br><span class="line">    status_bar-&gt;addPermanentWidget(label3);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>浮动窗口</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    铆接部件（浮动窗口）可以有多个</span><br><span class="line">    auto dock_widget = new QDockWidget(&quot;浮动&quot;, this);</span><br><span class="line">    addDockWidget(Qt::BottomDockWidgetArea, dock_widget);</span><br><span class="line">    dock_widget-&gt;setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>中心部件</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    设置中心部件 只有一个</span><br><span class="line">    auto text_edit = new QTextEdit(&quot;中心部件&quot;, this);</span><br><span class="line">    setCentralWidget(text_edit);</span><br></pre></td></tr></table></figure>
+<h3 id="对话框"><a class="markdownIt-Anchor" href="#对话框"></a> 对话框</h3>
+<ul>
+<li>模态对话框</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">   connect(ui-&gt;actionNew, &amp;QAction::triggered, [=]() &#123;</span><br><span class="line">//        对话框 分类</span><br><span class="line">//      模态对话框（不可以对其他对话框操作） 和 非模态对话框（可以对其他对话框操作）</span><br><span class="line">//      模态创建</span><br><span class="line">        QDialog dlg(this);</span><br><span class="line">        dlg.resize(200, 100);</span><br><span class="line">        dlg.exec();</span><br><span class="line">        std::cout &lt;&lt; &quot;模态对话框弹出了&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>非模态对话框</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> connect(ui-&gt;actionSave, &amp;QAction::triggered, [=]() &#123;</span><br><span class="line">//        非模态创建</span><br><span class="line">        auto dlg2 = new QDialog(this);</span><br><span class="line">        dlg2-&gt;setAttribute(Qt::WA_DeleteOnClose);</span><br><span class="line">        dlg2-&gt;resize(200, 100);</span><br><span class="line">        dlg2-&gt;show();</span><br><span class="line">        std::cout &lt;&lt; &quot;非模态对话框弹出了&quot; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>消息对话框</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">connect(ui-&gt;actionItem, &amp;QAction::triggered, [=]() &#123;</span><br><span class="line">//        消息对话框</span><br><span class="line">//        错误对话框</span><br><span class="line">        QMessageBox::critical(this, &quot;critical&quot;, &quot;错误&quot;);</span><br><span class="line">//        信息对话框</span><br><span class="line">        QMessageBox::information(this, &quot;information&quot;, &quot;信息&quot;);</span><br><span class="line">//        提问对话框</span><br><span class="line">//        参数分析：参数1，父亲 参数2 标题 参数3 提示内容 参数4 按键类型 参数5 默认关联回车键</span><br><span class="line">        auto ret = QMessageBox::question(this, &quot;question&quot;, &quot;提问&quot;, QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Cancel);</span><br><span class="line">        if (ret == QMessageBox::Save)</span><br><span class="line">        &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;选择的是保存&quot; &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;选择的取消&quot; &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">//        警告对话框</span><br><span class="line">        QMessageBox::warning(this, &quot;warning&quot;, &quot;警告&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其他标准对话框</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//        其他标准对话框</span><br><span class="line">//        颜色对话框</span><br><span class="line">        auto color = QColorDialog::getColor(QColor(255, 0, 0));</span><br><span class="line">        fmt::println(&quot;r:&#123;&#125;, g:&#123;&#125;, b:&#123;&#125;&quot;, color.red(), color.green(), color.blue());</span><br><span class="line"></span><br><span class="line">//        文件对话框</span><br><span class="line">        QFileDialog::getOpenFileName(this, &quot;打开文件&quot;, &quot;D:/dev&quot;, &quot;(*.exe)&quot;);</span><br><span class="line">//        字体对话框</span><br><span class="line">        bool flag;</span><br><span class="line">        auto front = QFontDialog::getFont(&amp;flag, this);</span><br><span class="line">        fmt::print(&quot;字体：&#123;&#125;， 字号：&#123;&#125;， 是否加粗：&#123;&#125;， 是否倾斜:&#123;&#125;\n&quot;,</span><br><span class="line">                   front.family().toStdString(), front.pointSize(), front.bold(), front.italic());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="控件布局"><a class="markdownIt-Anchor" href="#控件布局"></a> 控件布局</h3>
+<ul>
+<li>按钮</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    设置默认选中的按钮</span><br><span class="line">    ui-&gt;radioButtion_man-&gt;setChecked(true);</span><br><span class="line">//    设置选中女的响应</span><br><span class="line">    connect(ui-&gt;radioButton_woman, &amp;QRadioButton::clicked, [=]() &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;女的被选中了&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    多选按钮 2选中 0未选 1半选</span><br><span class="line">    connect(ui-&gt;checkBox_5_lady, &amp;QCheckBox::stateChanged, [=](int state) &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;state = &quot; &lt;&lt; state &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//  listWidget</span><br><span class="line">    auto item = new QListWidgetItem(&quot;锄禾日当午&quot;);</span><br><span class="line">    auto item1 = new QListWidgetItem(&quot;汗滴禾下土&quot;);</span><br><span class="line">    auto item2 = new QListWidgetItem(&quot;谁知盘中餐&quot;);</span><br><span class="line">    auto item3 = new QListWidgetItem(&quot;粒粒皆辛苦&quot;);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item1);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item2);</span><br><span class="line">    ui-&gt;listWidget-&gt;addItem(item3);</span><br><span class="line">    item-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    item1-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    item2-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    item3-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line"></span><br><span class="line">    QStringList list;</span><br><span class="line">    list &lt;&lt; &quot;杜甫 登高&quot;</span><br><span class="line">         &lt;&lt; &quot;风急天高猿啸哀，渚清沙白鸟飞回。&quot;</span><br><span class="line">         &lt;&lt; &quot;无边落木萧萧下，不尽长江滚滚来。&quot;</span><br><span class="line">         &lt;&lt; &quot;万里悲秋常作客，百年多病独登台。&quot;</span><br><span class="line">         &lt;&lt; &quot;艰难苦恨繁霜鬓，潦倒新停浊酒杯。&quot;;</span><br><span class="line">    ui-&gt;listWidget-&gt;addItems(list);</span><br><span class="line">    for (int i = 0; i &lt; ui-&gt;listWidget-&gt;count(); ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        ui-&gt;listWidget-&gt;item(i)-&gt;setTextAlignment(Qt::AlignHCenter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>treeWidget</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    treeWidget</span><br><span class="line">//    设置水平头</span><br><span class="line">    ui-&gt;treeWidget-&gt;setHeaderLabels(QStringList() &lt;&lt; &quot;英雄&quot; &lt;&lt; &quot;英雄介绍&quot;);</span><br><span class="line"></span><br><span class="line">    auto tree_item = new QTreeWidgetItem(QStringList() &lt;&lt; &quot;力量&quot;);</span><br><span class="line">    auto tree_item1 = new QTreeWidgetItem(QStringList() &lt;&lt; &quot;敏捷&quot;);</span><br><span class="line">    auto tree_item2 = new QTreeWidgetItem(QStringList() &lt;&lt; &quot;智力&quot;);</span><br><span class="line"></span><br><span class="line">//    加载顶层的节点</span><br><span class="line">    ui-&gt;treeWidget-&gt;addTopLevelItem(tree_item);</span><br><span class="line">    ui-&gt;treeWidget-&gt;addTopLevelItem(tree_item1);</span><br><span class="line">    ui-&gt;treeWidget-&gt;addTopLevelItem(tree_item2);</span><br><span class="line"></span><br><span class="line">//    追加子节点</span><br><span class="line">    new QTreeWidgetItem(tree_item,</span><br><span class="line">                        QStringList() &lt;&lt; &quot;刚被猪&quot; &lt;&lt; &quot;前排坦克， 能在吸收伤害的同时造成可观的范围输出&quot;);</span><br><span class="line">    new QTreeWidgetItem(tree_item1,</span><br><span class="line">                        QStringList() &lt;&lt; &quot;刚被猪&quot; &lt;&lt; &quot;前排坦克， 能在吸收伤害的同时造成可观的范围输出&quot;);</span><br><span class="line">    new QTreeWidgetItem(tree_item2,</span><br><span class="line">                        QStringList() &lt;&lt; &quot;刚被猪&quot; &lt;&lt; &quot;前排坦克， 能在吸收伤害的同时造成可观的范围输出&quot;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>tableWidget</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">//    TableWidget</span><br><span class="line">//    set column count</span><br><span class="line">    ui-&gt;tableWidget-&gt;setColumnCount(3);</span><br><span class="line">//    set horizontal header</span><br><span class="line">    ui-&gt;tableWidget-&gt;setHorizontalHeaderLabels(QStringList() &lt;&lt; &quot;姓名&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; &quot;年龄&quot;);</span><br><span class="line">//    set row number</span><br><span class="line">    ui-&gt;tableWidget-&gt;setRowCount(5);</span><br><span class="line">//    set content</span><br><span class="line">    QStringList names, sex_list;</span><br><span class="line">    names &lt;&lt; &quot;张三&quot; &lt;&lt; &quot;赵云&quot; &lt;&lt; &quot;张飞&quot; &lt;&lt; &quot;关羽&quot; &lt;&lt; &quot;花木兰&quot;;</span><br><span class="line">    sex_list &lt;&lt; &quot;男&quot; &lt;&lt; &quot;男&quot; &lt;&lt; &quot;男&quot; &lt;&lt; &quot;男&quot; &lt;&lt; &quot;女&quot;;</span><br><span class="line">    for (int i = 0; i &lt; 5; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        int col = 0;</span><br><span class="line">        ui-&gt;tableWidget-&gt;setItem(i, col++, new QTableWidgetItem(names[i]));</span><br><span class="line">        ui-&gt;tableWidget-&gt;setItem(i, col++, new QTableWidgetItem(sex_list[i]));</span><br><span class="line">        ui-&gt;tableWidget-&gt;setItem(i, col++, new QTableWidgetItem(QString::number(18+i)));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其他控件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    stackWidget</span><br><span class="line">//    set default pos</span><br><span class="line">    ui-&gt;stackedWidget-&gt;setCurrentIndex(1);</span><br><span class="line"></span><br><span class="line">    connect(ui-&gt;pushButtonStack_1, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;stackedWidget-&gt;setCurrentIndex(0);</span><br><span class="line">    &#125;);</span><br><span class="line">    connect(ui-&gt;pushButtonStack_2, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;stackedWidget-&gt;setCurrentIndex(1);</span><br><span class="line">    &#125;);</span><br><span class="line">    connect(ui-&gt;pushButtonStack_3, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;stackedWidget-&gt;setCurrentIndex(2);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    下拉框</span><br><span class="line">    ui-&gt;comboBox-&gt;addItems(QStringList() &lt;&lt; &quot;问界M7&quot; &lt;&lt; &quot;U8&quot; &lt;&lt; &quot;比亚迪&quot;);</span><br><span class="line">    connect(ui-&gt;pushButtonComboBox, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;comboBox-&gt;setCurrentIndex(1);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    QLabel</span><br><span class="line">    ui-&gt;labelPicture-&gt;setPixmap(QPixmap(&quot;../images/panda.jpg&quot;));</span><br><span class="line">//    show .gif</span><br><span class="line">    auto movie = new QMovie(&quot;../images/dog.gif&quot;);</span><br><span class="line">    ui-&gt;labelGif-&gt;setMovie(movie);</span><br><span class="line">    movie-&gt;start();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>自定义控件
+<ol>
+<li>创建自己UI控件类</li>
+<li>在主UI中使用Widget 提升为自己的类</li>
+<li>在创建的类中使用信号槽函数实现相关的功能</li>
+<li>可以在自己实现的类中定义接口</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">small_widget::small_widget(QWidget *parent) :</span><br><span class="line">        QWidget(parent), ui(new Ui::small_widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line">//    spinbox 移动</span><br><span class="line"></span><br><span class="line">    void (QSpinBox:: *spin_signal)(int) = &amp;QSpinBox::valueChanged;</span><br><span class="line">    connect(ui-&gt;spinBox, spin_signal, ui-&gt;horizontalScrollBar, &amp;QScrollBar::setValue);</span><br><span class="line">//    horizontal scroll bar</span><br><span class="line">    connect(ui-&gt;horizontalScrollBar, &amp;QScrollBar::valueChanged, ui-&gt;spinBox, &amp;QSpinBox::setValue);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int small_widget::get_value() const</span><br><span class="line">&#123;</span><br><span class="line">    return ui-&gt;spinBox-&gt;value();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void small_widget::set_value(int num)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;spinBox-&gt;setValue(num);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="qt中的事件"><a class="markdownIt-Anchor" href="#qt中的事件"></a> QT中的事件</h3>
+<ul>
+<li>鼠标事件
+<ol>
+<li>鼠标进入： enterEvent</li>
+<li>鼠标离开：leaveEvent</li>
+<li>按下：mousePressedEvent</li>
+<li>释放：mouseReleaseEvent</li>
+<li>移动：mouseMoveEvent</li>
+<li>ev-&gt;button() 可以判断按键,Qt::LeftButton</li>
+<li>ev-&gt;buttons() 判断组合键 在move 时使用</li>
+</ol>
+</li>
+<li>定时器（timerEvent）<br />
+1.事件 timerEvent(QTimerEvent *ev);<br />
+2. 启动定时器 startTimer(1000)<br />
+3. timerId() 定时器唯一标识<br />
+4. QTimer 类的使用，推荐方式  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    </span><br><span class="line">main_widget::main_widget(QWidget *parent) :</span><br><span class="line">        QWidget(parent), ui(new Ui::main_widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    get</span><br><span class="line">    connect(ui-&gt;pushButtonGetValue, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        std::cout &lt;&lt; ui-&gt;widget-&gt;get_value() &lt;&lt; std::endl;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    set</span><br><span class="line">    connect(ui-&gt;pushButtonHalfValue, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        ui-&gt;widget-&gt;set_value(50);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">//    启动定时器 单位：毫秒ms</span><br><span class="line">    timer_id1 = startTimer(1000);</span><br><span class="line">    timer_id2 = startTimer(2000);</span><br><span class="line">    //    定时器第二种使用方式 推荐的方式</span><br><span class="line">    QTimer *timer = new QTimer(this);</span><br><span class="line">    timer-&gt;start(500);</span><br><span class="line"></span><br><span class="line">    connect(timer, &amp;QTimer::timeout, [=]() &#123;</span><br><span class="line">        static int i = 0;</span><br><span class="line">        ui-&gt;labelTimer3-&gt;setText(QString::number(i++));</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main_widget::~main_widget()</span><br><span class="line">&#123;</span><br><span class="line">    delete ui;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void main_widget::timerEvent(QTimerEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">    if (timer_id1 == event-&gt;timerId())</span><br><span class="line">    &#123;</span><br><span class="line">        static int i = 0;</span><br><span class="line">        ui-&gt;labelTimer1-&gt;setText(QString::number(i++));</span><br><span class="line">    &#125;</span><br><span class="line">    if (timer_id2 == event-&gt;timerId())</span><br><span class="line">    &#123;</span><br><span class="line">        static int j = 0;</span><br><span class="line">        ui-&gt;labelTimer2-&gt;setText(QString::number(j++));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>QEvent
+<ol>
+<li>用于事件的分发</li>
+<li>可以做事件的拦截不建议</li>
+<li>bool event(Qevent *e) 返回值true 代表不向下分发</li>
+<li>e.type() == QEvent::MouseButtonPressed 用于事件判断</li>
+</ol>
+</li>
+<li>eventFilter
+<ol>
+<li>给控件安装事件过滤器</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    //    1.安装事件过滤器</span><br><span class="line">    ui-&gt;label-&gt;installEventFilter(this);</span><br><span class="line">//    2. 重写eventFilter</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>重写eventFilter</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    bool main_widget::eventFilter(QObject *watched, QEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">    if (watched == ui-&gt;label)</span><br><span class="line">    &#123;</span><br><span class="line">        if (event-&gt;type() == QEvent::MouseButtonPress)</span><br><span class="line">        &#123;</span><br><span class="line">            if (auto ev = dynamic_cast&lt;QMouseEvent*&gt;(event))</span><br><span class="line">            &#123;</span><br><span class="line">                print_helper(&quot;EventFilter: &quot;, ev);</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">//    其他默认处理</span><br><span class="line">    return QObject::eventFilter(watched, event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>QPaint 绘图事件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void paint_widget::paintEvent(QPaintEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">//    实例化画家对象 this 指定绘图设备</span><br><span class="line">    QPainter painter(this);</span><br><span class="line"></span><br><span class="line">//    设置画笔</span><br><span class="line">    QPen pen(QColor(255, 0, 0));</span><br><span class="line">//    设置画笔的宽度</span><br><span class="line">    pen.setWidth(3);</span><br><span class="line">//    设置画笔风格</span><br><span class="line">    pen.setStyle(Qt::DotLine);</span><br><span class="line">    painter.setPen(pen);</span><br><span class="line"></span><br><span class="line">//    设置画刷</span><br><span class="line">    QBrush brush(Qt::cyan);</span><br><span class="line">//    设置画刷的风格</span><br><span class="line">    brush.setStyle(Qt::Dense3Pattern);</span><br><span class="line">//    让画家使用画刷</span><br><span class="line">    painter.setBrush(brush);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    line</span><br><span class="line">    painter.drawLine(0, 0, 500, 500);</span><br><span class="line">//    circle</span><br><span class="line">    painter.drawEllipse(QPoint&#123;200, 200&#125;, 100, 100);</span><br><span class="line">//    矩形</span><br><span class="line">    painter.drawRect(100, 100, 200, 200);</span><br><span class="line">//    矩形文字</span><br><span class="line">    painter.drawText(QRect&#123;10, 400, 200, 50&#125;, &quot;好好学习天天向上&quot;);</span><br><span class="line"></span><br><span class="line">    QWidget::paintEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>QPinter 高级设置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> //    高级设置</span><br><span class="line">//    抗锯齿的设置</span><br><span class="line">    painter.setRenderHint(QPainter::Antialiasing);</span><br><span class="line"> //    对画家进行移动</span><br><span class="line">    painter.translate(100, 0);</span><br><span class="line">//    保持画家状态</span><br><span class="line">    painter.save();</span><br><span class="line">    painter.drawRect(500, 50, 100, 100);</span><br><span class="line">//    还原画家的状态</span><br><span class="line">    painter.restore();</span><br><span class="line"></span><br><span class="line">    painter.drawRect(600, 50, 100, 100);</span><br><span class="line">    painter.drawPixmap(800, 800, QPixmap(&quot;../images/panda.jpg&quot;));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//    移动举行</span><br><span class="line">    painter.drawRect(pos_x, 0, 100, 100);</span><br><span class="line">//    如果超出屏幕从 0 开始重新绘制</span><br><span class="line">    if (pos_x &gt; this-&gt;width())</span><br><span class="line">        pos_x = -100;</span><br><span class="line">    QWidget::paintEvent(event);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">paint_widget::paint_widget(QWidget *parent) :</span><br><span class="line">        QWidget(parent), ui(new Ui::paint_widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line"></span><br><span class="line">    connect(ui-&gt;pushButton, &amp;QPushButton::clicked, [=]() &#123;</span><br><span class="line">        pos_x += 20;</span><br><span class="line">        update();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>QPainterDevice<br />
+<strong>分类：QPixmap QImage QBitmap(黑白) QPicture QWidget</strong></li>
+</ul>
+<ol>
+<li>QPixmap 对不同的平台做了显示优化</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    Pixmap 绘图设备,专门为平台做了显示优化</span><br><span class="line">    QPixmap pix(300, 300);</span><br><span class="line">//    填充颜色</span><br><span class="line">    pix.fill(Qt::white);</span><br><span class="line">//    声明画家</span><br><span class="line">    QPainter painter(&amp;pix);</span><br><span class="line">    painter.setPen(QPen(Qt::green));</span><br><span class="line">    painter.drawEllipse(QPoint&#123;150, 150&#125;, 150, 150);</span><br><span class="line"></span><br><span class="line">//    保存</span><br><span class="line">    pix.save(&quot;../images/circle.png&quot;);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>QImage 可以对像素进行修改</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    QImage 绘图设备,可以对像素进行访问</span><br><span class="line">    QImage img(600, 400, QImage::Format_RGB32);</span><br><span class="line">    img.fill(Qt::white);</span><br><span class="line"></span><br><span class="line">    QPainter painter_img(&amp;img);</span><br><span class="line">    QPen pen_img(Qt::red);</span><br><span class="line">    pen_img.setWidth(3);</span><br><span class="line">    painter_img.setPen(pen_img);</span><br><span class="line">    painter_img.drawEllipse(QPoint&#123;300, 200&#125;, 300, 200);</span><br><span class="line"></span><br><span class="line">    img.save(&quot;../images/eclipse.png&quot;);</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>QPicture 记录和重现绘图指令</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//    QPicture 绘图设备，可以记录和重现绘图指令</span><br><span class="line">    QPicture pic;</span><br><span class="line">    QPainter painter_pic;</span><br><span class="line">//    开始绘图</span><br><span class="line">    painter_pic.begin(&amp;pic);</span><br><span class="line">    painter_pic.setPen(QPen(Qt::blue));</span><br><span class="line">    painter_pic.drawEllipse(QPoint&#123;300, 300&#125;, 150, 150);</span><br><span class="line">//    结束绘图</span><br><span class="line">    painter_pic.end();</span><br><span class="line">    pic.save(&quot;../images/pic.data&quot;);</span><br><span class="line"></span><br><span class="line">    //    QPicture 重现绘图指令</span><br><span class="line">    QPicture pic;</span><br><span class="line">    pic.load(&quot;../images/pic.data&quot;);</span><br><span class="line">    painter.drawPicture(300, 300, pic);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="qfile-对文件进行读写"><a class="markdownIt-Anchor" href="#qfile-对文件进行读写"></a> QFile 对文件进行读写</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">QString path = QFileDialog::getOpenFileName(this, &quot;打开文件&quot;, &quot;../&quot;);</span><br><span class="line">//        将路径放入lineEdit中</span><br><span class="line">        ui-&gt;lineEdit-&gt;setText(path);</span><br><span class="line">//        将内容读取到textEdit中</span><br><span class="line">//        QFile 默认格式UTF-8 编码类 QTextCodec</span><br><span class="line">        QFile file(path);</span><br><span class="line">//        设置打开方式</span><br><span class="line">        file.open(QIODevice::ReadOnly);</span><br><span class="line">        auto arr = file.readAll();</span><br><span class="line">//        将数据读取到文本框中</span><br><span class="line">        ui-&gt;textEdit-&gt;setText(arr);</span><br><span class="line">        file.close();</span><br><span class="line"></span><br><span class="line">        file.open(QIODevice::Append);</span><br><span class="line">        file.write(&quot;/**这是一个注释*/&quot;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="qfileinfo-文件信息"><a class="markdownIt-Anchor" href="#qfileinfo-文件信息"></a> QFileInfo 文件信息</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//        文件信息类：QFileInfo</span><br><span class="line">        QFileInfo info(path);</span><br><span class="line">        fmt::print(&quot;大小：&#123;&#125;\n文件名：&#123;&#125;\n文件路径：&#123;&#125;\n后缀名：&#123;&#125;\n&quot;,</span><br><span class="line">                   info.size(), info.fileName().toStdString(),</span><br><span class="line">                   info.filePath().toStdString(), info.suffix().toStdString());</span><br><span class="line">        fmt::print(&quot;创建时间：&#123;&#125;\n最后修改时间：&#123;&#125;\n拥有者: &#123;&#125;\n&quot;,</span><br><span class="line">                   info.birthTime().toString(&quot;yyyy-MM-dd hh:mm:ss&quot;).toStdString(),</span><br><span class="line">                   info.lastModified().toString(&quot;yyyy-MM-dd hh:mm:ss&quot;).toStdString(),</span><br><span class="line">                   info.owner().toStdString());</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>C++</tag>
+        <tag>Qt</tag>
+        <tag>计算机图形学</tag>
       </tags>
   </entry>
 </search>
