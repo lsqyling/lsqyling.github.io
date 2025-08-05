@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="什么是Vim  Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉 社区活跃，插件丰富，生态优秀 许多IDE都支持Vim模式：VSCode、JetBrains系列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim 教程">
+<meta property="og:url" content="https://lsqyling.github.io/2025/03/02/vim/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="什么是Vim  Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉 社区活跃，插件丰富，生态优秀 许多IDE都支持Vim模式：VSCode、JetBrains系列">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lsqyling.github.io/images/vim-Action.png">
+<meta property="article:published_time" content="2025-03-02T07:14:01.000Z">
+<meta property="article:modified_time" content="2025-08-05T12:07:24.088Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="工具命令">
+<meta property="article:tag" content="Vim">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lsqyling.github.io/images/vim-Action.png">
+
+<link rel="canonical" href="https://lsqyling.github.io/2025/03/02/vim/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Vim 教程 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2025/03/02/vim/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vim 教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-03-02 15:14:01" itemprop="dateCreated datePublished" datetime="2025-03-02T15:14:01+08:00">2025-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-05 20:07:24" itemprop="dateModified" datetime="2025-08-05T20:07:24+08:00">2025-08-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="什么是vim"><a class="markdownIt-Anchor" href="#什么是vim"></a> 什么是Vim</h2>
+<ul>
+<li>Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉</li>
+<li>社区活跃，插件丰富，生态优秀</li>
+<li>许多IDE都支持Vim模式：VSCode、JetBrains系列</li>
+</ul>
+<span id="more"></span>
+<h2 id="vim-在编程中的小tips"><a class="markdownIt-Anchor" href="#vim-在编程中的小tips"></a> vim 在编程中的小Tips</h2>
+<ol>
+<li>光标在函数上时，gd 跳转到函数定义或声明；gd— go to definition</li>
+<li>gt —在标签中向后跳转; gT — 在标签中向前跳转；gi—快速跳转到上次编辑的位置进入插入模式；</li>
+<li>ctrl + o 依次返回光标的位置；</li>
+<li>ctrl + i：跳回下一个位置;</li>
+<li>在终端中输入命令 如 git clone xxxxxxxxxxxxxxxxxxxxxxxxxx或时其他复杂命令很长的修改该过程如下：ctrl+a 移动行首；<br />
+ctrl+e 移动行尾；ctrl+f 往后移动；ctrl+b 往前移动；</li>
+</ol>
+<h2 id="normal模式基本移动"><a class="markdownIt-Anchor" href="#normal模式基本移动"></a> Normal模式：基本移动</h2>
+<ul>
+<li>hjkl：上下左右</li>
+<li>gg：跳到第一行(类似Home键) G：跳到最后一行（类似End键）</li>
+<li>&lt;Ctrl-u&gt;/&lt;Ctrl-b&gt;：往上翻半页/一页(类似PageUp键) &lt;Ctrl-d&gt;/&lt;Ctrl-f&gt;：往下翻半页/一页（类似PageDown键）</li>
+<li>{Lineno}gg：跳到第lineno 行</li>
+<li>zz/zt/zb：光标行设置为屏幕居中/屏幕第一行/屏幕最后一行</li>
+<li>L — 移动屏幕尾；H—移动屏幕首；M—移动到屏幕中；</li>
+</ul>
+<h2 id="进入insert模式"><a class="markdownIt-Anchor" href="#进入insert模式"></a> 进入Insert模式</h2>
+<p>Normal模式下通过特定命令进入Insert模式</p>
+<ul>
+<li>i：代表&quot;insert&quot;，当前光标之前开始输入</li>
+<li>a：代表&quot;append&quot;，当前光标之后开始输入</li>
+<li>o: 下方插入新的一行，然后开始输入</li>
+<li>s：删除当前光标的字符，然后开始输入</li>
+<li>r: 替换模式，ra — 将当前字符替换为a</li>
+<li>R: 替换模式，替换行，输入内容会覆盖当前内容；</li>
+<li>I：在本行的开头开始输入</li>
+<li>A：在本行的末尾开始输入</li>
+<li>O：上方插入新的一行，然后开始输入</li>
+<li>S：删除当前行，然后开始输入<br />
+Tips：大写字母和小写字母的操作存在关联，可以一起记忆</li>
+</ul>
+<h2 id="进入command模式"><a class="markdownIt-Anchor" href="#进入command模式"></a> 进入Command模式</h2>
+<p>Normal模式下输入：进入Command模式</p>
+<ul>
+<li>w：保存当前文件:q：退出</li>
+<li>q！：放弃当前更改，然后退出:wq：保存当前更改，然后退出</li>
+<li>h{command}：显示关于命令的帮助</li>
+<li>&lt;Esc&gt;回到Normal模式</li>
+</ul>
+<h2 id="进入visual模式"><a class="markdownIt-Anchor" href="#进入visual模式"></a> 进入Visual模式</h2>
+<ul>
+<li>Normal模式下按v进入可视模式</li>
+<li>进入可视模式后可以用Normal模式下的移动命令选择文本</li>
+<li>可视模式下×/y：剪切/复制；</li>
+<li>回到Normal模式下p：粘贴</li>
+<li>Normal模式下按V进入行可视模式，一次选中一整行，在需要选中多行时很方便</li>
+<li>&lt;Esc&gt;回到Normal模式</li>
+</ul>
+<h2 id="vim移动与编辑"><a class="markdownIt-Anchor" href="#vim移动与编辑"></a> Vim：移动与编辑</h2>
+<h3 id="基于单词的移动"><a class="markdownIt-Anchor" href="#基于单词的移动"></a> 基于单词的移动</h3>
+<p>简单的hjkl显然无法满足我们的需要</p>
+<ul>
+<li>w：代表&quot;word&quot;，跳转到下一处单词的开头</li>
+<li>b：代表&quot;back&quot;，跳转到上一处单词的开头</li>
+<li>e：代表&quot;end&quot;，跳转到下一处单词的结尾</li>
+<li>ge：e的反向版本，跳转到上一处单词的结尾<br />
+wbe大写版本WBE对应的单词是连续的非空字符</li>
+</ul>
+<h3 id="基于搜索的移动行内搜索"><a class="markdownIt-Anchor" href="#基于搜索的移动行内搜索"></a> 基于搜索的移动行内搜索</h3>
+<ul>
+<li>f{char}/t{char}：跳转到本行下一个char字符出现处/出现前</li>
+<li>；/，：快速向后/向前重复ft查找</li>
+<li>F{char}/T{char}：往前搜索而非往后文件中搜索：</li>
+<li>/{pattern}：跳转到本文件中下一个pattern出现的地方</li>
+<li>？{pattern}：跳转到本文件中上一个pattern出现的地方</li>
+<li>pattern可以是正则表达式</li>
+<li>*：等价于/{pattern}，pattern是当前光标下的单词</li>
+<li>nN：快速重复／查找</li>
+</ul>
+<h3 id="基于标记的移动"><a class="markdownIt-Anchor" href="#基于标记的移动"></a> 基于标记的移动</h3>
+<ul>
+<li>m{mark}：把当前位置标记为mark</li>
+<li>`{mark}：跳转到名为mark的标记位置<br />
+mark是a-z的字符<br />
+常用场景：当需要临时离开当前光标处，做一些事情后再快速地回来<br />
+我比较习惯用的标记是mm<br />
+内置标记：</li>
+<li>``：上次跳转前的位置</li>
+<li>`.: 上次修改的位置</li>
+<li>`^：上次插入的位置</li>
+</ul>
+<h3 id="其它实用的跳转"><a class="markdownIt-Anchor" href="#其它实用的跳转"></a> 其它实用的跳转</h3>
+<ul>
+<li>^／$：跳转到本行的开始/结尾</li>
+<li>%：跳到匹配的配对符（括号等）处</li>
+</ul>
+<h3 id="快速编辑"><a class="markdownIt-Anchor" href="#快速编辑"></a> 快速编辑</h3>
+<p><img src="/images/vim-Action.png" alt="Vim-Action" /></p>
+<h3 id="重复操作命令"><a class="markdownIt-Anchor" href="#重复操作命令"></a> 重复操作：.命令</h3>
+<ul>
+<li>.：重复上一次修改</li>
+<li>u：撤销上一次修改</li>
+<li>&lt;Ctrl-r&gt;：重做上一次修改<br />
+. 命令非常适合用于需要多次重复某一个修改动作的场景省去了重复输入命令，大大提高效率</li>
+</ul>
+<h3 id="批量操作数字动作"><a class="markdownIt-Anchor" href="#批量操作数字动作"></a> 批量操作：数字+动作</h3>
+<p>{count}{action}：重复count次action<br />
+动作动作可以是移动动作或是编辑动作</p>
+<ul>
+<li>4j：向下移动4行</li>
+<li>3dw：删除3个单词</li>
+<li>2yy：复制2行</li>
+<li>4p：粘贴4次</li>
+</ul>
+<p>数字+动作，是一种重要的批量操作方式，命令直观，语义明确</p>
+<ul>
+<li>．命令可以直观地看到每一次的变化，在合适的时候停止</li>
+<li>数字+动作则需要预先知道动作的次数</li>
+</ul>
+<h3 id="文本对象操作"><a class="markdownIt-Anchor" href="#文本对象操作"></a> 文本对象操作</h3>
+<p>textobjects：语义化的文本片段<br />
+格式：i/a+对象常见的对象：</p>
+<ul>
+<li>w／w，s，p，t，b,（， <code>[</code>, <code>&#123;</code>：单词/联单词、句子、段落、标签、()、[]、{}；<br />
+*（／），［/」，{／}，&lt;／&gt;，‘／“：配对符定义的对象<br />
+i代表&quot;inner”，内部；<br />
+a代表&quot;a&quot;，额外包括周围的空格或配对符</li>
+</ul>
+<h3 id="文本对象操作例子"><a class="markdownIt-Anchor" href="#文本对象操作例子"></a> 文本对象操作：例子</h3>
+<p>文本对象提供了为文本赋予了结构化的含义，允许我们以一个语义对象作为操作单元<br />
+<strong>[count]{operator}{textobjects}</strong></p>
+<ul>
+<li>diw：删除一个单词</li>
+<li>ci<code>(</code>：修改小括号内部</li>
+<li>yi<code>&#123;</code>：复制大括号内部</li>
+</ul>
+<p>通过组合operator与textobjects，可以对不同的语义对象实施不同的操作，不仅十分灵活，而且语义明确，容易记忆<br />
+配合：命令或【count】可以简单地完成多次对特定语义对象的操作</p>
+<h3 id="textobjectsvsmotion"><a class="markdownIt-Anchor" href="#textobjectsvsmotion"></a> textobjectsVSmotion</h3>
+<p>{operator}{motion}与{operator}{textobjects} 解耦了操作与操作的对象，大大提升了操作效率</p>
+<ul>
+<li>motion是能够移动光标的命令，可以独立使用（如wbe）</li>
+<li>文本对象只能跟在operator后面，不能独立使用（如iw）</li>
+<li>motion通过光标的移动确定operator的作用范围，范围更加灵活但不够明确</li>
+<li>textobjects则是显式地指定操作的对象，范围明确</li>
+</ul>
+<h3 id="操作符与命令补充"><a class="markdownIt-Anchor" href="#操作符与命令补充"></a> 操作符与命令补充</h3>
+<ul>
+<li>gu/gU/g~：操作符，转小写/转大写/翻转大小写 例如：guiw, gUiw, 符合{Operator}{textobjects} 或者 {operator}{motion}</li>
+<li>J：join，连接两行</li>
+<li>&lt;Ctrl-a&gt;/&lt;Ctrl-x&gt;：增加数字/减少数字</li>
+<li>g&lt;Ctrl-A&gt;：创建递增序列</li>
+<li>&lt;/&gt;：左/右缩进</li>
+</ul>
+<p><strong>建议：让你的命令更模块化<br />
+尽量使你的命令更模块化，具有清晰的含义与作用范围，以便于与·等命令协同例如：daw比dw具有更清晰的语义，也更模块化</strong></p>
+<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
+<p>Vim提供了许多寄存器用于存放内容，可以理解为剪贴板<br />
+一个字符对应一个寄存器（如a-z，0-9）特别的寄存器：</p>
+<ul>
+<li>&quot;：默认寄存器，平时复制、删除的内容都放在里面</li>
+<li>%：当前文件名</li>
+<li>.：上一次插入的内容</li>
+<li>:：上一次执行的命令</li>
+</ul>
+<p>通过：reg{register}查看对应寄存器中的内容</p>
+<h3 id="指定寄存器"><a class="markdownIt-Anchor" href="#指定寄存器"></a> 指定寄存器</h3>
+<p>在复制/删除/粘贴等操作前加上&quot;{register}就可以指定本次操作所用的寄存器<br />
+只要涉及寄存器操作的都可以这样指定</p>
+<ul>
+<li>&quot;ayy：将这一行复制到a寄存器中</li>
+<li>&quot;bdiw：将单词删除，保存到b寄存器中</li>
+<li>&quot;cp：将c寄存器中的内容粘贴出来</li>
+</ul>
+<p>常见用途：将想要持久保存的文本放到特定寄存器里，随时进行粘贴，避免被覆盖<br />
+<strong>寄存器字符大写：添加（append）而非覆盖</strong></p>
+<p><strong>宏</strong><br />
+宏（Macro）：录制一系列键盘操作，并允许我们重放这些操作操作序列存储在指定的寄存器中</p>
+<ul>
+<li>q{register}：开始录制宏，存在寄存器register 中</li>
+<li>录制过程中按q退出录制</li>
+<li>@{register}：重放寄存器register中的操作</li>
+<li>@@：重放上一次宏操作</li>
+</ul>
+<p><strong>常见用法：q{register}录制一段操作，@{register}重放，然后一直@@重放注意：：命令对宏不生效，．命令只记录上一次修改，而宏可能包含多次修改</strong><br />
+命令：.,$ normal @a</p>
+<p><em>建议：让你的宏对连续重放友好</em></p>
+<ol>
+<li>让你的光标移动更加general</li>
+<li>假设你要在多个特定的位置进行特定的操作，一个好的习惯是在宏录制的最后，跳转到下一个需要编辑的位置<br />
+即，宏包括【编辑动作】+【跳转到下一个需要编辑的位置】<br />
+这样一来，连续重放就可以实现对所有需要编辑的位置进行编辑操作通过大写的寄存器，在宏的后面添加命令<br />
+如果宏是重放友好的，允许我们使用[count]@{register}直接重放count次</li>
+</ol>
+<h2 id="vim-命令模式"><a class="markdownIt-Anchor" href="#vim-命令模式"></a> vim 命令模式</h2>
+<ol>
+<li>前面的教程大多集中在Normal模式</li>
+<li>命令模式提供了除了Normal模式的编辑方式</li>
+<li>命令模式的操作对象以“行”为基本单位</li>
+<li>normal和global命令提供强大的批量行操作</li>
+</ol>
+<h3 id="ex命令格式"><a class="markdownIt-Anchor" href="#ex命令格式"></a> Ex命令格式</h3>
+<p>：[range] {excommand} [args]</p>
+<ul>
+<li>range：作用的范围，不给的话默认是本行</li>
+<li>excommand：特殊的命令，适用于Command模式</li>
+<li>args：后续的参数，视命令而定</li>
+</ul>
+<p>一些ExCommand（[x]为寄存器，是可选项）：</p>
+<ul>
+<li>：[range] delete[x]：删除range中的行（到寄存器x），delete可简写为 d</li>
+<li>：[range] yank[x]：复制range中的行（到寄存器x），yank可简写为y</li>
+<li>：[range] print：将range 中行打印出来，print 可简写为p</li>
+</ul>
+<h3 id="range与address指定范围"><a class="markdownIt-Anchor" href="#range与address指定范围"></a> range与address：指定范围</h3>
+<p>range由一个或两个address构成，即{address}或{address}，{address} address可以是：</p>
+<ul>
+<li>{lineno}：行号，如3代表第三行（o代表第一行上面的虚拟行）</li>
+<li>$：最后一行</li>
+<li>.：光标所在行</li>
+<li>/{pattern}/：下一个pattern所在的行<br />
+address可以做加减法，.+3代表光标往下第三行，$-3代表倒数第4行</li>
+</ul>
+<h3 id="address组合成range"><a class="markdownIt-Anchor" href="#address组合成range"></a> address组合成range</h3>
+<p>address组合出range（可以混用）：</p>
+<ul>
+<li>1，3：文件的1-3行</li>
+<li>.，·+4：当前-当前往下4行 (共5 行)</li>
+<li>$-3，$：文件的最后4行</li>
+<li>%：特殊的range，代表当前文件的所有行</li>
+<li>&lt;／'&gt;：可视模式中选中范围的开头和结尾（可视模式下直接按：可以直接设置）<br />
+例子：</li>
+<li>:1，3 delete：删除1~3行</li>
+<li>:.，.+4 yank：复制当前-当前往下4 行</li>
+<li>:$-3，$ print: 打印文件的最后4行</li>
+</ul>
+<p>行的复制、移动、粘贴</p>
+<ul>
+<li>：[range]copy{address}：把range中的行复制到address后面</li>
+<li>：[range]move{address}：把range中的行移动到address后面</li>
+<li>：[address]put[x]：把寄存器×的内容粘贴到address后面</li>
+</ul>
+<p>0作为虚拟行的address，可以用来将内容插入第一行</p>
+<h3 id="批量操作normal命令"><a class="markdownIt-Anchor" href="#批量操作normal命令"></a> 批量操作：normal命令</h3>
+<p>格式：：[range]normal{commands}<br />
+含义：对range中的所有行执行Normal模式下的命令commands</p>
+<ul>
+<li>将range设置为%，可以对整个文件的所有行执行</li>
+<li>：[range] normal. ：配合，命令，效果拔群<br />
+常用做法：先做一次修改操作，再用normal命令在指定的行上完成操作</li>
+<li>.命令只能记录一次修改，用宏可以实现记录多个操作:[range] noraml @{register}<br />
+常用做法：先把想要的操作录制成宏，再用normal命令在指定的行上重放宏</li>
+</ul>
+<h2 id="批量操作global命令"><a class="markdownIt-Anchor" href="#批量操作global命令"></a> 批量操作：global命令</h2>
+<ul>
+<li>格式：：[range]global/{pattern}/[cmd]</li>
+<li>含义：对range中包含pattern的所有行执行Command模式下的Ex命令</li>
+<li>[cmd]：Ex命令，不给的话默认是打印（print）注意，normal命令也是Ex命令！</li>
+<li>：[range]global/{pattern}/normal{commands}：对range中所有带pattern的<br />
+行，执行Normal模式下的命令commands</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>·：%global/TODo/delete：删除所有带TODO的行</li>
+</ul>
+<h2 id="替换命令"><a class="markdownIt-Anchor" href="#替换命令"></a> 替换命令</h2>
+<p><strong>：[range]s/{pattern}/{string}/[flags]</strong><br />
+将pattern替换为string<br />
+flags:</p>
+<ul>
+<li>g：替换每一行的所有匹配</li>
+<li>i：忽视大小写</li>
+<li>c：替换前进行确认</li>
+<li>n：计数而不是替换</li>
+</ul>
+<dl>
+<dt>：%s/Vim//gn：统计文件中所有Vim出现的次数（此时替换为什么无所谓，加了n就不会执行替换操作）</dt>
+<dd>%s /\&lt;vim\&gt;/str/g；精确匹配vim这个单词比如 abc_vim是无法匹配的。</dd>
+</dl>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E5%91%BD%E4%BB%A4/" rel="tag"><i class="fa fa-tag"></i> 工具命令</a>
+              <a href="/tags/Vim/" rel="tag"><i class="fa fa-tag"></i> Vim</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/01/02/lambda-expression/" rel="prev" title="Lambda-expression">
+      <i class="fa fa-chevron-left"></i> Lambda-expression
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/02/html/" rel="next" title="HTML-前端开发">
+      HTML-前端开发 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFvim"><span class="nav-number">1.</span> <span class="nav-text"> 什么是Vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim-%E5%9C%A8%E7%BC%96%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%B0%8Ftips"><span class="nav-number">2.</span> <span class="nav-text"> vim 在编程中的小Tips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#normal%E6%A8%A1%E5%BC%8F%E5%9F%BA%E6%9C%AC%E7%A7%BB%E5%8A%A8"><span class="nav-number">3.</span> <span class="nav-text"> Normal模式：基本移动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5insert%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text"> 进入Insert模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5command%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text"> 进入Command模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5visual%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text"> 进入Visual模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim%E7%A7%BB%E5%8A%A8%E4%B8%8E%E7%BC%96%E8%BE%91"><span class="nav-number">7.</span> <span class="nav-text"> Vim：移动与编辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8D%95%E8%AF%8D%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-number">7.1.</span> <span class="nav-text"> 基于单词的移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%90%9C%E7%B4%A2%E7%9A%84%E7%A7%BB%E5%8A%A8%E8%A1%8C%E5%86%85%E6%90%9C%E7%B4%A2"><span class="nav-number">7.2.</span> <span class="nav-text"> 基于搜索的移动行内搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%A0%87%E8%AE%B0%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-number">7.3.</span> <span class="nav-text"> 基于标记的移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%AE%9E%E7%94%A8%E7%9A%84%E8%B7%B3%E8%BD%AC"><span class="nav-number">7.4.</span> <span class="nav-text"> 其它实用的跳转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E7%BC%96%E8%BE%91"><span class="nav-number">7.5.</span> <span class="nav-text"> 快速编辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="nav-number">7.6.</span> <span class="nav-text"> 重复操作：.命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E6%95%B0%E5%AD%97%E5%8A%A8%E4%BD%9C"><span class="nav-number">7.7.</span> <span class="nav-text"> 批量操作：数字+动作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C"><span class="nav-number">7.8.</span> <span class="nav-text"> 文本对象操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C%E4%BE%8B%E5%AD%90"><span class="nav-number">7.9.</span> <span class="nav-text"> 文本对象操作：例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#textobjectsvsmotion"><span class="nav-number">7.10.</span> <span class="nav-text"> textobjectsVSmotion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%85"><span class="nav-number">7.11.</span> <span class="nav-text"> 操作符与命令补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">7.12.</span> <span class="nav-text"> 寄存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">7.13.</span> <span class="nav-text"> 指定寄存器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim-%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text"> vim 命令模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ex%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-number">8.1.</span> <span class="nav-text"> Ex命令格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#range%E4%B8%8Eaddress%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4"><span class="nav-number">8.2.</span> <span class="nav-text"> range与address：指定范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#address%E7%BB%84%E5%90%88%E6%88%90range"><span class="nav-number">8.3.</span> <span class="nav-text"> address组合成range</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9Cnormal%E5%91%BD%E4%BB%A4"><span class="nav-number">8.4.</span> <span class="nav-text"> 批量操作：normal命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9Cglobal%E5%91%BD%E4%BB%A4"><span class="nav-number">9.</span> <span class="nav-text"> 批量操作：global命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-number">10.</span> <span class="nav-text"> 替换命令</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

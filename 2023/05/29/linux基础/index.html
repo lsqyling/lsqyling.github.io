@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux基础">
+<meta property="og:url" content="https://lsqyling.github.io/2023/05/29/linux%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lsqyling.github.io/images/fd_desc.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/c_program_layout.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/process_mask_pending.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/big_endian.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/little_endian.png">
+<meta property="article:published_time" content="2023-05-29T01:05:52.000Z">
+<meta property="article:modified_time" content="2025-08-05T12:07:24.071Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="CS">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lsqyling.github.io/images/fd_desc.png">
+
+<link rel="canonical" href="https://lsqyling.github.io/2023/05/29/linux%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Linux基础 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2023/05/29/linux%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-29 09:05:52" itemprop="dateCreated datePublished" datetime="2023-05-29T09:05:52+08:00">2023-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-05 20:07:24" itemprop="dateModified" datetime="2025-08-05T20:07:24+08:00">2025-08-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。</p>
+<span id="more"></span>
+<p>Linux系统一般有四个主要部分：内核、shell、文件系统、应用程序。前三者一起构成了基本的操作系统，应用程序则是在这个基础上运行的。</p>
+<h3 id="part-1-标准io"><a class="markdownIt-Anchor" href="#part-1-标准io"></a> <strong>Part 1: 标准IO</strong></h3>
+<p>I/O：input &amp; output,是一切实现的基础</p>
+<blockquote></blockquote>
+<pre><code>stdio 标准IO  
+sysio 系统调用IO（文件IO）
+</code></pre>
+<blockquote></blockquote>
+<p>stdio: FILE类型贯穿始终</p>
+<blockquote></blockquote>
+<pre><code>fopen();
+fclose();
+fgetc();
+fputc();
+fgets();
+fputs();
+fread();    binary read
+fwrite();   binary write
+
+printf();
+scanf();
+
+fseek();
+ftell();
+int fseeko(FILE *stream, off_t offset, int whence);  
+     node: On  some  architectures,  both off_t and long are 32-bit types, but    
+     
+     defining _FILE_OFFSET_BITS 64 
+     
+     with the value 64 (before including any header   files) will turn off_t into a 64-bit type.  
+
+off_t ftello(FILE *stream);
+
+rewind();
+fflush();
+    1. 缓冲区的作用：大多数情况下是好事，合并系统调用。
+    2. 行缓冲：换行时候刷新，满了的时候刷新，强制刷新（标准输出是这样的，因为是终端设备）
+    3. 全缓冲：满了的时候刷新，强制刷新（默认是全缓冲，只要不是终端设备）
+    4. 无缓冲：如stderr, 需要立即输出的内容
+    5. 更改缓冲模式的函数 setvbuf()--- 一般用不上
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-2-系统io文件io"><a class="markdownIt-Anchor" href="#part-2-系统io文件io"></a> <strong>Part 2: 系统IO/文件IO</strong></h3>
+<p>fd 是在文件IO中贯穿始终的类型<br />
+文件描述符的概念：<br />
+<img src="/images/fd_desc.png" alt="文件描述符的概念" /></p>
+<blockquote></blockquote>
+<pre><code>1. 实质：整形数---数组的下标，优先使用当前可用范围最小的。
+2. 当前数组是在一个进程空间中的，不同进程不会共用。
+3. 是进程用来访问操作系统对象的“指针”。
+</code></pre>
+<blockquote></blockquote>
+<p>文件IO相关操作：</p>
+<blockquote></blockquote>
+<pre><code>1. open(const char *pathname, int flags); flags --- 位图
+2. flags must be:  O_RDONLY,  O_WRONLY,  or O_RDWR.  
+3. or has O_CLOEXEC,  O_CREAT,  O_DIRECTORY,  O_EXCL,  O_NOCTTY,O_NOFOLLOW,  O_TMPFILE,  O_TRUNC... see man 2 open.
+4. r ---    O_RDONLY
+5. r+ ----  O_RDWR
+6. w ----   O_WRONLY|O_CREATE|O_TRUNC
+7. w+ ----  O_RDWR|O_TRUNC|O_CREATE
+8. read()
+9. write()
+10. close()
+11. lseek
+</code></pre>
+<blockquote></blockquote>
+<p>文件IO和标准IO的区别</p>
+<blockquote></blockquote>
+<pre><code>1. 响应速度 &amp; 吞吐量
+2. 如何使一个程序变快？主要考虑上面两个方面进行回答。
+3. 标准IO和系统IO 不可混用
+</code></pre>
+<blockquote></blockquote>
+<p>IO的效率问题</p>
+<blockquote></blockquote>
+<pre><code>bufsize 的大小会影响效率，但有一个最佳的bufsize 大小，需要测试。
+</code></pre>
+<blockquote></blockquote>
+<p>文件共享</p>
+<blockquote></blockquote>
+<pre><code>线程共享，在一个进程空间多次打开文件。
+进程共享，在两个进程中去打开文件，利用进程间共享。
+试题：写一个程序删除一个文件的第10行。
+</code></pre>
+<blockquote></blockquote>
+<p>原子操作</p>
+<blockquote></blockquote>
+<pre><code>1. 不可分割的操作
+2. 不可分割的最小单位
+3. 解决竞争和冲突
+4. 如：tmpnam()
+</code></pre>
+<blockquote></blockquote>
+<p>程序中的重定向：dup dup2</p>
+<blockquote></blockquote>
+<pre><code>dup2(old_fd, new_fd) : 把old_fd 从定向到new_fd,第一，关闭new_fd。 第二，copy old_fd 到new_fd。第三，如果old_fd == new_fd时，什么都不做。
+</code></pre>
+<blockquote></blockquote>
+<p>同步：sync fsync, fdatasysnc</p>
+<blockquote></blockquote>
+<pre><code>1. sync - commit buffer cache to disk,同步内核层面的buf cache
+2. 解除设备挂载时用到。 man 2 sync see the details.
+</code></pre>
+<blockquote></blockquote>
+<p>fcntl()</p>
+<blockquote></blockquote>
+<pre><code>1. 文件描述符所变的魔术几乎都来源与该函数。
+</code></pre>
+<blockquote></blockquote>
+<p>ioctl()</p>
+<blockquote></blockquote>
+<pre><code>1. 设备相关的内容
+</code></pre>
+<blockquote></blockquote>
+<p>/dev/fd/目录</p>
+<blockquote></blockquote>
+<pre><code>1. 虚目录
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-3-file-system"><a class="markdownIt-Anchor" href="#part-3-file-system"></a> <strong>Part 3: File System</strong></h3>
+<p>文件系统：<br />
+一、目录和文件</p>
+<blockquote></blockquote>
+<pre><code>1. 获取文件属性
+    stat()：通过文件路径获取属性，面对符号链接文件时获取的是所指向的属性。
+    fstat():通过文件描述符获取属性。
+    lstat():面对符号链接文件时获取的是符号链接文件的属性。
+    文件类型：7种 --- dcb-lsp d:目录文件 c:字符设备文件 b:块设备文件 -：常规文件  
+    l:链接文件（符号链接文件）s:网络套接字socket 文件 p:管道文件
+2. 文件访问权限
+    st_mode 是一个16位的位图，用于表示文件类型，文件访问权限，特殊权限位
+3. umask
+    作用：防止产生权限过松的文件
+4. 文件权限的更改/管理
+    chmod();
+        chmod a+x big.c --- a+x：所有可读可写可执行 rwxrwxrwx. u+x 代表user rwx.
+        g+x: group rwx. o+x :other x.
+    fchmod();
+5. 粘住位
+    t 位 /tmp 目录有t位
+6. 文件系统：FAT，UFS
+    文件或数据的存储和管理
+7. 硬链接，符号链接
+    硬链接与目录项是同义词，且建立硬链接有限制：不能给目录建立，不能给分区建立。
+    符号链接优点：可跨分区，可以给目录建立。
+    link() ---&gt; ln src dest/ln -s src dest.
+     unlink()
+    remove() ---&gt; rm
+    rename() ---&gt; mv
+8. utime
+    change file last access and modification times.
+9. 目录的创建和销毁
+    mkdir()
+    rmdir()
+10. 更改当前工作路径
+    chdir(); ---&gt; cd: change working directory.
+    fchdir();
+    getcwd();---&gt; pwd: get current working directory.
+11. 分析目录/读取目录内容
+    glob()：解析模式/ 统配符 可以实现以下方法的集合。
+
+    opendir();
+    closedir();
+    readdir();
+    rewinddir();
+    fseekdir();
+    seekdir();
+    telldir();
+</code></pre>
+<blockquote></blockquote>
+<p>二、系统数据文件和信息</p>
+<blockquote></blockquote>
+<pre><code>1. /etc/passed
+    getpwuid();
+    getpwnam();
+
+2. /etc/group
+    getgrgid();
+    getgrgnam();
+3. /etc/shadow
+    getspnam();
+    crypt();
+    getpass();
+
+4. 时间戳: time_t   char *   struct tm
+    time();
+    gmtime();
+    localtime();
+    mktime();
+    strftime(); 
+</code></pre>
+<blockquote></blockquote>
+<p>三、进程环境</p>
+<blockquote></blockquote>
+<pre><code>1. main() 函数
+    int main(int argc, char **argv);
+2. 进程的终止
+    正常终止：
+        1）从main 函数返回
+        2）调用exit()
+        3) 调用_exit() 或_Exit()
+        4) 最后一个线程从其启动例程返回
+        5) 最后一个线程调用pthread_exit()
+    异常终止：
+        1）调用abort()
+        2) 接到一个信号并终止
+        3) 最后一个线程对其取消请求作出响应 
+    atexit();
+        在进程正常结束时钩子函数逆序被调用，但是进程如果是调用_exit()或_Exit()不会执行钩子函数
+3. 命令行参数的分析
+     getopt()
+     getopt_long()
+4. 环境变量
+    key=value
+    getenv();
+    setenv();
+    putenv();
+5. c程序的存储空间布局 (pmap p_id)
+</code></pre>
+<p><img src="/images/c_program_layout.png" alt="c程序的存储空间布局" /></p>
+<pre><code>6. 库  
+    动态库  
+    静态库  
+    手工装载库  
+        dlopen();  
+        dlerror();  
+        dlsym();  
+        dlclose();  
+7. 函数跳转
+    setjmp();
+        设置跳转点
+    longjmp();
+        安全跨函数的跳转
+8. 资源的获取及控制
+    getrlimit();
+    setrlimit();
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-4-process"><a class="markdownIt-Anchor" href="#part-4-process"></a> <strong>Part 4: Process</strong></h3>
+<p>进程基本知识， 已经进入多进程。</p>
+<blockquote></blockquote>
+<pre><code>1. 进程标识符 pid
+    1）类型pid_t 有符号16位整数（现在已经扩展根据机器环境有不同的大小）
+    2）命令ps (man ps) 例如： ps axf ps axm ps ax -L 
+    3）进程号是顺次向下使用
+    4）getpid();
+    5）getppid(); 
+2. 进程的产生
+    1）fork();
+    2）注意理解关键字：duplicating，意味着拷贝，克隆，一模一样等含义，代码从fork()的位置开始一式两份。  
+    3）fork后父子进程的区别：fork的返回值不一样，pid不同，ppid也不同，未决信号和文件锁不继承，资源利用量清零。
+    4）init进程：是所有进程的祖先进程 进程号是1号
+    5）调度器的调度策略决定了哪个进程先运行，不可假设。
+    6）fork() 之前fflush() 的重要性。
+    7）子进程exit() 的重要性。
+    8）vfork()
+
+3. 进程的消亡及释放资源
+    wait();
+    waitpid()
+    wait3();
+    wait4();
+4. exec函数族
+    execl();
+    execlp();
+    execle();
+    execv();
+    execvp();
+    注意：exec组函数使用注意fflush 的使用。
+5. 用户权限及组权限
+    u + s
+    g + s
+    getuid();
+    geteuid();
+    getgid();
+    getegid();
+    setuid();// 常用 例子：mysu.c
+    setgid();
+    setreuid();
+    setregid();
+    seteuid();
+    setguid();
+    chown root ./mysu
+    chmod u+s ./mysu
+
+6. 解释器文件
+    #！  /bin/bash
+
+7. system();
+    理解：fork + exec + wait 封装
+    例子： 
+    fork() + exec(&quot;/bin/sh&quot;, &quot;sh&quot;, &quot;date + %s &lt; /dev/null&quot;, NULL) + wait()的一个简单封装
+8. 进程会计
+    acct();
+
+9. 进程时间
+    进程时间
+    times() ---&gt; time ./myexec 
+
+10. 守护进程
+    会话 session
+        是一个容器，承载进程组。
+        标识sid
+        setsid() 
+            creates a new session if the calling process is not a process   
+            group leader.The calling process is the leader of the new session,
+            the process group leader of the new process group,
+            and has no controlling tty.
+    终端
+        输入和输出
+    setpgid();
+    getpgid();
+    getpgrp();
+    单实例的守护进程：用的是锁文件 /var/run/xxx.pid
+    启动脚本文件：/etc/rc1./xx
+
+11. 系统日志
+    存放的位置： /var/log
+    rsyslogd 服务
+    openlog();
+    syslog();
+    closelog();
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-5-concurrency"><a class="markdownIt-Anchor" href="#part-5-concurrency"></a> <strong>Part 5: Concurrency</strong></h3>
+<p>同步<br />
+异步<br />
+异步事件的处理：查询法，通知法。<br />
+异步事件发生的很稀疏通知法是合适的，发生很频繁用查询法。</p>
+<p>一、信号</p>
+<blockquote></blockquote>
+<pre><code>1. 信号的概念
+    信号是软件层面的中断。
+    信号的响应依赖于中断。
+
+2. signal();
+    kill -l 显示信号
+    SIGINT ---&gt; ctrl + c
+    信号会打断阻塞的系统调用。
+
+3. 信号的不可靠
+    指信号行为的不可靠
+
+4. 可重入函数
+    所有的系统调用都是可重入的，一部分库函数也是可重入的。memcpy()可重入，rand()不可重入，
+    rand_r() 可重入。
+
+5. 信号的响应过程
+    信号从受到到响应有一个不可避免的延迟  
+    思考：信号如何忽略掉一个信号的？  
+    标准信号为什么要丢失？
+    标准信号的响应没有严格的顺序。  
+    不能从信号处理函数中随意的往外跳
+</code></pre>
+<p><img src="/images/process_mask_pending.png" alt="信号的响应过程" /></p>
+<pre><code>6. 常用函数
+    kill(); -- send signal to a process
+    raise();-- send a signal to the caller
+
+    alarm();
+    setitimer();
+    例：使用单一计时器，setitimer()或alarm()构造一组函数，实现任意数量的计时器。
+
+    pause();-- wait a signal
+    abort();-- create a core dump file
+    system();
+        During execution of the command, SIGCHLD will  
+        be blocked and SIGINT and SIGQUIT will be  ignored,  
+        in  the  process  that  calls  system().
+    sleep();
+    usleep();
+    nanosleep();
+    select();
+    
+7. 信号集
+    类型：sigset_t
+    sigemptyset();
+    sigfillset();
+    sigaddset();
+    sigismember();
+
+8. 信号屏蔽子/pending 集的处理
+    sigprocmask(); 例子：block.c
+    sigpending(); --- 不常用
+
+
+9. 扩展集
+    sigsuspend(); -- wait for a signal
+        解除信号集马上进入等待一个信号
+    sigaction(); -- signal()
+
+10. 实时信号
+    范围： [SIGRTMIN, SIGRTMAX]
+    不丢失排队，排队的多少查看ulimit -a
+</code></pre>
+<blockquote></blockquote>
+<p>二、线程</p>
+<blockquote></blockquote>
+<pre><code>1. 线程的概念
+    一个正在运行的函数  
+    posix 线程是一套标准，而不是实现  
+    openmp线程  
+    线程标识：pthread_t
+    pthread_equal();
+    pthread_self(); -- obtain ID of the calling thread.
+
+2. 线程的创建
+    pthread_create();
+    线程的调度取决于调度器策略
+
+    线程的终止
+        3种方式：
+            1）线程从启动例程返回，返回值就是线程的退出码
+            2）线程可以被同一进程中的其他线程取消
+            3）线程调用pthread_exit()函数
+        pthread_join() -- join with a terminated thread
+
+    栈的清理
+        pthread_cleanup_push();
+        pthread_cleanup_pop();
+
+    线程的取消选项
+        线程取消： pthread_cancel();
+        取消有2种状态： 允许和不允许
+        允许取消又分为：异步cancel,推迟cancel(默认)，推迟至cancel点在响应。
+        cancel点：posix定义的cancel点，都是可能引发阻塞的系统调用。
+        pthread_setcancelstate(): 设置是否允许取消
+        pthread_setcanceltype(): 设置取消方式
+        pthread_testcancel(): 本函数什么都不做，就是一个取消点。
+
+    线程分离：
+        pthread_detach();
+
+3. 线程的同步
+    互斥量： 
+        pthread_mutex_t
+        pthread_mutex_init();
+        pthread_mutex_destroy();
+        pthread_mutex_lock();
+        pthread_mutex_trylock();
+        pthread_mutex_unlock();
+        pthread_once(); // 只执行一次
+
+    条件变量：
+        pthread_cond_t
+        pthread_cond_init();
+        pthread_cond_destroy();
+        pthread_cond_broadcast();
+        pthread_cond_signal();
+        pthread_cond_wait(); -- 解锁等待 被通知后抢锁
+        pthread_cond_timedwait();
+
+    信号量：
+    多写锁：读锁 ---&gt; 共享锁    写锁 ---&gt; 互斥锁
+
+4. 线程属性
+    pthread_attr_t 
+    pthread_attr_init();
+    pthread_attr_destroy();
+    pthread_attr_setstacksize();
+    见 man pthread_attr_init 的see also
+
+    线程同步的属性
+        互斥量属性：
+            pthread_mutexattr_init();
+            pthread_mutexattr_destroy();
+            pthread_mutexattr_setpshared();
+            pthread_mutexattr_getpshared();
+            clone();
+            pthread_mutexattr_gettype();
+            pthread_mutexattr_settype();
+        
+        条件变量：
+            pthread_condattr_init();
+            pthread_condattr_destroy();
+
+        读写锁属性：
+
+5. 重入
+    多线程中的IO
+    线程与信号
+        pthread_sigmask();
+        sigwait();
+        pthread_kill();
+
+    线程与fork
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-6-advanced-io"><a class="markdownIt-Anchor" href="#part-6-advanced-io"></a> <strong>Part 6: Advanced IO</strong></h3>
+<p>非阻塞IO – 阻塞IO<br />
+补充：有限状态机编程</p>
+<blockquote></blockquote>
+<pre><code>1. 非阻塞IO
+    简单流程：自然流程是结构化的
+    复杂流程：自然流程不是结构化的
+
+2. IO 多路转接
+    select(); --- 古老
+        以事件（读，写，异常）为单位，来组织文件描述符
+        缺陷：监视现场和监视结果是放在同一空间，只要select 有返回，除了你感兴趣的事件，  
+        其他的集合都清空，需要重新布置监视现场。监视的事件太单一。
+
+        void FD_CLR(int fd, fd_set *set); ---&gt; 删除
+        int  FD_ISSET(int fd, fd_set *set); ---&gt; 测试
+        void FD_SET(int fd, fd_set *set); ---&gt; 添加
+        void FD_ZERO(fd_set *set); ---&gt; 清空
+
+    poll(); --- 可移植，wait for some events on a fd.
+        以文件描述符为单位，来组织事件
+
+    epoll(); --- linux 方言
+        epoll_create();
+        epoll_ctl();
+        epoll_wait();
+
+3. 其他读写函数
+    readv();
+    writev();
+
+4. 存储映射IO
+    mmap(); ---&gt; 映射
+    munmap(); ---&gt; 解除映射
+
+5. 文件锁
+    fcntl()
+    lockf()
+    flock()
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-7-ipc"><a class="markdownIt-Anchor" href="#part-7-ipc"></a> <strong>Part 7: IPC</strong></h3>
+<blockquote></blockquote>
+<pre><code>1.管道
+    内核提供，单工（一端为读，一端为写），自同步机制
+    匿名管道
+        pipe()
+    命名管道
+        mkfifo()
+
+
+2. XSI -&gt; SysV
+    IPC -&gt; Inter-Process Communication
+    主动端：先发包的一方
+    被动端：先发包的一方（先运行）
+
+    key:ftok 
+
+    Message Queues
+
+    Shared Memory Segments
+
+    Semaphore Arrays
+
+    以上创建方法都是：xxxget xxxop xxxctl for exmaple:man msgget msgop msgctl semget 
+    semop semctl man shemget ...
+
+
+3. 网络套接字socket
+    讨论：跨主机的传输要注意的问题
+        1 字节序问题：
+            大端模式：就是高位字节排放在内存的低地址端，低位字节排放在内存的高地址端。
+            小端模式：就是低字节排放在内存的低地址端，高位字节排放在内存的高地址端。
+            主机字节序：host
+            网络字节序：network
+            解决：_to__: htons, htols, ntohs, ntohs
+</code></pre>
+<p><img src="/images/big_endian.png" alt="大端存储" /><br />
+<img src="/images/little_endian.png" alt="小端存储" /></p>
+<pre><code>        2 对齐：
+            <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> f;</span><br><span class="line">    <span class="type">char</span> ch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            解决：不对齐（让编译器不对齐）
+
+        3 类型长度问题：
+            int
+            char
+            解决：int32_t, uint32_t, int64_t int8_t uint8_t
+
+    Socket 是什么？
+
+    报式套接字：
+        被动端：(先运行)
+            1 取得socket
+            2 给socket 绑定地址（本地地址、端口）
+            3 收/发 消息
+            4 关闭socket
+        主动端：
+            1 取得socket
+            2 给socket 绑定地址（可省略，系统会自动分配一个端口）
+            3 发/收 消息
+            4 关闭socket
+
+        UDP 包的推荐长度是512byte， 报头长度为8byte.
+        socket()
+        bind()
+        sendto()
+        recvfrom()
+        inet_pton()
+        inet_ntop()
+        setsockopt()
+        getsockopt()
+
+        多点通讯：广播（全网广播，子网广播）， 多播/组播
+
+    流式套接子：
+        C 端（主动端）
+            1 获得socket
+            2 给socket 绑定地址（可省略）
+            3 发送连接
+            4 收/发消息
+            5 关闭
+
+
+        S 端（被动端）
+            1 获得socket
+            2 给socket 绑定地址
+            3 将socket 置为监听模式
+            4 接受链接
+            5 收/发消息
+            6 关闭
+</code></pre>
+<blockquote></blockquote>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/CS/" rel="tag"><i class="fa fa-tag"></i> CS</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/28/pco-%E8%AE%A1%E7%BB%84%E5%8E%9F%E7%90%86/" rel="prev" title="计算机组成原理">
+      <i class="fa fa-chevron-left"></i> 计算机组成原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/29/network-%E5%8E%9F%E7%90%86/" rel="next" title="计算机网络">
+      计算机网络 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#part-1-%E6%A0%87%E5%87%86io"><span class="nav-number">1.</span> <span class="nav-text"> Part 1: 标准IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#part-2-%E7%B3%BB%E7%BB%9Fio%E6%96%87%E4%BB%B6io"><span class="nav-number">2.</span> <span class="nav-text"> Part 2: 系统IO&#x2F;文件IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#part-3-file-system"><span class="nav-number">3.</span> <span class="nav-text"> Part 3: File System</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#part-4-process"><span class="nav-number">4.</span> <span class="nav-text"> Part 4: Process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#part-5-concurrency"><span class="nav-number">5.</span> <span class="nav-text"> Part 5: Concurrency</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#part-6-advanced-io"><span class="nav-number">6.</span> <span class="nav-text"> Part 6: Advanced IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#part-7-ipc"><span class="nav-number">7.</span> <span class="nav-text"> Part 7: IPC</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

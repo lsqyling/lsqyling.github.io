@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统-南大">
+<meta property="og:url" content="https://lsqyling.github.io/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-29T06:52:13.000Z">
+<meta property="article:modified_time" content="2025-08-05T12:07:24.083Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="CS">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lsqyling.github.io/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>操作系统-南大 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统-南大
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-29 14:52:13" itemprop="dateCreated datePublished" datetime="2023-05-29T14:52:13+08:00">2023-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-05 20:07:24" itemprop="dateModified" datetime="2025-08-05T20:07:24+08:00">2025-08-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
+<span id="more"></span>
+<h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
+<h4 id="1-why-为什么要学操作系统"><a class="markdownIt-Anchor" href="#1-why-为什么要学操作系统"></a> 1. (Why): 为什么要学操作系统？</h4>
+<p>重走从无到有的发现过程</p>
+<ul>
+<li>基本思想、基本方法、里程碑、走过的弯路</li>
+<li>最终目的：应用/创新</li>
+<li>操作系统带你补完编程的技术体系</li>
+<li>具有编写一切 “能写出来” 程序的能力 (具备阅读论文的能力)</li>
+</ul>
+<h4 id="2-what-到底什么是操作系统"><a class="markdownIt-Anchor" href="#2-what-到底什么是操作系统"></a> 2. (What): 到底什么是操作系统？</h4>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Operating System: A body of software, in fact, that is responsible for making it   </span><br><span class="line">easy to run programs (even allowing you to seemingly run many at the same time),   </span><br><span class="line">allowing programs to share memory, enabling programs to interact with devices,   </span><br><span class="line">and other fun stuff like that. (OSTEP)    </span><br></pre></td></tr></table></figure>
+<p>理解操作系统:</p>
+<blockquote>
+<p>理解硬件(计算机)和软件(程序)的发展历史, 夹在中间的就是操作系统</p>
+</blockquote>
+<ul>
+<li>1950s的操作系统</li>
+<li>操作(operate)任务(jobs)的系统(system)</li>
+<li>批处理系统 = 程序自动切换+库函数API</li>
+<li>Disk Operating System(DOS)</li>
+<li>操作系统开始出现设备，文件，任务等对象和API</li>
+</ul>
+<blockquote>
+<p>今天的操作系统</p>
+</blockquote>
+<ul>
+<li>通过虚拟化硬件资源为程序运行提供服务的软件。</li>
+</ul>
+<h4 id="3-how-怎么学操作系统"><a class="markdownIt-Anchor" href="#3-how-怎么学操作系统"></a> 3. (How): 怎么学操作系统？</h4>
+<blockquote>
+<p>学习操作系统：现代方法</p>
+</blockquote>
+<ol>
+<li>读得懂的教科书和阅读材料</li>
+</ol>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://pages.cs.wisc.edu/~remzi/OSTEP/">Operating System: Three Easy Pieces</a></li>
+</ul>
+<ol start="2">
+<li>问题驱动，用代码说话</li>
+</ol>
+<ul>
+<li>Demo 小程序，各类系统工具(strace, gdb,…)的使用</li>
+<li>xv6-risv, AbstractMachine</li>
+<li>RTFM, STFW，， RTFSC(F can be a colorful word)</li>
+</ul>
+<h4 id="4-prerequisites"><a class="markdownIt-Anchor" href="#4-prerequisites"></a> 4. Prerequisites</h4>
+<blockquote>
+<p>计算机专业学生必须具备的核心素质。</p>
+</blockquote>
+<ul>
+<li>是一个合格的操作系统用户</li>
+<li>会 STFW/RTFM 自己动手解决问题</li>
+<li>不怕使用任何命令行工具</li>
+<li>vim, tmux, grep, gcc, binutils, …</li>
+<li>不怕写代码</li>
+<li>能管理一定规模 (数千行) 的代码</li>
+<li>能在出 bug 时默念 “机器永远是对的、我肯定能调出来的”</li>
+<li>然后开始用正确的工具/方法调试</li>
+</ul>
+<h4 id="5-学术诚信-academic-integrity"><a class="markdownIt-Anchor" href="#5-学术诚信-academic-integrity"></a> 5. 学术诚信 (Academic Integrity)</h4>
+<blockquote>
+<p>Academic integrity 不是底线，而是 “自发的要求”</p>
+</blockquote>
+<ul>
+<li>对 “不应该做的事情” 有清楚的认识</li>
+<li>不将代码上传到互联网</li>
+<li>主动不参考别人完成的实验代码</li>
+<li>不使用他人测试用例 (depends)</li>
+<li>有些行为可能使你得到分数，但失去应有的训练</li>
+</ul>
+<blockquote>
+<p>一些过去的例子</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/40568346">代码抄袭：那些让985学生沉默，211学生流泪的真相</a></li>
+<li>我们也在 Academic Integrity 方面有一些考虑</li>
+</ul>
+<h4 id="6-成为-power-user"><a class="markdownIt-Anchor" href="#6-成为-power-user"></a> 6. 成为 Power User</h4>
+<blockquote>
+<p>感到 Linux/PowerShell/… 很难用？</p>
+</blockquote>
+<ul>
+<li>没有建立信心、没有理解基本逻辑
+<ul>
+<li>计算机科学自学指南</li>
+<li>没有找对材料/没有多问 “能不能再做点什么”</li>
+<li>Baidu v.s. Google/Github/SO v.s. ChatGPT</li>
+<li>没有用对工具 (man v.s. tldr; 该用 IDE 就别 Vim)</li>
+<li>过了入门阶段，都会好起来</li>
+</ul>
+</li>
+<li>本章代码请参考github: <a target="_blank" rel="noopener" href="https://github.com/lsqyling/OperatingSys_NJ/tree/main/part_01">操作系统-南大-part_01</a></li>
+</ul>
+<hr />
+<h2 id="p2-应用视角的操作系统-程序的状态机模型编译优化"><a class="markdownIt-Anchor" href="#p2-应用视角的操作系统-程序的状态机模型编译优化"></a> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</h2>
+<blockquote>
+<p>本讲内容：指令序列和高级语言的状态机模型；回答以下问题：</p>
+</blockquote>
+<ul>
+<li>什么是软件 (程序)？</li>
+<li>如何在操作系统上构造最小/一般/图形界面应用程序？</li>
+<li>什么是编译器？编译器把一段程序翻译成什么样的指令序列才算 “正确”？</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/CS/" rel="tag"><i class="fa fa-tag"></i> CS</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/29/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="prev" title="Linux常用命令">
+      <i class="fa fa-chevron-left"></i> Linux常用命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/12/22/qt-base/" rel="next" title="Qt-base">
+      Qt-base <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#p1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.</span> <span class="nav-text"> P1: 操作系统概述 (操作系统的历史；学习建议)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-why-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.0.1.</span> <span class="nav-text"> 1. (Why): 为什么要学操作系统？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-what-%E5%88%B0%E5%BA%95%E4%BB%80%E4%B9%88%E6%98%AF%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.0.2.</span> <span class="nav-text"> 2. (What): 到底什么是操作系统？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-how-%E6%80%8E%E4%B9%88%E5%AD%A6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.0.3.</span> <span class="nav-text"> 3. (How): 怎么学操作系统？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-prerequisites"><span class="nav-number">1.0.4.</span> <span class="nav-text"> 4. Prerequisites</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%AD%A6%E6%9C%AF%E8%AF%9A%E4%BF%A1-academic-integrity"><span class="nav-number">1.0.5.</span> <span class="nav-text"> 5. 学术诚信 (Academic Integrity)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E6%88%90%E4%B8%BA-power-user"><span class="nav-number">1.0.6.</span> <span class="nav-text"> 6. 成为 Power User</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#p2-%E5%BA%94%E7%94%A8%E8%A7%86%E8%A7%92%E7%9A%84%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text"> P2: 应用视角的操作系统 (程序的状态机模型；编译优化)</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>
