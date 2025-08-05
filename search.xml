@@ -3030,7 +3030,7 @@ visibility属性默认值是show，如果设置为hidden，元素会隐藏。<br
   </entry>
   <entry>
     <title>C语言</title>
-    <url>/2023/05/29/c-yu-yan/</url>
+    <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
     <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
 <span id="more"></span>
 <blockquote>
@@ -3296,7 +3296,7 @@ NS图，流程图            工具Dia</p>
   </entry>
   <entry>
     <title>英语词根记忆法(20000words)</title>
-    <url>/2025/03/02/english-ci-gen-ji-yi-fa/</url>
+    <url>/2025/03/02/english-%E8%AF%8D%E6%A0%B9%E8%AE%B0%E5%BF%86%E6%B3%95/</url>
     <content><![CDATA[<p>简介：英语词根记忆法是一种通过学习和理解单词的基本构成部分——词根、前缀和后缀来增强词汇量和理解能力的学习策略。这种方法基于许多英语单词都是由拉丁语和希腊语的词根演变而来的事实，因此掌握这些基本组成部分可以帮助学习者更轻松地推测出大量单词的意思。</p>
 <span id="more"></span>
 <h1 id="词缀词根记忆法"><a class="markdownIt-Anchor" href="#词缀词根记忆法"></a> 词缀词根记忆法</h1>
@@ -4161,7 +4161,7 @@ checked属性：让该复选框默认选中。</p>
   </entry>
   <entry>
     <title>Linux基础</title>
-    <url>/2023/05/29/linux-ji-chu/</url>
+    <url>/2023/05/29/linux%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p>前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。</p>
 <span id="more"></span>
 <p>Linux系统一般有四个主要部分：内核、shell、文件系统、应用程序。前三者一起构成了基本的操作系统，应用程序则是在这个基础上运行的。</p>
@@ -4794,7 +4794,7 @@ fflush();
   </entry>
   <entry>
     <title>Linux常用命令</title>
-    <url>/2023/05/29/linux-chang-yong-ming-ling/</url>
+    <url>/2023/05/29/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
 <span id="more"></span>
 <h2 id="linux常用命令"><a class="markdownIt-Anchor" href="#linux常用命令"></a> Linux常用命令</h2>
@@ -4932,7 +4932,7 @@ fflush();
   </entry>
   <entry>
     <title>计算机网络</title>
-    <url>/2023/05/29/network-yuan-li/</url>
+    <url>/2023/05/29/network-%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<p>前言：计算机网络是指将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及网络通信协议的管理和协调下，实现资源共享和信息传递的计算机系统。计算机网络的基础知识，包括TCP / UDP协议、Http协议、Socket等方面。</p>
 <span id="more"></span>
 <h3 id="课程主要内容"><a class="markdownIt-Anchor" href="#课程主要内容"></a> <strong>课程主要内容</strong></h3>
@@ -5513,7 +5513,7 @@ Internet 协议栈
   </entry>
   <entry>
     <title>操作系统-南大</title>
-    <url>/2023/05/29/operating-system-nan-da/</url>
+    <url>/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/</url>
     <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
 <span id="more"></span>
 <h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
@@ -5629,7 +5629,7 @@ Internet 协议栈
   </entry>
   <entry>
     <title>计算机组成原理</title>
-    <url>/2023/05/28/pco-ji-zu-yuan-li/</url>
+    <url>/2023/05/28/pco-%E8%AE%A1%E7%BB%84%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<p>前言：计算机组成原理是计算机科学的一门基础课程，主要研究计算机的硬件系统，包括计算机的基本组成、指令系统、CPU设计、存储器层次结构、总线结构、I/O系统等方面。</p>
 <span id="more"></span>
 <h1 id="第一章计算机系统概述"><a class="markdownIt-Anchor" href="#第一章计算机系统概述"></a> 第一章：计算机系统概述</h1>
@@ -6418,7 +6418,7 @@ IEEE 754浮点数的格式如下：</p>
   </entry>
   <entry>
     <title>Python核心教程</title>
-    <url>/2025/04/15/python-jiao-cheng/</url>
+    <url>/2025/04/15/python%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<p>前言：  什么是<code>Python</code>？ 优缺点？<code>Python</code>是一个叫龟叔的荷兰老头写的（89年）擅长： 1.爬虫 2.自动化 3.科学计算 4.人工智能;<br />
 deepseek给出的简介如下：</p>
 <span id="more"></span>
