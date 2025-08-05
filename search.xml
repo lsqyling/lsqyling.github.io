@@ -852,6 +852,25 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
       </tags>
   </entry>
   <entry>
+    <title>汇编语言</title>
+    <url>/2025/03/02/assembly/</url>
+    <content><![CDATA[<p>简介：汇编语言（Assembly Language）是一种低级编程语言，它为特定的计算机架构提供了人类可读的指令形式。与高级编程语言相比，汇编语言更接近于机器码，几乎每个汇编语言语句都有一对一的对应机器指令。因此，使用汇编语言编写的程序通常能更高效地运行，并且可以更好地控制硬件资源。</p>
+<span id="more"></span>
+<h1 id="汇编语言"><a class="markdownIt-Anchor" href="#汇编语言"></a> 汇编语言</h1>
+<p>前言：汇编语言是直接在硬件之上的工作的编程语言，我们首先要了解硬件系统的结构，才能有效地应用汇编语言对其编程。汇编课程的研究重点是如何利于硬件系统的结构和指令集有效的控制系统进行工作。</p>
+<h2 id="第一章-基础知识"><a class="markdownIt-Anchor" href="#第一章-基础知识"></a> 第一章 基础知识</h2>
+<h3 id="11-机器语言"><a class="markdownIt-Anchor" href="#11-机器语言"></a> 1.1 机器语言</h3>
+<p>机器语言是机器指令的集合。8086CPU完成s = 768 + 12288 - 1280,机器码如下：<br />
+1011’1000’0000’0000’0000’0011<br />
+0000’0101’0000’0000’0011’0000<br />
+0010’1101’0000’0000’0000’0101</p>
+]]></content>
+      <tags>
+        <tag>汇编</tag>
+        <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Coroutine-协程</title>
     <url>/2025/03/03/coroutine/</url>
     <content><![CDATA[<p>前言：协程（Coroutine）是一种计算机程序组件，它与子例程（即通常所说的函数或过程）类似，但其执行方式更为灵活。不同于传统的线程和进程，协程允许在特定的地方暂停执行，并能在之后从暂停的地方恢复执行。这种特性使得协程在处理异步编程、并发操作以及I/O密集型任务时特别有用。</p>
@@ -1029,291 +1048,6 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
         <tag>C++</tag>
         <tag>协程</tag>
         <tag>网络编程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>汇编语言</title>
-    <url>/2025/03/02/assembly/</url>
-    <content><![CDATA[<p>简介：汇编语言（Assembly Language）是一种低级编程语言，它为特定的计算机架构提供了人类可读的指令形式。与高级编程语言相比，汇编语言更接近于机器码，几乎每个汇编语言语句都有一对一的对应机器指令。因此，使用汇编语言编写的程序通常能更高效地运行，并且可以更好地控制硬件资源。</p>
-<span id="more"></span>
-<h1 id="汇编语言"><a class="markdownIt-Anchor" href="#汇编语言"></a> 汇编语言</h1>
-<p>前言：汇编语言是直接在硬件之上的工作的编程语言，我们首先要了解硬件系统的结构，才能有效地应用汇编语言对其编程。汇编课程的研究重点是如何利于硬件系统的结构和指令集有效的控制系统进行工作。</p>
-<h2 id="第一章-基础知识"><a class="markdownIt-Anchor" href="#第一章-基础知识"></a> 第一章 基础知识</h2>
-<h3 id="11-机器语言"><a class="markdownIt-Anchor" href="#11-机器语言"></a> 1.1 机器语言</h3>
-<p>机器语言是机器指令的集合。8086CPU完成s = 768 + 12288 - 1280,机器码如下：<br />
-1011’1000’0000’0000’0000’0011<br />
-0000’0101’0000’0000’0011’0000<br />
-0010’1101’0000’0000’0000’0101</p>
-]]></content>
-      <tags>
-        <tag>汇编</tag>
-        <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>C语言</title>
-    <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
-    <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
-<span id="more"></span>
-<blockquote>
-<ul>
-<li>the history of c programing</li>
-<li>c 语言的特点<br />
-1. 基础性语言<br />
-2. 语法简洁，紧凑，方便，灵活<br />
-3. 运算符，结构丰富<br />
-4. 结构化，模块化编程<br />
-5. 移植性好，执行效率高<br />
-6. 允许对硬件直接操作</li>
-<li>c 语言学习建议
-<ul>
-<li>概念的正确性</li>
-<li>动手</li>
-<li>阅读优秀的程序段</li>
-<li>大量练习,面试题</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<h3 id="c课程讲解思路"><a class="markdownIt-Anchor" href="#c课程讲解思路"></a> <strong>c课程讲解思路</strong></h3>
-<blockquote></blockquote>
-<pre><code>    1. 基本概念
-    2. 数据类型，运算符和表达式
-    3. 输入输出专题
-    4. 流程控制
-    5. 数组
-    6. 指针
-    7. 函数 
-    8. 构造类型
-    9. 动态内存管理
-    10. 调试工具和调试技巧
-    11. 常用库函数
-</code></pre>
-<blockquote></blockquote>
-<p>hello.c ：<br />
-c源文件 — 预处理 —编译 —汇编— 链接 — 可执行程序</p>
-<blockquote></blockquote>
-<hr />
-<h3 id="一-基本概念"><a class="markdownIt-Anchor" href="#一-基本概念"></a> <strong>一、基本概念</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 以helloworld 为例对写程序的思路提出如下要求：
-2. 头文件正确包含的重要性
-3. 以函数为单位来进行程序的编写
-4. 声明部分+实现部分
-5. return 0 (exit(0) 给他的父进程看的)
-6. echo $?    
-</code></pre>
-<blockquote></blockquote>
-<p>算法：解决问题的方法</p>
-<blockquote></blockquote>
-<pre><code>1. 流程图
-2. NS 图
-3. FSM 有限状态机
-</code></pre>
-<blockquote></blockquote>
-<p>程序：用某种语言实现算法</p>
-<h3 id="二-数据类型运算符和表达式"><a class="markdownIt-Anchor" href="#二-数据类型运算符和表达式"></a> <strong>二、数据类型，运算符和表达式</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 数据类型：（基本类型,构造类型，指针类型，空类型void)
-2. 数据存储（占用的字节数）
-3. 不同类型的数据间进行转换
-4. 特殊性：
-5. bool 类型
-6. float 类型的比较
-7. char 类型的符号（c 标准未定义）
-8. 不同形式的零直
-</code></pre>
-<blockquote></blockquote>
-<h3 id="三-常量与变量"><a class="markdownIt-Anchor" href="#三-常量与变量"></a> <strong>三、常量与变量</strong></h3>
-<blockquote></blockquote>
-<ol>
-<li>
-<p>常量：<br />
-分类：<br />
-1）整形常量 1，790， 67，52<br />
-2）实行常量：3.14， 52.26<br />
-3）字符常量：‘\015’, ‘\x7f’<br />
-4）字符串常量：“helloworld”， “”<br />
-5）标识常量： #define，处理在程序的预处理阶段，不检查语法，只是单纯宏名和宏体的替换。</p>
-</li>
-<li>
-<p>变量：用来保存一些特定的内容，并且在程序执行过程中变化的量。<br />
-1） 定义：【存储类型】 数据类型 标识符<br />
-2）                 TYPE NAME = VALUE；<br />
-3）标识符：由字母 数字 下划线组成且不能以数字开头的表示序列。<br />
-4）存储类型： auto static register extern（说明型）<br />
-1》auto: 默认，自动分配空间<br />
-2》register:（建议型）寄存器类型，只能定义局部变量，不能定义全局变量。一个寄存器类型的变量无法打印地址。<br />
-3》static :静态型，自动初始化为0值或空值，且其值具有继承性。<br />
-4》extern : 说明型，不能改变变量的类型。</p>
-</li>
-<li>
-<p>变量的生命周期和作用范围：<br />
-1）全局变量和局部变量<br />
-2）局部变量和局部变量</p>
-</li>
-</ol>
-<blockquote></blockquote>
-<h3 id="四-运算符和表达式"><a class="markdownIt-Anchor" href="#四-运算符和表达式"></a> <strong>四、运算符和表达式</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 表达式与语句的区别  
-2. 运算符部分：  
-    1）每个运算符所需要的参与运算的操作数的个数  
-    2）结合性  
-    3）优先级  
-    4）运算符的特殊用法  
-        如：  %， = 与==，逻辑运算符的短路特性
-    5）位运算的重要意义  
-        将操作数中第n位置1，其他位不变：num = num | 1 &lt;&lt; n;
-        将操作数中第n位置0，其他位不变：num = num &amp; ～（1 &lt;&lt; n）;
-    6）优先级：算术运算符 &gt; 移位运算符 &gt; 关系运算符 &gt; 位运算符 &gt; 逻辑运算符 &gt; 条件运算符 &gt; 赋值运算符 &gt; 符合赋值运算符 &gt; 逗号运算符  
-</code></pre>
-<blockquote></blockquote>
-<h3 id="五-输入输出专题"><a class="markdownIt-Anchor" href="#五-输入输出专题"></a> <strong>五、输入，输出专题</strong></h3>
-<p>input &amp;&amp; output ----&gt; I/O(标准IO，文件IO或系统IO)</p>
-<blockquote></blockquote>
-<pre><code>1. 格式化输入输出函数：scanf printf  
-    1）int printf(const char *format, ...);
-    2） int scanf(const char *format, ...);
-2. 字符输入输出函数：getchar ,putchar
-3. 字符串输入输出函数：fgets fputs
-</code></pre>
-<blockquote></blockquote>
-<h3 id="六-流程控制"><a class="markdownIt-Anchor" href="#六-流程控制"></a> <strong>六、流程控制</strong></h3>
-<p>顺序，选择，循环<br />
-简单结构与复杂结构：自然流程<br />
-NS图，流程图            工具Dia</p>
-<blockquote></blockquote>
-<pre><code>1. 关键字：
-2. if else switch case while do while continue break
-</code></pre>
-<blockquote></blockquote>
-<h3 id="七-数组"><a class="markdownIt-Anchor" href="#七-数组"></a> <strong>七、数组</strong></h3>
-<p>一维数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义：【存储类型】数据类型 标识符【下标】 下标：必须是整形常量或整形表达式。  
-2. 初始化    
-    不初始化    
-    部分初始化    
-    全部初始化    
-3. 元素引用  
-4. 数组名  
-5. 数组越界  
-</code></pre>
-<blockquote></blockquote>
-<p>二维数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义，初始化  
-2. 元素引用  
-3. 存储形式  
-4. 深入理解二维数组  
-</code></pre>
-<blockquote></blockquote>
-<p>字符数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义，初始化存储特点
-    【存储类型】数据类型 标识符【下标】
-    单个字符初始化
-    用字符串常量初始化
-2. 输入输出
-3. 常用函数
-</code></pre>
-<blockquote></blockquote>
-<p>多维数组</p>
-<blockquote></blockquote>
-<blockquote></blockquote>
-<h3 id="八-指针"><a class="markdownIt-Anchor" href="#八-指针"></a> <strong>八、指针</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 变量与地址
-2. 指针与指针变量
-3. 直接访问与简接访问
-4. 空指针与野指针
-5. 空类型
-6. 指针与初始化的书写规则
-7. 指针与运算
-    &amp; * 关系运算 ++ --
-8. 指针与数组
-    指针与一维数组
-    指针与二维数组
-    指针与字符数组
-9. const 与指针
-10. 指针数组与数组指针
-11. 多级指针
-</code></pre>
-<blockquote></blockquote>
-<h3 id="九-函数"><a class="markdownIt-Anchor" href="#九-函数"></a> <strong>九、函数</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 函数的定义
-    数据类型 函数名（【形式参数说明表】）
-2. 函数的传参
-    值传递
-    地址传递
-    全局变量
-3. 函数的调用
-    嵌套调用
-    递归
-4. 函数与数组
-5. 函数与指针
-    指针函数
-        返回值 *函数名（形参）；
-        如：int * func(int);
-    函数指针
-        类型 （*指针名）（形参）；
-        如：int （*p)(int);
-</code></pre>
-<blockquote></blockquote>
-<h3 id="十-构造类型"><a class="markdownIt-Anchor" href="#十-构造类型"></a> <strong>十、构造类型</strong></h3>
-<p>结构体</p>
-<blockquote></blockquote>
-<pre><code>1. 产生即意义
-2. 类型描述
-    struct 结构体名
-    &#123;
-        数据类型 成员1；
-        数据类型 成员2；
-        ...
-    &#125;;
-3. 嵌套定义
-    
-4. 定义变量（变量，数组，指针），初始化及成员引用
-        成员引用：变量名.成员名
-            指针-&gt;成员名
-            （*指针）.成员名
-5. 占用内存空间大小
-6. 函数传参（值，地址）
-</code></pre>
-<blockquote></blockquote>
-<p>共用体</p>
-<blockquote></blockquote>
-<pre><code>1. 产生及意义
-2. 类型描述
-3. 嵌套定义
-4. 定义变量（变量，数组，指针），初始化及成员引用
-5. 占用内存大小
-6. 函数传参（值，地址）
-7. 位域
-</code></pre>
-<blockquote></blockquote>
-<p>枚举</p>
-<blockquote></blockquote>
-<pre><code>enum 标识符
-&#123;
-    成员 1，
-    成员 2，
-    成员 3
-&#125;;
-</code></pre>
-<blockquote></blockquote>
-<h3 id="十一-动态内存管理"><a class="markdownIt-Anchor" href="#十一-动态内存管理"></a> <strong>十一、动态内存管理</strong></h3>
-<p><em>malloc ralloc realloc free</em></p>
-<blockquote></blockquote>
-<pre><code>1. 规则：谁申请，谁释放。
-</code></pre>
-<blockquote></blockquote>
-]]></content>
-      <tags>
-        <tag>C</tag>
-        <tag>CS</tag>
       </tags>
   </entry>
   <entry>
@@ -3295,8 +3029,274 @@ visibility属性默认值是show，如果设置为hidden，元素会隐藏。<br
       </tags>
   </entry>
   <entry>
+    <title>C语言</title>
+    <url>/2023/05/29/c-yu-yan/</url>
+    <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
+<span id="more"></span>
+<blockquote>
+<ul>
+<li>the history of c programing</li>
+<li>c 语言的特点<br />
+1. 基础性语言<br />
+2. 语法简洁，紧凑，方便，灵活<br />
+3. 运算符，结构丰富<br />
+4. 结构化，模块化编程<br />
+5. 移植性好，执行效率高<br />
+6. 允许对硬件直接操作</li>
+<li>c 语言学习建议
+<ul>
+<li>概念的正确性</li>
+<li>动手</li>
+<li>阅读优秀的程序段</li>
+<li>大量练习,面试题</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="c课程讲解思路"><a class="markdownIt-Anchor" href="#c课程讲解思路"></a> <strong>c课程讲解思路</strong></h3>
+<blockquote></blockquote>
+<pre><code>    1. 基本概念
+    2. 数据类型，运算符和表达式
+    3. 输入输出专题
+    4. 流程控制
+    5. 数组
+    6. 指针
+    7. 函数 
+    8. 构造类型
+    9. 动态内存管理
+    10. 调试工具和调试技巧
+    11. 常用库函数
+</code></pre>
+<blockquote></blockquote>
+<p>hello.c ：<br />
+c源文件 — 预处理 —编译 —汇编— 链接 — 可执行程序</p>
+<blockquote></blockquote>
+<hr />
+<h3 id="一-基本概念"><a class="markdownIt-Anchor" href="#一-基本概念"></a> <strong>一、基本概念</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 以helloworld 为例对写程序的思路提出如下要求：
+2. 头文件正确包含的重要性
+3. 以函数为单位来进行程序的编写
+4. 声明部分+实现部分
+5. return 0 (exit(0) 给他的父进程看的)
+6. echo $?    
+</code></pre>
+<blockquote></blockquote>
+<p>算法：解决问题的方法</p>
+<blockquote></blockquote>
+<pre><code>1. 流程图
+2. NS 图
+3. FSM 有限状态机
+</code></pre>
+<blockquote></blockquote>
+<p>程序：用某种语言实现算法</p>
+<h3 id="二-数据类型运算符和表达式"><a class="markdownIt-Anchor" href="#二-数据类型运算符和表达式"></a> <strong>二、数据类型，运算符和表达式</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 数据类型：（基本类型,构造类型，指针类型，空类型void)
+2. 数据存储（占用的字节数）
+3. 不同类型的数据间进行转换
+4. 特殊性：
+5. bool 类型
+6. float 类型的比较
+7. char 类型的符号（c 标准未定义）
+8. 不同形式的零直
+</code></pre>
+<blockquote></blockquote>
+<h3 id="三-常量与变量"><a class="markdownIt-Anchor" href="#三-常量与变量"></a> <strong>三、常量与变量</strong></h3>
+<blockquote></blockquote>
+<ol>
+<li>
+<p>常量：<br />
+分类：<br />
+1）整形常量 1，790， 67，52<br />
+2）实行常量：3.14， 52.26<br />
+3）字符常量：‘\015’, ‘\x7f’<br />
+4）字符串常量：“helloworld”， “”<br />
+5）标识常量： #define，处理在程序的预处理阶段，不检查语法，只是单纯宏名和宏体的替换。</p>
+</li>
+<li>
+<p>变量：用来保存一些特定的内容，并且在程序执行过程中变化的量。<br />
+1） 定义：【存储类型】 数据类型 标识符<br />
+2）                 TYPE NAME = VALUE；<br />
+3）标识符：由字母 数字 下划线组成且不能以数字开头的表示序列。<br />
+4）存储类型： auto static register extern（说明型）<br />
+1》auto: 默认，自动分配空间<br />
+2》register:（建议型）寄存器类型，只能定义局部变量，不能定义全局变量。一个寄存器类型的变量无法打印地址。<br />
+3》static :静态型，自动初始化为0值或空值，且其值具有继承性。<br />
+4》extern : 说明型，不能改变变量的类型。</p>
+</li>
+<li>
+<p>变量的生命周期和作用范围：<br />
+1）全局变量和局部变量<br />
+2）局部变量和局部变量</p>
+</li>
+</ol>
+<blockquote></blockquote>
+<h3 id="四-运算符和表达式"><a class="markdownIt-Anchor" href="#四-运算符和表达式"></a> <strong>四、运算符和表达式</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 表达式与语句的区别  
+2. 运算符部分：  
+    1）每个运算符所需要的参与运算的操作数的个数  
+    2）结合性  
+    3）优先级  
+    4）运算符的特殊用法  
+        如：  %， = 与==，逻辑运算符的短路特性
+    5）位运算的重要意义  
+        将操作数中第n位置1，其他位不变：num = num | 1 &lt;&lt; n;
+        将操作数中第n位置0，其他位不变：num = num &amp; ～（1 &lt;&lt; n）;
+    6）优先级：算术运算符 &gt; 移位运算符 &gt; 关系运算符 &gt; 位运算符 &gt; 逻辑运算符 &gt; 条件运算符 &gt; 赋值运算符 &gt; 符合赋值运算符 &gt; 逗号运算符  
+</code></pre>
+<blockquote></blockquote>
+<h3 id="五-输入输出专题"><a class="markdownIt-Anchor" href="#五-输入输出专题"></a> <strong>五、输入，输出专题</strong></h3>
+<p>input &amp;&amp; output ----&gt; I/O(标准IO，文件IO或系统IO)</p>
+<blockquote></blockquote>
+<pre><code>1. 格式化输入输出函数：scanf printf  
+    1）int printf(const char *format, ...);
+    2） int scanf(const char *format, ...);
+2. 字符输入输出函数：getchar ,putchar
+3. 字符串输入输出函数：fgets fputs
+</code></pre>
+<blockquote></blockquote>
+<h3 id="六-流程控制"><a class="markdownIt-Anchor" href="#六-流程控制"></a> <strong>六、流程控制</strong></h3>
+<p>顺序，选择，循环<br />
+简单结构与复杂结构：自然流程<br />
+NS图，流程图            工具Dia</p>
+<blockquote></blockquote>
+<pre><code>1. 关键字：
+2. if else switch case while do while continue break
+</code></pre>
+<blockquote></blockquote>
+<h3 id="七-数组"><a class="markdownIt-Anchor" href="#七-数组"></a> <strong>七、数组</strong></h3>
+<p>一维数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义：【存储类型】数据类型 标识符【下标】 下标：必须是整形常量或整形表达式。  
+2. 初始化    
+    不初始化    
+    部分初始化    
+    全部初始化    
+3. 元素引用  
+4. 数组名  
+5. 数组越界  
+</code></pre>
+<blockquote></blockquote>
+<p>二维数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义，初始化  
+2. 元素引用  
+3. 存储形式  
+4. 深入理解二维数组  
+</code></pre>
+<blockquote></blockquote>
+<p>字符数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义，初始化存储特点
+    【存储类型】数据类型 标识符【下标】
+    单个字符初始化
+    用字符串常量初始化
+2. 输入输出
+3. 常用函数
+</code></pre>
+<blockquote></blockquote>
+<p>多维数组</p>
+<blockquote></blockquote>
+<blockquote></blockquote>
+<h3 id="八-指针"><a class="markdownIt-Anchor" href="#八-指针"></a> <strong>八、指针</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 变量与地址
+2. 指针与指针变量
+3. 直接访问与简接访问
+4. 空指针与野指针
+5. 空类型
+6. 指针与初始化的书写规则
+7. 指针与运算
+    &amp; * 关系运算 ++ --
+8. 指针与数组
+    指针与一维数组
+    指针与二维数组
+    指针与字符数组
+9. const 与指针
+10. 指针数组与数组指针
+11. 多级指针
+</code></pre>
+<blockquote></blockquote>
+<h3 id="九-函数"><a class="markdownIt-Anchor" href="#九-函数"></a> <strong>九、函数</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 函数的定义
+    数据类型 函数名（【形式参数说明表】）
+2. 函数的传参
+    值传递
+    地址传递
+    全局变量
+3. 函数的调用
+    嵌套调用
+    递归
+4. 函数与数组
+5. 函数与指针
+    指针函数
+        返回值 *函数名（形参）；
+        如：int * func(int);
+    函数指针
+        类型 （*指针名）（形参）；
+        如：int （*p)(int);
+</code></pre>
+<blockquote></blockquote>
+<h3 id="十-构造类型"><a class="markdownIt-Anchor" href="#十-构造类型"></a> <strong>十、构造类型</strong></h3>
+<p>结构体</p>
+<blockquote></blockquote>
+<pre><code>1. 产生即意义
+2. 类型描述
+    struct 结构体名
+    &#123;
+        数据类型 成员1；
+        数据类型 成员2；
+        ...
+    &#125;;
+3. 嵌套定义
+    
+4. 定义变量（变量，数组，指针），初始化及成员引用
+        成员引用：变量名.成员名
+            指针-&gt;成员名
+            （*指针）.成员名
+5. 占用内存空间大小
+6. 函数传参（值，地址）
+</code></pre>
+<blockquote></blockquote>
+<p>共用体</p>
+<blockquote></blockquote>
+<pre><code>1. 产生及意义
+2. 类型描述
+3. 嵌套定义
+4. 定义变量（变量，数组，指针），初始化及成员引用
+5. 占用内存大小
+6. 函数传参（值，地址）
+7. 位域
+</code></pre>
+<blockquote></blockquote>
+<p>枚举</p>
+<blockquote></blockquote>
+<pre><code>enum 标识符
+&#123;
+    成员 1，
+    成员 2，
+    成员 3
+&#125;;
+</code></pre>
+<blockquote></blockquote>
+<h3 id="十一-动态内存管理"><a class="markdownIt-Anchor" href="#十一-动态内存管理"></a> <strong>十一、动态内存管理</strong></h3>
+<p><em>malloc ralloc realloc free</em></p>
+<blockquote></blockquote>
+<pre><code>1. 规则：谁申请，谁释放。
+</code></pre>
+<blockquote></blockquote>
+]]></content>
+      <tags>
+        <tag>C</tag>
+        <tag>CS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>英语词根记忆法(20000words)</title>
-    <url>/2025/03/02/english-%E8%AF%8D%E6%A0%B9%E8%AE%B0%E5%BF%86%E6%B3%95/</url>
+    <url>/2025/03/02/english-ci-gen-ji-yi-fa/</url>
     <content><![CDATA[<p>简介：英语词根记忆法是一种通过学习和理解单词的基本构成部分——词根、前缀和后缀来增强词汇量和理解能力的学习策略。这种方法基于许多英语单词都是由拉丁语和希腊语的词根演变而来的事实，因此掌握这些基本组成部分可以帮助学习者更轻松地推测出大量单词的意思。</p>
 <span id="more"></span>
 <h1 id="词缀词根记忆法"><a class="markdownIt-Anchor" href="#词缀词根记忆法"></a> 词缀词根记忆法</h1>
@@ -4161,7 +4161,7 @@ checked属性：让该复选框默认选中。</p>
   </entry>
   <entry>
     <title>Linux基础</title>
-    <url>/2023/05/29/linux%E5%9F%BA%E7%A1%80/</url>
+    <url>/2023/05/29/linux-ji-chu/</url>
     <content><![CDATA[<p>前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。</p>
 <span id="more"></span>
 <p>Linux系统一般有四个主要部分：内核、shell、文件系统、应用程序。前三者一起构成了基本的操作系统，应用程序则是在这个基础上运行的。</p>
@@ -4794,7 +4794,7 @@ fflush();
   </entry>
   <entry>
     <title>Linux常用命令</title>
-    <url>/2023/05/29/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <url>/2023/05/29/linux-chang-yong-ming-ling/</url>
     <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
 <span id="more"></span>
 <h2 id="linux常用命令"><a class="markdownIt-Anchor" href="#linux常用命令"></a> Linux常用命令</h2>
@@ -4932,7 +4932,7 @@ fflush();
   </entry>
   <entry>
     <title>计算机网络</title>
-    <url>/2023/05/29/network-%E5%8E%9F%E7%90%86/</url>
+    <url>/2023/05/29/network-yuan-li/</url>
     <content><![CDATA[<p>前言：计算机网络是指将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及网络通信协议的管理和协调下，实现资源共享和信息传递的计算机系统。计算机网络的基础知识，包括TCP / UDP协议、Http协议、Socket等方面。</p>
 <span id="more"></span>
 <h3 id="课程主要内容"><a class="markdownIt-Anchor" href="#课程主要内容"></a> <strong>课程主要内容</strong></h3>
@@ -5513,7 +5513,7 @@ Internet 协议栈
   </entry>
   <entry>
     <title>操作系统-南大</title>
-    <url>/2023/05/29/operating-system%E5%8D%97%E5%A4%A7/</url>
+    <url>/2023/05/29/operating-system-nan-da/</url>
     <content><![CDATA[<p>前言：南大操作系统课程是蒋岩炎老师主讲，他在B站公开了课程，讲的非常强。在B站搜南京大学计算机操作系统就可找到。</p>
 <span id="more"></span>
 <h2 id="p1-操作系统概述-操作系统的历史学习建议"><a class="markdownIt-Anchor" href="#p1-操作系统概述-操作系统的历史学习建议"></a> P1: 操作系统概述 (操作系统的历史；学习建议)</h2>
@@ -5629,7 +5629,7 @@ Internet 协议栈
   </entry>
   <entry>
     <title>计算机组成原理</title>
-    <url>/2023/05/28/pco-%E8%AE%A1%E7%BB%84%E5%8E%9F%E7%90%86/</url>
+    <url>/2023/05/28/pco-ji-zu-yuan-li/</url>
     <content><![CDATA[<p>前言：计算机组成原理是计算机科学的一门基础课程，主要研究计算机的硬件系统，包括计算机的基本组成、指令系统、CPU设计、存储器层次结构、总线结构、I/O系统等方面。</p>
 <span id="more"></span>
 <h1 id="第一章计算机系统概述"><a class="markdownIt-Anchor" href="#第一章计算机系统概述"></a> 第一章：计算机系统概述</h1>
@@ -6417,295 +6417,8 @@ IEEE 754浮点数的格式如下：</p>
       </tags>
   </entry>
   <entry>
-    <title>Vim 教程</title>
-    <url>/2025/03/02/vim/</url>
-    <content><![CDATA[<h2 id="什么是vim"><a class="markdownIt-Anchor" href="#什么是vim"></a> 什么是Vim</h2>
-<ul>
-<li>Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉</li>
-<li>社区活跃，插件丰富，生态优秀</li>
-<li>许多IDE都支持Vim模式：VSCode、JetBrains系列</li>
-</ul>
-<span id="more"></span>
-<h2 id="vim-在编程中的小tips"><a class="markdownIt-Anchor" href="#vim-在编程中的小tips"></a> vim 在编程中的小Tips</h2>
-<ol>
-<li>光标在函数上时，gd 跳转到函数定义或声明；gd— go to definition</li>
-<li>gt —在标签中向后跳转; gT — 在标签中向前跳转；gi—快速跳转到上次编辑的位置进入插入模式；</li>
-<li>ctrl + o 依次返回光标的位置；</li>
-<li>ctrl + i：跳回下一个位置;</li>
-<li>在终端中输入命令 如 git clone xxxxxxxxxxxxxxxxxxxxxxxxxx或时其他复杂命令很长的修改该过程如下：ctrl+a 移动行首；<br />
-ctrl+e 移动行尾；ctrl+f 往后移动；ctrl+b 往前移动；</li>
-</ol>
-<h2 id="normal模式基本移动"><a class="markdownIt-Anchor" href="#normal模式基本移动"></a> Normal模式：基本移动</h2>
-<ul>
-<li>hjkl：上下左右</li>
-<li>gg：跳到第一行(类似Home键) G：跳到最后一行（类似End键）</li>
-<li>&lt;Ctrl-u&gt;/&lt;Ctrl-b&gt;：往上翻半页/一页(类似PageUp键) &lt;Ctrl-d&gt;/&lt;Ctrl-f&gt;：往下翻半页/一页（类似PageDown键）</li>
-<li>{Lineno}gg：跳到第lineno 行</li>
-<li>zz/zt/zb：光标行设置为屏幕居中/屏幕第一行/屏幕最后一行</li>
-<li>L — 移动屏幕尾；H—移动屏幕首；M—移动到屏幕中；</li>
-</ul>
-<h2 id="进入insert模式"><a class="markdownIt-Anchor" href="#进入insert模式"></a> 进入Insert模式</h2>
-<p>Normal模式下通过特定命令进入Insert模式</p>
-<ul>
-<li>i：代表&quot;insert&quot;，当前光标之前开始输入</li>
-<li>a：代表&quot;append&quot;，当前光标之后开始输入</li>
-<li>o: 下方插入新的一行，然后开始输入</li>
-<li>s：删除当前光标的字符，然后开始输入</li>
-<li>r: 替换模式，ra — 将当前字符替换为a</li>
-<li>R: 替换模式，替换行，输入内容会覆盖当前内容；</li>
-<li>I：在本行的开头开始输入</li>
-<li>A：在本行的末尾开始输入</li>
-<li>O：上方插入新的一行，然后开始输入</li>
-<li>S：删除当前行，然后开始输入<br />
-Tips：大写字母和小写字母的操作存在关联，可以一起记忆</li>
-</ul>
-<h2 id="进入command模式"><a class="markdownIt-Anchor" href="#进入command模式"></a> 进入Command模式</h2>
-<p>Normal模式下输入：进入Command模式</p>
-<ul>
-<li>w：保存当前文件:q：退出</li>
-<li>q！：放弃当前更改，然后退出:wq：保存当前更改，然后退出</li>
-<li>h{command}：显示关于命令的帮助</li>
-<li>&lt;Esc&gt;回到Normal模式</li>
-</ul>
-<h2 id="进入visual模式"><a class="markdownIt-Anchor" href="#进入visual模式"></a> 进入Visual模式</h2>
-<ul>
-<li>Normal模式下按v进入可视模式</li>
-<li>进入可视模式后可以用Normal模式下的移动命令选择文本</li>
-<li>可视模式下×/y：剪切/复制；</li>
-<li>回到Normal模式下p：粘贴</li>
-<li>Normal模式下按V进入行可视模式，一次选中一整行，在需要选中多行时很方便</li>
-<li>&lt;Esc&gt;回到Normal模式</li>
-</ul>
-<h2 id="vim移动与编辑"><a class="markdownIt-Anchor" href="#vim移动与编辑"></a> Vim：移动与编辑</h2>
-<h3 id="基于单词的移动"><a class="markdownIt-Anchor" href="#基于单词的移动"></a> 基于单词的移动</h3>
-<p>简单的hjkl显然无法满足我们的需要</p>
-<ul>
-<li>w：代表&quot;word&quot;，跳转到下一处单词的开头</li>
-<li>b：代表&quot;back&quot;，跳转到上一处单词的开头</li>
-<li>e：代表&quot;end&quot;，跳转到下一处单词的结尾</li>
-<li>ge：e的反向版本，跳转到上一处单词的结尾<br />
-wbe大写版本WBE对应的单词是连续的非空字符</li>
-</ul>
-<h3 id="基于搜索的移动行内搜索"><a class="markdownIt-Anchor" href="#基于搜索的移动行内搜索"></a> 基于搜索的移动行内搜索</h3>
-<ul>
-<li>f{char}/t{char}：跳转到本行下一个char字符出现处/出现前</li>
-<li>；/，：快速向后/向前重复ft查找</li>
-<li>F{char}/T{char}：往前搜索而非往后文件中搜索：</li>
-<li>/{pattern}：跳转到本文件中下一个pattern出现的地方</li>
-<li>？{pattern}：跳转到本文件中上一个pattern出现的地方</li>
-<li>pattern可以是正则表达式</li>
-<li>*：等价于/{pattern}，pattern是当前光标下的单词</li>
-<li>nN：快速重复／查找</li>
-</ul>
-<h3 id="基于标记的移动"><a class="markdownIt-Anchor" href="#基于标记的移动"></a> 基于标记的移动</h3>
-<ul>
-<li>m{mark}：把当前位置标记为mark</li>
-<li>`{mark}：跳转到名为mark的标记位置<br />
-mark是a-z的字符<br />
-常用场景：当需要临时离开当前光标处，做一些事情后再快速地回来<br />
-我比较习惯用的标记是mm<br />
-内置标记：</li>
-<li>``：上次跳转前的位置</li>
-<li>`.: 上次修改的位置</li>
-<li>`^：上次插入的位置</li>
-</ul>
-<h3 id="其它实用的跳转"><a class="markdownIt-Anchor" href="#其它实用的跳转"></a> 其它实用的跳转</h3>
-<ul>
-<li>^／$：跳转到本行的开始/结尾</li>
-<li>%：跳到匹配的配对符（括号等）处</li>
-</ul>
-<h3 id="快速编辑"><a class="markdownIt-Anchor" href="#快速编辑"></a> 快速编辑</h3>
-<p><img src="/images/vim-Action.png" alt="Vim-Action" /></p>
-<h3 id="重复操作命令"><a class="markdownIt-Anchor" href="#重复操作命令"></a> 重复操作：.命令</h3>
-<ul>
-<li>.：重复上一次修改</li>
-<li>u：撤销上一次修改</li>
-<li>&lt;Ctrl-r&gt;：重做上一次修改<br />
-. 命令非常适合用于需要多次重复某一个修改动作的场景省去了重复输入命令，大大提高效率</li>
-</ul>
-<h3 id="批量操作数字动作"><a class="markdownIt-Anchor" href="#批量操作数字动作"></a> 批量操作：数字+动作</h3>
-<p>{count}{action}：重复count次action<br />
-动作动作可以是移动动作或是编辑动作</p>
-<ul>
-<li>4j：向下移动4行</li>
-<li>3dw：删除3个单词</li>
-<li>2yy：复制2行</li>
-<li>4p：粘贴4次</li>
-</ul>
-<p>数字+动作，是一种重要的批量操作方式，命令直观，语义明确</p>
-<ul>
-<li>．命令可以直观地看到每一次的变化，在合适的时候停止</li>
-<li>数字+动作则需要预先知道动作的次数</li>
-</ul>
-<h3 id="文本对象操作"><a class="markdownIt-Anchor" href="#文本对象操作"></a> 文本对象操作</h3>
-<p>textobjects：语义化的文本片段<br />
-格式：i/a+对象常见的对象：</p>
-<ul>
-<li>w／w，s，p，t，b,（， <code>[</code>, <code>&#123;</code>：单词/联单词、句子、段落、标签、()、[]、{}；<br />
-*（／），［/」，{／}，&lt;／&gt;，‘／“：配对符定义的对象<br />
-i代表&quot;inner”，内部；<br />
-a代表&quot;a&quot;，额外包括周围的空格或配对符</li>
-</ul>
-<h3 id="文本对象操作例子"><a class="markdownIt-Anchor" href="#文本对象操作例子"></a> 文本对象操作：例子</h3>
-<p>文本对象提供了为文本赋予了结构化的含义，允许我们以一个语义对象作为操作单元<br />
-<strong>[count]{operator}{textobjects}</strong></p>
-<ul>
-<li>diw：删除一个单词</li>
-<li>ci<code>(</code>：修改小括号内部</li>
-<li>yi<code>&#123;</code>：复制大括号内部</li>
-</ul>
-<p>通过组合operator与textobjects，可以对不同的语义对象实施不同的操作，不仅十分灵活，而且语义明确，容易记忆<br />
-配合：命令或【count】可以简单地完成多次对特定语义对象的操作</p>
-<h3 id="textobjectsvsmotion"><a class="markdownIt-Anchor" href="#textobjectsvsmotion"></a> textobjectsVSmotion</h3>
-<p>{operator}{motion}与{operator}{textobjects} 解耦了操作与操作的对象，大大提升了操作效率</p>
-<ul>
-<li>motion是能够移动光标的命令，可以独立使用（如wbe）</li>
-<li>文本对象只能跟在operator后面，不能独立使用（如iw）</li>
-<li>motion通过光标的移动确定operator的作用范围，范围更加灵活但不够明确</li>
-<li>textobjects则是显式地指定操作的对象，范围明确</li>
-</ul>
-<h3 id="操作符与命令补充"><a class="markdownIt-Anchor" href="#操作符与命令补充"></a> 操作符与命令补充</h3>
-<ul>
-<li>gu/gU/g~：操作符，转小写/转大写/翻转大小写 例如：guiw, gUiw, 符合{Operator}{textobjects} 或者 {operator}{motion}</li>
-<li>J：join，连接两行</li>
-<li>&lt;Ctrl-a&gt;/&lt;Ctrl-x&gt;：增加数字/减少数字</li>
-<li>g&lt;Ctrl-A&gt;：创建递增序列</li>
-<li>&lt;/&gt;：左/右缩进</li>
-</ul>
-<p><strong>建议：让你的命令更模块化<br />
-尽量使你的命令更模块化，具有清晰的含义与作用范围，以便于与·等命令协同例如：daw比dw具有更清晰的语义，也更模块化</strong></p>
-<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
-<p>Vim提供了许多寄存器用于存放内容，可以理解为剪贴板<br />
-一个字符对应一个寄存器（如a-z，0-9）特别的寄存器：</p>
-<ul>
-<li>&quot;：默认寄存器，平时复制、删除的内容都放在里面</li>
-<li>%：当前文件名</li>
-<li>.：上一次插入的内容</li>
-<li>:：上一次执行的命令</li>
-</ul>
-<p>通过：reg{register}查看对应寄存器中的内容</p>
-<h3 id="指定寄存器"><a class="markdownIt-Anchor" href="#指定寄存器"></a> 指定寄存器</h3>
-<p>在复制/删除/粘贴等操作前加上&quot;{register}就可以指定本次操作所用的寄存器<br />
-只要涉及寄存器操作的都可以这样指定</p>
-<ul>
-<li>&quot;ayy：将这一行复制到a寄存器中</li>
-<li>&quot;bdiw：将单词删除，保存到b寄存器中</li>
-<li>&quot;cp：将c寄存器中的内容粘贴出来</li>
-</ul>
-<p>常见用途：将想要持久保存的文本放到特定寄存器里，随时进行粘贴，避免被覆盖<br />
-<strong>寄存器字符大写：添加（append）而非覆盖</strong></p>
-<p><strong>宏</strong><br />
-宏（Macro）：录制一系列键盘操作，并允许我们重放这些操作操作序列存储在指定的寄存器中</p>
-<ul>
-<li>q{register}：开始录制宏，存在寄存器register 中</li>
-<li>录制过程中按q退出录制</li>
-<li>@{register}：重放寄存器register中的操作</li>
-<li>@@：重放上一次宏操作</li>
-</ul>
-<p><strong>常见用法：q{register}录制一段操作，@{register}重放，然后一直@@重放注意：：命令对宏不生效，．命令只记录上一次修改，而宏可能包含多次修改</strong><br />
-命令：.,$ normal @a</p>
-<p><em>建议：让你的宏对连续重放友好</em></p>
-<ol>
-<li>让你的光标移动更加general</li>
-<li>假设你要在多个特定的位置进行特定的操作，一个好的习惯是在宏录制的最后，跳转到下一个需要编辑的位置<br />
-即，宏包括【编辑动作】+【跳转到下一个需要编辑的位置】<br />
-这样一来，连续重放就可以实现对所有需要编辑的位置进行编辑操作通过大写的寄存器，在宏的后面添加命令<br />
-如果宏是重放友好的，允许我们使用[count]@{register}直接重放count次</li>
-</ol>
-<h2 id="vim-命令模式"><a class="markdownIt-Anchor" href="#vim-命令模式"></a> vim 命令模式</h2>
-<ol>
-<li>前面的教程大多集中在Normal模式</li>
-<li>命令模式提供了除了Normal模式的编辑方式</li>
-<li>命令模式的操作对象以“行”为基本单位</li>
-<li>normal和global命令提供强大的批量行操作</li>
-</ol>
-<h3 id="ex命令格式"><a class="markdownIt-Anchor" href="#ex命令格式"></a> Ex命令格式</h3>
-<p>：[range] {excommand} [args]</p>
-<ul>
-<li>range：作用的范围，不给的话默认是本行</li>
-<li>excommand：特殊的命令，适用于Command模式</li>
-<li>args：后续的参数，视命令而定</li>
-</ul>
-<p>一些ExCommand（[x]为寄存器，是可选项）：</p>
-<ul>
-<li>：[range] delete[x]：删除range中的行（到寄存器x），delete可简写为 d</li>
-<li>：[range] yank[x]：复制range中的行（到寄存器x），yank可简写为y</li>
-<li>：[range] print：将range 中行打印出来，print 可简写为p</li>
-</ul>
-<h3 id="range与address指定范围"><a class="markdownIt-Anchor" href="#range与address指定范围"></a> range与address：指定范围</h3>
-<p>range由一个或两个address构成，即{address}或{address}，{address} address可以是：</p>
-<ul>
-<li>{lineno}：行号，如3代表第三行（o代表第一行上面的虚拟行）</li>
-<li>$：最后一行</li>
-<li>.：光标所在行</li>
-<li>/{pattern}/：下一个pattern所在的行<br />
-address可以做加减法，.+3代表光标往下第三行，$-3代表倒数第4行</li>
-</ul>
-<h3 id="address组合成range"><a class="markdownIt-Anchor" href="#address组合成range"></a> address组合成range</h3>
-<p>address组合出range（可以混用）：</p>
-<ul>
-<li>1，3：文件的1-3行</li>
-<li>.，·+4：当前-当前往下4行 (共5 行)</li>
-<li>$-3，$：文件的最后4行</li>
-<li>%：特殊的range，代表当前文件的所有行</li>
-<li>&lt;／'&gt;：可视模式中选中范围的开头和结尾（可视模式下直接按：可以直接设置）<br />
-例子：</li>
-<li>:1，3 delete：删除1~3行</li>
-<li>:.，.+4 yank：复制当前-当前往下4 行</li>
-<li>:$-3，$ print: 打印文件的最后4行</li>
-</ul>
-<p>行的复制、移动、粘贴</p>
-<ul>
-<li>：[range]copy{address}：把range中的行复制到address后面</li>
-<li>：[range]move{address}：把range中的行移动到address后面</li>
-<li>：[address]put[x]：把寄存器×的内容粘贴到address后面</li>
-</ul>
-<p>0作为虚拟行的address，可以用来将内容插入第一行</p>
-<h3 id="批量操作normal命令"><a class="markdownIt-Anchor" href="#批量操作normal命令"></a> 批量操作：normal命令</h3>
-<p>格式：：[range]normal{commands}<br />
-含义：对range中的所有行执行Normal模式下的命令commands</p>
-<ul>
-<li>将range设置为%，可以对整个文件的所有行执行</li>
-<li>：[range] normal. ：配合，命令，效果拔群<br />
-常用做法：先做一次修改操作，再用normal命令在指定的行上完成操作</li>
-<li>.命令只能记录一次修改，用宏可以实现记录多个操作:[range] noraml @{register}<br />
-常用做法：先把想要的操作录制成宏，再用normal命令在指定的行上重放宏</li>
-</ul>
-<h2 id="批量操作global命令"><a class="markdownIt-Anchor" href="#批量操作global命令"></a> 批量操作：global命令</h2>
-<ul>
-<li>格式：：[range]global/{pattern}/[cmd]</li>
-<li>含义：对range中包含pattern的所有行执行Command模式下的Ex命令</li>
-<li>[cmd]：Ex命令，不给的话默认是打印（print）注意，normal命令也是Ex命令！</li>
-<li>：[range]global/{pattern}/normal{commands}：对range中所有带pattern的<br />
-行，执行Normal模式下的命令commands</li>
-</ul>
-<p>例子：</p>
-<ul>
-<li>·：%global/TODo/delete：删除所有带TODO的行</li>
-</ul>
-<h2 id="替换命令"><a class="markdownIt-Anchor" href="#替换命令"></a> 替换命令</h2>
-<p><strong>：[range]s/{pattern}/{string}/[flags]</strong><br />
-将pattern替换为string<br />
-flags:</p>
-<ul>
-<li>g：替换每一行的所有匹配</li>
-<li>i：忽视大小写</li>
-<li>c：替换前进行确认</li>
-<li>n：计数而不是替换</li>
-</ul>
-<dl>
-<dt>：%s/Vim//gn：统计文件中所有Vim出现的次数（此时替换为什么无所谓，加了n就不会执行替换操作）</dt>
-<dd>%s /\&lt;vim\&gt;/str/g；精确匹配vim这个单词比如 abc_vim是无法匹配的。</dd>
-</dl>
-]]></content>
-      <tags>
-        <tag>工具命令</tag>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python核心教程</title>
-    <url>/2025/04/15/python%E6%95%99%E7%A8%8B/</url>
+    <url>/2025/04/15/python-jiao-cheng/</url>
     <content><![CDATA[<p>前言：  什么是<code>Python</code>？ 优缺点？<code>Python</code>是一个叫龟叔的荷兰老头写的（89年）擅长： 1.爬虫 2.自动化 3.科学计算 4.人工智能;<br />
 deepseek给出的简介如下：</p>
 <span id="more"></span>
@@ -8398,6 +8111,293 @@ x_3
 ]]></content>
       <tags>
         <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vim 教程</title>
+    <url>/2025/03/02/vim/</url>
+    <content><![CDATA[<h2 id="什么是vim"><a class="markdownIt-Anchor" href="#什么是vim"></a> 什么是Vim</h2>
+<ul>
+<li>Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉</li>
+<li>社区活跃，插件丰富，生态优秀</li>
+<li>许多IDE都支持Vim模式：VSCode、JetBrains系列</li>
+</ul>
+<span id="more"></span>
+<h2 id="vim-在编程中的小tips"><a class="markdownIt-Anchor" href="#vim-在编程中的小tips"></a> vim 在编程中的小Tips</h2>
+<ol>
+<li>光标在函数上时，gd 跳转到函数定义或声明；gd— go to definition</li>
+<li>gt —在标签中向后跳转; gT — 在标签中向前跳转；gi—快速跳转到上次编辑的位置进入插入模式；</li>
+<li>ctrl + o 依次返回光标的位置；</li>
+<li>ctrl + i：跳回下一个位置;</li>
+<li>在终端中输入命令 如 git clone xxxxxxxxxxxxxxxxxxxxxxxxxx或时其他复杂命令很长的修改该过程如下：ctrl+a 移动行首；<br />
+ctrl+e 移动行尾；ctrl+f 往后移动；ctrl+b 往前移动；</li>
+</ol>
+<h2 id="normal模式基本移动"><a class="markdownIt-Anchor" href="#normal模式基本移动"></a> Normal模式：基本移动</h2>
+<ul>
+<li>hjkl：上下左右</li>
+<li>gg：跳到第一行(类似Home键) G：跳到最后一行（类似End键）</li>
+<li>&lt;Ctrl-u&gt;/&lt;Ctrl-b&gt;：往上翻半页/一页(类似PageUp键) &lt;Ctrl-d&gt;/&lt;Ctrl-f&gt;：往下翻半页/一页（类似PageDown键）</li>
+<li>{Lineno}gg：跳到第lineno 行</li>
+<li>zz/zt/zb：光标行设置为屏幕居中/屏幕第一行/屏幕最后一行</li>
+<li>L — 移动屏幕尾；H—移动屏幕首；M—移动到屏幕中；</li>
+</ul>
+<h2 id="进入insert模式"><a class="markdownIt-Anchor" href="#进入insert模式"></a> 进入Insert模式</h2>
+<p>Normal模式下通过特定命令进入Insert模式</p>
+<ul>
+<li>i：代表&quot;insert&quot;，当前光标之前开始输入</li>
+<li>a：代表&quot;append&quot;，当前光标之后开始输入</li>
+<li>o: 下方插入新的一行，然后开始输入</li>
+<li>s：删除当前光标的字符，然后开始输入</li>
+<li>r: 替换模式，ra — 将当前字符替换为a</li>
+<li>R: 替换模式，替换行，输入内容会覆盖当前内容；</li>
+<li>I：在本行的开头开始输入</li>
+<li>A：在本行的末尾开始输入</li>
+<li>O：上方插入新的一行，然后开始输入</li>
+<li>S：删除当前行，然后开始输入<br />
+Tips：大写字母和小写字母的操作存在关联，可以一起记忆</li>
+</ul>
+<h2 id="进入command模式"><a class="markdownIt-Anchor" href="#进入command模式"></a> 进入Command模式</h2>
+<p>Normal模式下输入：进入Command模式</p>
+<ul>
+<li>w：保存当前文件:q：退出</li>
+<li>q！：放弃当前更改，然后退出:wq：保存当前更改，然后退出</li>
+<li>h{command}：显示关于命令的帮助</li>
+<li>&lt;Esc&gt;回到Normal模式</li>
+</ul>
+<h2 id="进入visual模式"><a class="markdownIt-Anchor" href="#进入visual模式"></a> 进入Visual模式</h2>
+<ul>
+<li>Normal模式下按v进入可视模式</li>
+<li>进入可视模式后可以用Normal模式下的移动命令选择文本</li>
+<li>可视模式下×/y：剪切/复制；</li>
+<li>回到Normal模式下p：粘贴</li>
+<li>Normal模式下按V进入行可视模式，一次选中一整行，在需要选中多行时很方便</li>
+<li>&lt;Esc&gt;回到Normal模式</li>
+</ul>
+<h2 id="vim移动与编辑"><a class="markdownIt-Anchor" href="#vim移动与编辑"></a> Vim：移动与编辑</h2>
+<h3 id="基于单词的移动"><a class="markdownIt-Anchor" href="#基于单词的移动"></a> 基于单词的移动</h3>
+<p>简单的hjkl显然无法满足我们的需要</p>
+<ul>
+<li>w：代表&quot;word&quot;，跳转到下一处单词的开头</li>
+<li>b：代表&quot;back&quot;，跳转到上一处单词的开头</li>
+<li>e：代表&quot;end&quot;，跳转到下一处单词的结尾</li>
+<li>ge：e的反向版本，跳转到上一处单词的结尾<br />
+wbe大写版本WBE对应的单词是连续的非空字符</li>
+</ul>
+<h3 id="基于搜索的移动行内搜索"><a class="markdownIt-Anchor" href="#基于搜索的移动行内搜索"></a> 基于搜索的移动行内搜索</h3>
+<ul>
+<li>f{char}/t{char}：跳转到本行下一个char字符出现处/出现前</li>
+<li>；/，：快速向后/向前重复ft查找</li>
+<li>F{char}/T{char}：往前搜索而非往后文件中搜索：</li>
+<li>/{pattern}：跳转到本文件中下一个pattern出现的地方</li>
+<li>？{pattern}：跳转到本文件中上一个pattern出现的地方</li>
+<li>pattern可以是正则表达式</li>
+<li>*：等价于/{pattern}，pattern是当前光标下的单词</li>
+<li>nN：快速重复／查找</li>
+</ul>
+<h3 id="基于标记的移动"><a class="markdownIt-Anchor" href="#基于标记的移动"></a> 基于标记的移动</h3>
+<ul>
+<li>m{mark}：把当前位置标记为mark</li>
+<li>`{mark}：跳转到名为mark的标记位置<br />
+mark是a-z的字符<br />
+常用场景：当需要临时离开当前光标处，做一些事情后再快速地回来<br />
+我比较习惯用的标记是mm<br />
+内置标记：</li>
+<li>``：上次跳转前的位置</li>
+<li>`.: 上次修改的位置</li>
+<li>`^：上次插入的位置</li>
+</ul>
+<h3 id="其它实用的跳转"><a class="markdownIt-Anchor" href="#其它实用的跳转"></a> 其它实用的跳转</h3>
+<ul>
+<li>^／$：跳转到本行的开始/结尾</li>
+<li>%：跳到匹配的配对符（括号等）处</li>
+</ul>
+<h3 id="快速编辑"><a class="markdownIt-Anchor" href="#快速编辑"></a> 快速编辑</h3>
+<p><img src="/images/vim-Action.png" alt="Vim-Action" /></p>
+<h3 id="重复操作命令"><a class="markdownIt-Anchor" href="#重复操作命令"></a> 重复操作：.命令</h3>
+<ul>
+<li>.：重复上一次修改</li>
+<li>u：撤销上一次修改</li>
+<li>&lt;Ctrl-r&gt;：重做上一次修改<br />
+. 命令非常适合用于需要多次重复某一个修改动作的场景省去了重复输入命令，大大提高效率</li>
+</ul>
+<h3 id="批量操作数字动作"><a class="markdownIt-Anchor" href="#批量操作数字动作"></a> 批量操作：数字+动作</h3>
+<p>{count}{action}：重复count次action<br />
+动作动作可以是移动动作或是编辑动作</p>
+<ul>
+<li>4j：向下移动4行</li>
+<li>3dw：删除3个单词</li>
+<li>2yy：复制2行</li>
+<li>4p：粘贴4次</li>
+</ul>
+<p>数字+动作，是一种重要的批量操作方式，命令直观，语义明确</p>
+<ul>
+<li>．命令可以直观地看到每一次的变化，在合适的时候停止</li>
+<li>数字+动作则需要预先知道动作的次数</li>
+</ul>
+<h3 id="文本对象操作"><a class="markdownIt-Anchor" href="#文本对象操作"></a> 文本对象操作</h3>
+<p>textobjects：语义化的文本片段<br />
+格式：i/a+对象常见的对象：</p>
+<ul>
+<li>w／w，s，p，t，b,（， <code>[</code>, <code>&#123;</code>：单词/联单词、句子、段落、标签、()、[]、{}；<br />
+*（／），［/」，{／}，&lt;／&gt;，‘／“：配对符定义的对象<br />
+i代表&quot;inner”，内部；<br />
+a代表&quot;a&quot;，额外包括周围的空格或配对符</li>
+</ul>
+<h3 id="文本对象操作例子"><a class="markdownIt-Anchor" href="#文本对象操作例子"></a> 文本对象操作：例子</h3>
+<p>文本对象提供了为文本赋予了结构化的含义，允许我们以一个语义对象作为操作单元<br />
+<strong>[count]{operator}{textobjects}</strong></p>
+<ul>
+<li>diw：删除一个单词</li>
+<li>ci<code>(</code>：修改小括号内部</li>
+<li>yi<code>&#123;</code>：复制大括号内部</li>
+</ul>
+<p>通过组合operator与textobjects，可以对不同的语义对象实施不同的操作，不仅十分灵活，而且语义明确，容易记忆<br />
+配合：命令或【count】可以简单地完成多次对特定语义对象的操作</p>
+<h3 id="textobjectsvsmotion"><a class="markdownIt-Anchor" href="#textobjectsvsmotion"></a> textobjectsVSmotion</h3>
+<p>{operator}{motion}与{operator}{textobjects} 解耦了操作与操作的对象，大大提升了操作效率</p>
+<ul>
+<li>motion是能够移动光标的命令，可以独立使用（如wbe）</li>
+<li>文本对象只能跟在operator后面，不能独立使用（如iw）</li>
+<li>motion通过光标的移动确定operator的作用范围，范围更加灵活但不够明确</li>
+<li>textobjects则是显式地指定操作的对象，范围明确</li>
+</ul>
+<h3 id="操作符与命令补充"><a class="markdownIt-Anchor" href="#操作符与命令补充"></a> 操作符与命令补充</h3>
+<ul>
+<li>gu/gU/g~：操作符，转小写/转大写/翻转大小写 例如：guiw, gUiw, 符合{Operator}{textobjects} 或者 {operator}{motion}</li>
+<li>J：join，连接两行</li>
+<li>&lt;Ctrl-a&gt;/&lt;Ctrl-x&gt;：增加数字/减少数字</li>
+<li>g&lt;Ctrl-A&gt;：创建递增序列</li>
+<li>&lt;/&gt;：左/右缩进</li>
+</ul>
+<p><strong>建议：让你的命令更模块化<br />
+尽量使你的命令更模块化，具有清晰的含义与作用范围，以便于与·等命令协同例如：daw比dw具有更清晰的语义，也更模块化</strong></p>
+<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
+<p>Vim提供了许多寄存器用于存放内容，可以理解为剪贴板<br />
+一个字符对应一个寄存器（如a-z，0-9）特别的寄存器：</p>
+<ul>
+<li>&quot;：默认寄存器，平时复制、删除的内容都放在里面</li>
+<li>%：当前文件名</li>
+<li>.：上一次插入的内容</li>
+<li>:：上一次执行的命令</li>
+</ul>
+<p>通过：reg{register}查看对应寄存器中的内容</p>
+<h3 id="指定寄存器"><a class="markdownIt-Anchor" href="#指定寄存器"></a> 指定寄存器</h3>
+<p>在复制/删除/粘贴等操作前加上&quot;{register}就可以指定本次操作所用的寄存器<br />
+只要涉及寄存器操作的都可以这样指定</p>
+<ul>
+<li>&quot;ayy：将这一行复制到a寄存器中</li>
+<li>&quot;bdiw：将单词删除，保存到b寄存器中</li>
+<li>&quot;cp：将c寄存器中的内容粘贴出来</li>
+</ul>
+<p>常见用途：将想要持久保存的文本放到特定寄存器里，随时进行粘贴，避免被覆盖<br />
+<strong>寄存器字符大写：添加（append）而非覆盖</strong></p>
+<p><strong>宏</strong><br />
+宏（Macro）：录制一系列键盘操作，并允许我们重放这些操作操作序列存储在指定的寄存器中</p>
+<ul>
+<li>q{register}：开始录制宏，存在寄存器register 中</li>
+<li>录制过程中按q退出录制</li>
+<li>@{register}：重放寄存器register中的操作</li>
+<li>@@：重放上一次宏操作</li>
+</ul>
+<p><strong>常见用法：q{register}录制一段操作，@{register}重放，然后一直@@重放注意：：命令对宏不生效，．命令只记录上一次修改，而宏可能包含多次修改</strong><br />
+命令：.,$ normal @a</p>
+<p><em>建议：让你的宏对连续重放友好</em></p>
+<ol>
+<li>让你的光标移动更加general</li>
+<li>假设你要在多个特定的位置进行特定的操作，一个好的习惯是在宏录制的最后，跳转到下一个需要编辑的位置<br />
+即，宏包括【编辑动作】+【跳转到下一个需要编辑的位置】<br />
+这样一来，连续重放就可以实现对所有需要编辑的位置进行编辑操作通过大写的寄存器，在宏的后面添加命令<br />
+如果宏是重放友好的，允许我们使用[count]@{register}直接重放count次</li>
+</ol>
+<h2 id="vim-命令模式"><a class="markdownIt-Anchor" href="#vim-命令模式"></a> vim 命令模式</h2>
+<ol>
+<li>前面的教程大多集中在Normal模式</li>
+<li>命令模式提供了除了Normal模式的编辑方式</li>
+<li>命令模式的操作对象以“行”为基本单位</li>
+<li>normal和global命令提供强大的批量行操作</li>
+</ol>
+<h3 id="ex命令格式"><a class="markdownIt-Anchor" href="#ex命令格式"></a> Ex命令格式</h3>
+<p>：[range] {excommand} [args]</p>
+<ul>
+<li>range：作用的范围，不给的话默认是本行</li>
+<li>excommand：特殊的命令，适用于Command模式</li>
+<li>args：后续的参数，视命令而定</li>
+</ul>
+<p>一些ExCommand（[x]为寄存器，是可选项）：</p>
+<ul>
+<li>：[range] delete[x]：删除range中的行（到寄存器x），delete可简写为 d</li>
+<li>：[range] yank[x]：复制range中的行（到寄存器x），yank可简写为y</li>
+<li>：[range] print：将range 中行打印出来，print 可简写为p</li>
+</ul>
+<h3 id="range与address指定范围"><a class="markdownIt-Anchor" href="#range与address指定范围"></a> range与address：指定范围</h3>
+<p>range由一个或两个address构成，即{address}或{address}，{address} address可以是：</p>
+<ul>
+<li>{lineno}：行号，如3代表第三行（o代表第一行上面的虚拟行）</li>
+<li>$：最后一行</li>
+<li>.：光标所在行</li>
+<li>/{pattern}/：下一个pattern所在的行<br />
+address可以做加减法，.+3代表光标往下第三行，$-3代表倒数第4行</li>
+</ul>
+<h3 id="address组合成range"><a class="markdownIt-Anchor" href="#address组合成range"></a> address组合成range</h3>
+<p>address组合出range（可以混用）：</p>
+<ul>
+<li>1，3：文件的1-3行</li>
+<li>.，·+4：当前-当前往下4行 (共5 行)</li>
+<li>$-3，$：文件的最后4行</li>
+<li>%：特殊的range，代表当前文件的所有行</li>
+<li>&lt;／'&gt;：可视模式中选中范围的开头和结尾（可视模式下直接按：可以直接设置）<br />
+例子：</li>
+<li>:1，3 delete：删除1~3行</li>
+<li>:.，.+4 yank：复制当前-当前往下4 行</li>
+<li>:$-3，$ print: 打印文件的最后4行</li>
+</ul>
+<p>行的复制、移动、粘贴</p>
+<ul>
+<li>：[range]copy{address}：把range中的行复制到address后面</li>
+<li>：[range]move{address}：把range中的行移动到address后面</li>
+<li>：[address]put[x]：把寄存器×的内容粘贴到address后面</li>
+</ul>
+<p>0作为虚拟行的address，可以用来将内容插入第一行</p>
+<h3 id="批量操作normal命令"><a class="markdownIt-Anchor" href="#批量操作normal命令"></a> 批量操作：normal命令</h3>
+<p>格式：：[range]normal{commands}<br />
+含义：对range中的所有行执行Normal模式下的命令commands</p>
+<ul>
+<li>将range设置为%，可以对整个文件的所有行执行</li>
+<li>：[range] normal. ：配合，命令，效果拔群<br />
+常用做法：先做一次修改操作，再用normal命令在指定的行上完成操作</li>
+<li>.命令只能记录一次修改，用宏可以实现记录多个操作:[range] noraml @{register}<br />
+常用做法：先把想要的操作录制成宏，再用normal命令在指定的行上重放宏</li>
+</ul>
+<h2 id="批量操作global命令"><a class="markdownIt-Anchor" href="#批量操作global命令"></a> 批量操作：global命令</h2>
+<ul>
+<li>格式：：[range]global/{pattern}/[cmd]</li>
+<li>含义：对range中包含pattern的所有行执行Command模式下的Ex命令</li>
+<li>[cmd]：Ex命令，不给的话默认是打印（print）注意，normal命令也是Ex命令！</li>
+<li>：[range]global/{pattern}/normal{commands}：对range中所有带pattern的<br />
+行，执行Normal模式下的命令commands</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>·：%global/TODo/delete：删除所有带TODO的行</li>
+</ul>
+<h2 id="替换命令"><a class="markdownIt-Anchor" href="#替换命令"></a> 替换命令</h2>
+<p><strong>：[range]s/{pattern}/{string}/[flags]</strong><br />
+将pattern替换为string<br />
+flags:</p>
+<ul>
+<li>g：替换每一行的所有匹配</li>
+<li>i：忽视大小写</li>
+<li>c：替换前进行确认</li>
+<li>n：计数而不是替换</li>
+</ul>
+<dl>
+<dt>：%s/Vim//gn：统计文件中所有Vim出现的次数（此时替换为什么无所谓，加了n就不会执行替换操作）</dt>
+<dd>%s /\&lt;vim\&gt;/str/g；精确匹配vim这个单词比如 abc_vim是无法匹配的。</dd>
+</dl>
+]]></content>
+      <tags>
+        <tag>工具命令</tag>
+        <tag>Vim</tag>
       </tags>
   </entry>
 </search>
