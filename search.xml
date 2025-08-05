@@ -1,6 +1,796 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux基础</title>
+    <url>/2023/05/29/Linux%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<p>前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。</p>
+<span id="more"></span>
+<p>Linux系统一般有四个主要部分：内核、shell、文件系统、应用程序。前三者一起构成了基本的操作系统，应用程序则是在这个基础上运行的。</p>
+<h3 id="part-1-标准io"><a class="markdownIt-Anchor" href="#part-1-标准io"></a> <strong>Part 1: 标准IO</strong></h3>
+<p>I/O：input &amp; output,是一切实现的基础</p>
+<blockquote></blockquote>
+<pre><code>stdio 标准IO  
+sysio 系统调用IO（文件IO）
+</code></pre>
+<blockquote></blockquote>
+<p>stdio: FILE类型贯穿始终</p>
+<blockquote></blockquote>
+<pre><code>fopen();
+fclose();
+fgetc();
+fputc();
+fgets();
+fputs();
+fread();    binary read
+fwrite();   binary write
+
+printf();
+scanf();
+
+fseek();
+ftell();
+int fseeko(FILE *stream, off_t offset, int whence);  
+     node: On  some  architectures,  both off_t and long are 32-bit types, but    
+     
+     defining _FILE_OFFSET_BITS 64 
+     
+     with the value 64 (before including any header   files) will turn off_t into a 64-bit type.  
+
+off_t ftello(FILE *stream);
+
+rewind();
+fflush();
+    1. 缓冲区的作用：大多数情况下是好事，合并系统调用。
+    2. 行缓冲：换行时候刷新，满了的时候刷新，强制刷新（标准输出是这样的，因为是终端设备）
+    3. 全缓冲：满了的时候刷新，强制刷新（默认是全缓冲，只要不是终端设备）
+    4. 无缓冲：如stderr, 需要立即输出的内容
+    5. 更改缓冲模式的函数 setvbuf()--- 一般用不上
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-2-系统io文件io"><a class="markdownIt-Anchor" href="#part-2-系统io文件io"></a> <strong>Part 2: 系统IO/文件IO</strong></h3>
+<p>fd 是在文件IO中贯穿始终的类型<br />
+文件描述符的概念：<br />
+<img src="/images/fd_desc.png" alt="文件描述符的概念" /></p>
+<blockquote></blockquote>
+<pre><code>1. 实质：整形数---数组的下标，优先使用当前可用范围最小的。
+2. 当前数组是在一个进程空间中的，不同进程不会共用。
+3. 是进程用来访问操作系统对象的“指针”。
+</code></pre>
+<blockquote></blockquote>
+<p>文件IO相关操作：</p>
+<blockquote></blockquote>
+<pre><code>1. open(const char *pathname, int flags); flags --- 位图
+2. flags must be:  O_RDONLY,  O_WRONLY,  or O_RDWR.  
+3. or has O_CLOEXEC,  O_CREAT,  O_DIRECTORY,  O_EXCL,  O_NOCTTY,O_NOFOLLOW,  O_TMPFILE,  O_TRUNC... see man 2 open.
+4. r ---    O_RDONLY
+5. r+ ----  O_RDWR
+6. w ----   O_WRONLY|O_CREATE|O_TRUNC
+7. w+ ----  O_RDWR|O_TRUNC|O_CREATE
+8. read()
+9. write()
+10. close()
+11. lseek
+</code></pre>
+<blockquote></blockquote>
+<p>文件IO和标准IO的区别</p>
+<blockquote></blockquote>
+<pre><code>1. 响应速度 &amp; 吞吐量
+2. 如何使一个程序变快？主要考虑上面两个方面进行回答。
+3. 标准IO和系统IO 不可混用
+</code></pre>
+<blockquote></blockquote>
+<p>IO的效率问题</p>
+<blockquote></blockquote>
+<pre><code>bufsize 的大小会影响效率，但有一个最佳的bufsize 大小，需要测试。
+</code></pre>
+<blockquote></blockquote>
+<p>文件共享</p>
+<blockquote></blockquote>
+<pre><code>线程共享，在一个进程空间多次打开文件。
+进程共享，在两个进程中去打开文件，利用进程间共享。
+试题：写一个程序删除一个文件的第10行。
+</code></pre>
+<blockquote></blockquote>
+<p>原子操作</p>
+<blockquote></blockquote>
+<pre><code>1. 不可分割的操作
+2. 不可分割的最小单位
+3. 解决竞争和冲突
+4. 如：tmpnam()
+</code></pre>
+<blockquote></blockquote>
+<p>程序中的重定向：dup dup2</p>
+<blockquote></blockquote>
+<pre><code>dup2(old_fd, new_fd) : 把old_fd 从定向到new_fd,第一，关闭new_fd。 第二，copy old_fd 到new_fd。第三，如果old_fd == new_fd时，什么都不做。
+</code></pre>
+<blockquote></blockquote>
+<p>同步：sync fsync, fdatasysnc</p>
+<blockquote></blockquote>
+<pre><code>1. sync - commit buffer cache to disk,同步内核层面的buf cache
+2. 解除设备挂载时用到。 man 2 sync see the details.
+</code></pre>
+<blockquote></blockquote>
+<p>fcntl()</p>
+<blockquote></blockquote>
+<pre><code>1. 文件描述符所变的魔术几乎都来源与该函数。
+</code></pre>
+<blockquote></blockquote>
+<p>ioctl()</p>
+<blockquote></blockquote>
+<pre><code>1. 设备相关的内容
+</code></pre>
+<blockquote></blockquote>
+<p>/dev/fd/目录</p>
+<blockquote></blockquote>
+<pre><code>1. 虚目录
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-3-file-system"><a class="markdownIt-Anchor" href="#part-3-file-system"></a> <strong>Part 3: File System</strong></h3>
+<p>文件系统：<br />
+一、目录和文件</p>
+<blockquote></blockquote>
+<pre><code>1. 获取文件属性
+    stat()：通过文件路径获取属性，面对符号链接文件时获取的是所指向的属性。
+    fstat():通过文件描述符获取属性。
+    lstat():面对符号链接文件时获取的是符号链接文件的属性。
+    文件类型：7种 --- dcb-lsp d:目录文件 c:字符设备文件 b:块设备文件 -：常规文件  
+    l:链接文件（符号链接文件）s:网络套接字socket 文件 p:管道文件
+2. 文件访问权限
+    st_mode 是一个16位的位图，用于表示文件类型，文件访问权限，特殊权限位
+3. umask
+    作用：防止产生权限过松的文件
+4. 文件权限的更改/管理
+    chmod();
+        chmod a+x big.c --- a+x：所有可读可写可执行 rwxrwxrwx. u+x 代表user rwx.
+        g+x: group rwx. o+x :other x.
+    fchmod();
+5. 粘住位
+    t 位 /tmp 目录有t位
+6. 文件系统：FAT，UFS
+    文件或数据的存储和管理
+7. 硬链接，符号链接
+    硬链接与目录项是同义词，且建立硬链接有限制：不能给目录建立，不能给分区建立。
+    符号链接优点：可跨分区，可以给目录建立。
+    link() ---&gt; ln src dest/ln -s src dest.
+     unlink()
+    remove() ---&gt; rm
+    rename() ---&gt; mv
+8. utime
+    change file last access and modification times.
+9. 目录的创建和销毁
+    mkdir()
+    rmdir()
+10. 更改当前工作路径
+    chdir(); ---&gt; cd: change working directory.
+    fchdir();
+    getcwd();---&gt; pwd: get current working directory.
+11. 分析目录/读取目录内容
+    glob()：解析模式/ 统配符 可以实现以下方法的集合。
+
+    opendir();
+    closedir();
+    readdir();
+    rewinddir();
+    fseekdir();
+    seekdir();
+    telldir();
+</code></pre>
+<blockquote></blockquote>
+<p>二、系统数据文件和信息</p>
+<blockquote></blockquote>
+<pre><code>1. /etc/passed
+    getpwuid();
+    getpwnam();
+
+2. /etc/group
+    getgrgid();
+    getgrgnam();
+3. /etc/shadow
+    getspnam();
+    crypt();
+    getpass();
+
+4. 时间戳: time_t   char *   struct tm
+    time();
+    gmtime();
+    localtime();
+    mktime();
+    strftime(); 
+</code></pre>
+<blockquote></blockquote>
+<p>三、进程环境</p>
+<blockquote></blockquote>
+<pre><code>1. main() 函数
+    int main(int argc, char **argv);
+2. 进程的终止
+    正常终止：
+        1）从main 函数返回
+        2）调用exit()
+        3) 调用_exit() 或_Exit()
+        4) 最后一个线程从其启动例程返回
+        5) 最后一个线程调用pthread_exit()
+    异常终止：
+        1）调用abort()
+        2) 接到一个信号并终止
+        3) 最后一个线程对其取消请求作出响应 
+    atexit();
+        在进程正常结束时钩子函数逆序被调用，但是进程如果是调用_exit()或_Exit()不会执行钩子函数
+3. 命令行参数的分析
+     getopt()
+     getopt_long()
+4. 环境变量
+    key=value
+    getenv();
+    setenv();
+    putenv();
+5. c程序的存储空间布局 (pmap p_id)
+</code></pre>
+<p><img src="/images/c_program_layout.png" alt="c程序的存储空间布局" /></p>
+<pre><code>6. 库  
+    动态库  
+    静态库  
+    手工装载库  
+        dlopen();  
+        dlerror();  
+        dlsym();  
+        dlclose();  
+7. 函数跳转
+    setjmp();
+        设置跳转点
+    longjmp();
+        安全跨函数的跳转
+8. 资源的获取及控制
+    getrlimit();
+    setrlimit();
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-4-process"><a class="markdownIt-Anchor" href="#part-4-process"></a> <strong>Part 4: Process</strong></h3>
+<p>进程基本知识， 已经进入多进程。</p>
+<blockquote></blockquote>
+<pre><code>1. 进程标识符 pid
+    1）类型pid_t 有符号16位整数（现在已经扩展根据机器环境有不同的大小）
+    2）命令ps (man ps) 例如： ps axf ps axm ps ax -L 
+    3）进程号是顺次向下使用
+    4）getpid();
+    5）getppid(); 
+2. 进程的产生
+    1）fork();
+    2）注意理解关键字：duplicating，意味着拷贝，克隆，一模一样等含义，代码从fork()的位置开始一式两份。  
+    3）fork后父子进程的区别：fork的返回值不一样，pid不同，ppid也不同，未决信号和文件锁不继承，资源利用量清零。
+    4）init进程：是所有进程的祖先进程 进程号是1号
+    5）调度器的调度策略决定了哪个进程先运行，不可假设。
+    6）fork() 之前fflush() 的重要性。
+    7）子进程exit() 的重要性。
+    8）vfork()
+
+3. 进程的消亡及释放资源
+    wait();
+    waitpid()
+    wait3();
+    wait4();
+4. exec函数族
+    execl();
+    execlp();
+    execle();
+    execv();
+    execvp();
+    注意：exec组函数使用注意fflush 的使用。
+5. 用户权限及组权限
+    u + s
+    g + s
+    getuid();
+    geteuid();
+    getgid();
+    getegid();
+    setuid();// 常用 例子：mysu.c
+    setgid();
+    setreuid();
+    setregid();
+    seteuid();
+    setguid();
+    chown root ./mysu
+    chmod u+s ./mysu
+
+6. 解释器文件
+    #！  /bin/bash
+
+7. system();
+    理解：fork + exec + wait 封装
+    例子： 
+    fork() + exec(&quot;/bin/sh&quot;, &quot;sh&quot;, &quot;date + %s &lt; /dev/null&quot;, NULL) + wait()的一个简单封装
+8. 进程会计
+    acct();
+
+9. 进程时间
+    进程时间
+    times() ---&gt; time ./myexec 
+
+10. 守护进程
+    会话 session
+        是一个容器，承载进程组。
+        标识sid
+        setsid() 
+            creates a new session if the calling process is not a process   
+            group leader.The calling process is the leader of the new session,
+            the process group leader of the new process group,
+            and has no controlling tty.
+    终端
+        输入和输出
+    setpgid();
+    getpgid();
+    getpgrp();
+    单实例的守护进程：用的是锁文件 /var/run/xxx.pid
+    启动脚本文件：/etc/rc1./xx
+
+11. 系统日志
+    存放的位置： /var/log
+    rsyslogd 服务
+    openlog();
+    syslog();
+    closelog();
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-5-concurrency"><a class="markdownIt-Anchor" href="#part-5-concurrency"></a> <strong>Part 5: Concurrency</strong></h3>
+<p>同步<br />
+异步<br />
+异步事件的处理：查询法，通知法。<br />
+异步事件发生的很稀疏通知法是合适的，发生很频繁用查询法。</p>
+<p>一、信号</p>
+<blockquote></blockquote>
+<pre><code>1. 信号的概念
+    信号是软件层面的中断。
+    信号的响应依赖于中断。
+
+2. signal();
+    kill -l 显示信号
+    SIGINT ---&gt; ctrl + c
+    信号会打断阻塞的系统调用。
+
+3. 信号的不可靠
+    指信号行为的不可靠
+
+4. 可重入函数
+    所有的系统调用都是可重入的，一部分库函数也是可重入的。memcpy()可重入，rand()不可重入，
+    rand_r() 可重入。
+
+5. 信号的响应过程
+    信号从受到到响应有一个不可避免的延迟  
+    思考：信号如何忽略掉一个信号的？  
+    标准信号为什么要丢失？
+    标准信号的响应没有严格的顺序。  
+    不能从信号处理函数中随意的往外跳
+</code></pre>
+<p><img src="/images/process_mask_pending.png" alt="信号的响应过程" /></p>
+<pre><code>6. 常用函数
+    kill(); -- send signal to a process
+    raise();-- send a signal to the caller
+
+    alarm();
+    setitimer();
+    例：使用单一计时器，setitimer()或alarm()构造一组函数，实现任意数量的计时器。
+
+    pause();-- wait a signal
+    abort();-- create a core dump file
+    system();
+        During execution of the command, SIGCHLD will  
+        be blocked and SIGINT and SIGQUIT will be  ignored,  
+        in  the  process  that  calls  system().
+    sleep();
+    usleep();
+    nanosleep();
+    select();
+    
+7. 信号集
+    类型：sigset_t
+    sigemptyset();
+    sigfillset();
+    sigaddset();
+    sigismember();
+
+8. 信号屏蔽子/pending 集的处理
+    sigprocmask(); 例子：block.c
+    sigpending(); --- 不常用
+
+
+9. 扩展集
+    sigsuspend(); -- wait for a signal
+        解除信号集马上进入等待一个信号
+    sigaction(); -- signal()
+
+10. 实时信号
+    范围： [SIGRTMIN, SIGRTMAX]
+    不丢失排队，排队的多少查看ulimit -a
+</code></pre>
+<blockquote></blockquote>
+<p>二、线程</p>
+<blockquote></blockquote>
+<pre><code>1. 线程的概念
+    一个正在运行的函数  
+    posix 线程是一套标准，而不是实现  
+    openmp线程  
+    线程标识：pthread_t
+    pthread_equal();
+    pthread_self(); -- obtain ID of the calling thread.
+
+2. 线程的创建
+    pthread_create();
+    线程的调度取决于调度器策略
+
+    线程的终止
+        3种方式：
+            1）线程从启动例程返回，返回值就是线程的退出码
+            2）线程可以被同一进程中的其他线程取消
+            3）线程调用pthread_exit()函数
+        pthread_join() -- join with a terminated thread
+
+    栈的清理
+        pthread_cleanup_push();
+        pthread_cleanup_pop();
+
+    线程的取消选项
+        线程取消： pthread_cancel();
+        取消有2种状态： 允许和不允许
+        允许取消又分为：异步cancel,推迟cancel(默认)，推迟至cancel点在响应。
+        cancel点：posix定义的cancel点，都是可能引发阻塞的系统调用。
+        pthread_setcancelstate(): 设置是否允许取消
+        pthread_setcanceltype(): 设置取消方式
+        pthread_testcancel(): 本函数什么都不做，就是一个取消点。
+
+    线程分离：
+        pthread_detach();
+
+3. 线程的同步
+    互斥量： 
+        pthread_mutex_t
+        pthread_mutex_init();
+        pthread_mutex_destroy();
+        pthread_mutex_lock();
+        pthread_mutex_trylock();
+        pthread_mutex_unlock();
+        pthread_once(); // 只执行一次
+
+    条件变量：
+        pthread_cond_t
+        pthread_cond_init();
+        pthread_cond_destroy();
+        pthread_cond_broadcast();
+        pthread_cond_signal();
+        pthread_cond_wait(); -- 解锁等待 被通知后抢锁
+        pthread_cond_timedwait();
+
+    信号量：
+    多写锁：读锁 ---&gt; 共享锁    写锁 ---&gt; 互斥锁
+
+4. 线程属性
+    pthread_attr_t 
+    pthread_attr_init();
+    pthread_attr_destroy();
+    pthread_attr_setstacksize();
+    见 man pthread_attr_init 的see also
+
+    线程同步的属性
+        互斥量属性：
+            pthread_mutexattr_init();
+            pthread_mutexattr_destroy();
+            pthread_mutexattr_setpshared();
+            pthread_mutexattr_getpshared();
+            clone();
+            pthread_mutexattr_gettype();
+            pthread_mutexattr_settype();
+        
+        条件变量：
+            pthread_condattr_init();
+            pthread_condattr_destroy();
+
+        读写锁属性：
+
+5. 重入
+    多线程中的IO
+    线程与信号
+        pthread_sigmask();
+        sigwait();
+        pthread_kill();
+
+    线程与fork
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-6-advanced-io"><a class="markdownIt-Anchor" href="#part-6-advanced-io"></a> <strong>Part 6: Advanced IO</strong></h3>
+<p>非阻塞IO – 阻塞IO<br />
+补充：有限状态机编程</p>
+<blockquote></blockquote>
+<pre><code>1. 非阻塞IO
+    简单流程：自然流程是结构化的
+    复杂流程：自然流程不是结构化的
+
+2. IO 多路转接
+    select(); --- 古老
+        以事件（读，写，异常）为单位，来组织文件描述符
+        缺陷：监视现场和监视结果是放在同一空间，只要select 有返回，除了你感兴趣的事件，  
+        其他的集合都清空，需要重新布置监视现场。监视的事件太单一。
+
+        void FD_CLR(int fd, fd_set *set); ---&gt; 删除
+        int  FD_ISSET(int fd, fd_set *set); ---&gt; 测试
+        void FD_SET(int fd, fd_set *set); ---&gt; 添加
+        void FD_ZERO(fd_set *set); ---&gt; 清空
+
+    poll(); --- 可移植，wait for some events on a fd.
+        以文件描述符为单位，来组织事件
+
+    epoll(); --- linux 方言
+        epoll_create();
+        epoll_ctl();
+        epoll_wait();
+
+3. 其他读写函数
+    readv();
+    writev();
+
+4. 存储映射IO
+    mmap(); ---&gt; 映射
+    munmap(); ---&gt; 解除映射
+
+5. 文件锁
+    fcntl()
+    lockf()
+    flock()
+</code></pre>
+<blockquote></blockquote>
+<h3 id="part-7-ipc"><a class="markdownIt-Anchor" href="#part-7-ipc"></a> <strong>Part 7: IPC</strong></h3>
+<blockquote></blockquote>
+<pre><code>1.管道
+    内核提供，单工（一端为读，一端为写），自同步机制
+    匿名管道
+        pipe()
+    命名管道
+        mkfifo()
+
+
+2. XSI -&gt; SysV
+    IPC -&gt; Inter-Process Communication
+    主动端：先发包的一方
+    被动端：先发包的一方（先运行）
+
+    key:ftok 
+
+    Message Queues
+
+    Shared Memory Segments
+
+    Semaphore Arrays
+
+    以上创建方法都是：xxxget xxxop xxxctl for exmaple:man msgget msgop msgctl semget 
+    semop semctl man shemget ...
+
+
+3. 网络套接字socket
+    讨论：跨主机的传输要注意的问题
+        1 字节序问题：
+            大端模式：就是高位字节排放在内存的低地址端，低位字节排放在内存的高地址端。
+            小端模式：就是低字节排放在内存的低地址端，高位字节排放在内存的高地址端。
+            主机字节序：host
+            网络字节序：network
+            解决：_to__: htons, htols, ntohs, ntohs
+</code></pre>
+<p><img src="/images/big_endian.png" alt="大端存储" /><br />
+<img src="/images/little_endian.png" alt="小端存储" /></p>
+<pre><code>        2 对齐：
+            <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> f;</span><br><span class="line">    <span class="type">char</span> ch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            解决：不对齐（让编译器不对齐）
+
+        3 类型长度问题：
+            int
+            char
+            解决：int32_t, uint32_t, int64_t int8_t uint8_t
+
+    Socket 是什么？
+
+    报式套接字：
+        被动端：(先运行)
+            1 取得socket
+            2 给socket 绑定地址（本地地址、端口）
+            3 收/发 消息
+            4 关闭socket
+        主动端：
+            1 取得socket
+            2 给socket 绑定地址（可省略，系统会自动分配一个端口）
+            3 发/收 消息
+            4 关闭socket
+
+        UDP 包的推荐长度是512byte， 报头长度为8byte.
+        socket()
+        bind()
+        sendto()
+        recvfrom()
+        inet_pton()
+        inet_ntop()
+        setsockopt()
+        getsockopt()
+
+        多点通讯：广播（全网广播，子网广播）， 多播/组播
+
+    流式套接子：
+        C 端（主动端）
+            1 获得socket
+            2 给socket 绑定地址（可省略）
+            3 发送连接
+            4 收/发消息
+            5 关闭
+
+
+        S 端（被动端）
+            1 获得socket
+            2 给socket 绑定地址
+            3 将socket 置为监听模式
+            4 接受链接
+            5 收/发消息
+            6 关闭
+</code></pre>
+<blockquote></blockquote>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+        <tag>CS</tag>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux常用命令</title>
+    <url>/2023/05/29/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
+<span id="more"></span>
+<h2 id="linux常用命令"><a class="markdownIt-Anchor" href="#linux常用命令"></a> Linux常用命令</h2>
+<h3 id="file"><a class="markdownIt-Anchor" href="#file"></a> File</h3>
+<ul>
+<li>ls /etc/a*.conf (匹配查找文件)</li>
+<li>grep “#define container_of” -R .(当前目录递归查找)</li>
+<li>diff /etc/service tmp (比较文件的差异)</li>
+<li>cat tmp</li>
+<li>tail -n 10 out.log (-f 动态模式)</li>
+<li>chmod a+x a.out (更改文件的权限 常用权限664可读可写可执行)</li>
+<li>chown root a.out（将 a.out文件的所有者更改为 root 用户）</li>
+<li>./a.out -&gt; sudo !! (当执行a.out 没有权限时可以使用 sudo !! 获得权限执行)</li>
+<li>chmod u+s mysu
+<blockquote>
+<p>设置文件或目录的 setuid 位。当一个带有 setuid 位的文件或目录被执行时，它会以该文件或目录的所有者的权限而不是执行它的用户的权限来运行。这对于需要以提升的权限运行但不能作为 root 运行的程序非常有用。如果您想允许用户运行需要 root 权限的程序而不给他们访问 root 帐户，可以在程序文件上设置 setuid 位。</p>
+</blockquote>
+</li>
+<li>du abc.c/directory (分析文件/目录占用磁盘空间大小 默认是以k字节为单位)</li>
+<li>primer0 | wc -l (统计primer0执行输出结果的行数)</li>
+<li>cat file | wc -l (统计file文件内容的行数)</li>
+<li>file a.out (查看文件的类型)</li>
+<li>ls -lh (较好的方式显示文件的大小)</li>
+</ul>
+<hr />
+<h3 id="system"><a class="markdownIt-Anchor" href="#system"></a> System</h3>
+<ul>
+<li>ulimit -a (查看当前用户的资源限制，如最大打开文件数、最大进程数等等)</li>
+<li>strace ./a.out (看可执行文件的系统调用是如何发生的)</li>
+<li>time ./a.out (查看调用时间)</li>
+<li>export (显示所有的环境变量)</li>
+<li>ps axf（显示进程,及进程下子进程）</li>
+<li>ps axm（显示进程不显示递进关系）</li>
+<li>ps axj（显示进程的状态信息，包括进程的 PID、PPID、CPU 占用率、内存占用率等等）</li>
+<li>ps ax -L（显示进程和线程）</li>
+<li>pstree (打印系统进程树)</li>
+<li>pmap p_id（查看程序的进程空间的分布）</li>
+<li>kill -l（list all signal）</li>
+<li>kill pid（杀死进程）</li>
+<li>ipcs (查看系统进程间通信的信息)</li>
+</ul>
+<hr />
+<h3 id="network"><a class="markdownIt-Anchor" href="#network"></a> Network</h3>
+<ul>
+<li>ip addr (查看网络环境)</li>
+<li>ip add sh(查看网卡信息)</li>
+<li>ip ro sh(查看ip路由表的命令)</li>
+<li>ip ro add default via 192.168.1.125（添加默认路由）</li>
+<li>ipcs（显示系统IPC）</li>
+<li>netstat -anu(local pc udp info)</li>
+<li>netstat -ant(local pc tcp info)</li>
+</ul>
+<hr />
+<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> GCC</h3>
+<ul>
+<li>gcc -E hello.c</li>
+<li>gcc -E hello.c &gt; hello.i</li>
+<li>gcc -S hello.i</li>
+<li>gcc -c hello.s</li>
+<li>gcc hello.o -o hello</li>
+<li>gcc hello.c</li>
+<li>gcc hello.c -o myhello</li>
+<li>make hello</li>
+<li>objdump -d a.out （反汇编 汇编码-d）</li>
+<li>strace -f gcc a.c (追踪gcc a.c 的过程，包括gcc 启动的其他程序) strace -f gcc a.c 2&gt;&amp;1 | grep execve</li>
+<li>strip test_sqlist (移除调试信息)</li>
+</ul>
+<hr />
+<h3 id="gdb"><a class="markdownIt-Anchor" href="#gdb"></a> GDB</h3>
+<ul>
+<li>gdb a.out (载入程序)</li>
+<li>run/r	(开始运行程序)</li>
+<li>starti (运行第一条指令)</li>
+<li>layout asm (查看汇编代码)</li>
+<li>si (单步查看-&gt;汇编单步)</li>
+<li>info registers (查看寄存器代码)</li>
+<li>bt (打印系统调用栈)</li>
+<li>info inferiors（打印可执行程序的进程号）</li>
+<li>print/p $rdx (打印寄存器rdx的值)</li>
+<li>target record-full (开始记录)</li>
+<li>watch $rax（观察寄存器rax的值）</li>
+<li>watch *0x7c00 (在地址7c00处设置监视点)</li>
+<li>rsi (单步回退查看-&gt;汇编单步)</li>
+<li>layout src(调试源代码)</li>
+<li>set scheduler-locking on (可以使其他处理器（线程)不要干扰）</li>
+<li>thread 1（switching to thread 1）</li>
+</ul>
+<h2 id="vps科学上网"><a class="markdownIt-Anchor" href="#vps科学上网"></a> vps+科学上网</h2>
+<h3 id="v2ray和xray"><a class="markdownIt-Anchor" href="#v2ray和xray"></a> v2ray和xray</h3>
+<ul>
+<li>安装mulit-v2ray和xray</li>
+<li>source &lt;(curl -sL <a href="https://multi.netlify.app/v2ray.sh">https://multi.netlify.app/v2ray.sh</a>) --zh（安装v2ray）</li>
+<li>systemctl stop firewalld.service  （关闭防火墙）</li>
+<li>systemctl disable firewalld.service</li>
+<li>sudo ufw disable (Debian禁用ufw防火墙)</li>
+</ul>
+<h3 id="安装tls"><a class="markdownIt-Anchor" href="#安装tls"></a> 安装tls</h3>
+<ul>
+<li>安装acme证书</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://get.acme.sh | sh</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装socat</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install socat</span><br></pre></td></tr></table></figure>
+<ul>
+<li>添加软链接</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /usr/local/bin</span><br><span class="line">1n -s/root/.acme.sh/acme.sh /usr/local/bin/acme.sh</span><br></pre></td></tr></table></figure>
+<ul>
+<li>设置默认的CA</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --set-default-ca --server letsencrypt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>开放80端口：非必需</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw allow 80</span><br></pre></td></tr></table></figure>
+<ul>
+<li>申请证书ipv4默认方式</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --issue -d freeqing.dpdns.org --standalone -k ec-256</span><br></pre></td></tr></table></figure>
+<ul>
+<li>申请证书ipv6方式</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --issue -d freeqing.dpdns.org --standalone -k ec-256 --listen-v6 --insecure</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装或复制证书到特定位置，非必须</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --installcert -d freeqing.dpdns.org --ecc --key-file  /etc/v2ray/server.key --fullchain-file /etc/v2ray/server.crt</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>Linux</tag>
+        <tag>CS</tag>
+        <tag>工具命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>汇编语言</title>
+    <url>/2025/03/02/assembly/</url>
+    <content><![CDATA[<p>简介：汇编语言（Assembly Language）是一种低级编程语言，它为特定的计算机架构提供了人类可读的指令形式。与高级编程语言相比，汇编语言更接近于机器码，几乎每个汇编语言语句都有一对一的对应机器指令。因此，使用汇编语言编写的程序通常能更高效地运行，并且可以更好地控制硬件资源。</p>
+<span id="more"></span>
+<h1 id="汇编语言"><a class="markdownIt-Anchor" href="#汇编语言"></a> 汇编语言</h1>
+<p>前言：汇编语言是直接在硬件之上的工作的编程语言，我们首先要了解硬件系统的结构，才能有效地应用汇编语言对其编程。汇编课程的研究重点是如何利于硬件系统的结构和指令集有效的控制系统进行工作。</p>
+<h2 id="第一章-基础知识"><a class="markdownIt-Anchor" href="#第一章-基础知识"></a> 第一章 基础知识</h2>
+<h3 id="11-机器语言"><a class="markdownIt-Anchor" href="#11-机器语言"></a> 1.1 机器语言</h3>
+<p>机器语言是机器指令的集合。8086CPU完成s = 768 + 12288 - 1280,机器码如下：<br />
+1011’1000’0000’0000’0000’0011<br />
+0000’0101’0000’0000’0011’0000<br />
+0010’1101’0000’0000’0000’0101</p>
+]]></content>
+      <tags>
+        <tag>汇编</tag>
+        <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Algorithm-算法</title>
     <url>/2025/03/02/algorithm/</url>
     <content><![CDATA[<p>简介：算法是解决特定问题或执行特定任务的一系列明确步骤或规则。在计算机科学中，算法是指能够被计算机程序实现的解决问题的方法。一个有效的算法应该具有以下特性：</p>
@@ -852,25 +1642,6 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
       </tags>
   </entry>
   <entry>
-    <title>汇编语言</title>
-    <url>/2025/03/02/assembly/</url>
-    <content><![CDATA[<p>简介：汇编语言（Assembly Language）是一种低级编程语言，它为特定的计算机架构提供了人类可读的指令形式。与高级编程语言相比，汇编语言更接近于机器码，几乎每个汇编语言语句都有一对一的对应机器指令。因此，使用汇编语言编写的程序通常能更高效地运行，并且可以更好地控制硬件资源。</p>
-<span id="more"></span>
-<h1 id="汇编语言"><a class="markdownIt-Anchor" href="#汇编语言"></a> 汇编语言</h1>
-<p>前言：汇编语言是直接在硬件之上的工作的编程语言，我们首先要了解硬件系统的结构，才能有效地应用汇编语言对其编程。汇编课程的研究重点是如何利于硬件系统的结构和指令集有效的控制系统进行工作。</p>
-<h2 id="第一章-基础知识"><a class="markdownIt-Anchor" href="#第一章-基础知识"></a> 第一章 基础知识</h2>
-<h3 id="11-机器语言"><a class="markdownIt-Anchor" href="#11-机器语言"></a> 1.1 机器语言</h3>
-<p>机器语言是机器指令的集合。8086CPU完成s = 768 + 12288 - 1280,机器码如下：<br />
-1011’1000’0000’0000’0000’0011<br />
-0000’0101’0000’0000’0011’0000<br />
-0010’1101’0000’0000’0000’0101</p>
-]]></content>
-      <tags>
-        <tag>汇编</tag>
-        <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Coroutine-协程</title>
     <url>/2025/03/03/coroutine/</url>
     <content><![CDATA[<p>前言：协程（Coroutine）是一种计算机程序组件，它与子例程（即通常所说的函数或过程）类似，但其执行方式更为灵活。不同于传统的线程和进程，协程允许在特定的地方暂停执行，并能在之后从暂停的地方恢复执行。这种特性使得协程在处理异步编程、并发操作以及I/O密集型任务时特别有用。</p>
@@ -1048,6 +1819,272 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
         <tag>C++</tag>
         <tag>协程</tag>
         <tag>网络编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言</title>
+    <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
+    <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
+<span id="more"></span>
+<blockquote>
+<ul>
+<li>the history of c programing</li>
+<li>c 语言的特点<br />
+1. 基础性语言<br />
+2. 语法简洁，紧凑，方便，灵活<br />
+3. 运算符，结构丰富<br />
+4. 结构化，模块化编程<br />
+5. 移植性好，执行效率高<br />
+6. 允许对硬件直接操作</li>
+<li>c 语言学习建议
+<ul>
+<li>概念的正确性</li>
+<li>动手</li>
+<li>阅读优秀的程序段</li>
+<li>大量练习,面试题</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="c课程讲解思路"><a class="markdownIt-Anchor" href="#c课程讲解思路"></a> <strong>c课程讲解思路</strong></h3>
+<blockquote></blockquote>
+<pre><code>    1. 基本概念
+    2. 数据类型，运算符和表达式
+    3. 输入输出专题
+    4. 流程控制
+    5. 数组
+    6. 指针
+    7. 函数 
+    8. 构造类型
+    9. 动态内存管理
+    10. 调试工具和调试技巧
+    11. 常用库函数
+</code></pre>
+<blockquote></blockquote>
+<p>hello.c ：<br />
+c源文件 — 预处理 —编译 —汇编— 链接 — 可执行程序</p>
+<blockquote></blockquote>
+<hr />
+<h3 id="一-基本概念"><a class="markdownIt-Anchor" href="#一-基本概念"></a> <strong>一、基本概念</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 以helloworld 为例对写程序的思路提出如下要求：
+2. 头文件正确包含的重要性
+3. 以函数为单位来进行程序的编写
+4. 声明部分+实现部分
+5. return 0 (exit(0) 给他的父进程看的)
+6. echo $?    
+</code></pre>
+<blockquote></blockquote>
+<p>算法：解决问题的方法</p>
+<blockquote></blockquote>
+<pre><code>1. 流程图
+2. NS 图
+3. FSM 有限状态机
+</code></pre>
+<blockquote></blockquote>
+<p>程序：用某种语言实现算法</p>
+<h3 id="二-数据类型运算符和表达式"><a class="markdownIt-Anchor" href="#二-数据类型运算符和表达式"></a> <strong>二、数据类型，运算符和表达式</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 数据类型：（基本类型,构造类型，指针类型，空类型void)
+2. 数据存储（占用的字节数）
+3. 不同类型的数据间进行转换
+4. 特殊性：
+5. bool 类型
+6. float 类型的比较
+7. char 类型的符号（c 标准未定义）
+8. 不同形式的零直
+</code></pre>
+<blockquote></blockquote>
+<h3 id="三-常量与变量"><a class="markdownIt-Anchor" href="#三-常量与变量"></a> <strong>三、常量与变量</strong></h3>
+<blockquote></blockquote>
+<ol>
+<li>
+<p>常量：<br />
+分类：<br />
+1）整形常量 1，790， 67，52<br />
+2）实行常量：3.14， 52.26<br />
+3）字符常量：‘\015’, ‘\x7f’<br />
+4）字符串常量：“helloworld”， “”<br />
+5）标识常量： #define，处理在程序的预处理阶段，不检查语法，只是单纯宏名和宏体的替换。</p>
+</li>
+<li>
+<p>变量：用来保存一些特定的内容，并且在程序执行过程中变化的量。<br />
+1） 定义：【存储类型】 数据类型 标识符<br />
+2）                 TYPE NAME = VALUE；<br />
+3）标识符：由字母 数字 下划线组成且不能以数字开头的表示序列。<br />
+4）存储类型： auto static register extern（说明型）<br />
+1》auto: 默认，自动分配空间<br />
+2》register:（建议型）寄存器类型，只能定义局部变量，不能定义全局变量。一个寄存器类型的变量无法打印地址。<br />
+3》static :静态型，自动初始化为0值或空值，且其值具有继承性。<br />
+4》extern : 说明型，不能改变变量的类型。</p>
+</li>
+<li>
+<p>变量的生命周期和作用范围：<br />
+1）全局变量和局部变量<br />
+2）局部变量和局部变量</p>
+</li>
+</ol>
+<blockquote></blockquote>
+<h3 id="四-运算符和表达式"><a class="markdownIt-Anchor" href="#四-运算符和表达式"></a> <strong>四、运算符和表达式</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 表达式与语句的区别  
+2. 运算符部分：  
+    1）每个运算符所需要的参与运算的操作数的个数  
+    2）结合性  
+    3）优先级  
+    4）运算符的特殊用法  
+        如：  %， = 与==，逻辑运算符的短路特性
+    5）位运算的重要意义  
+        将操作数中第n位置1，其他位不变：num = num | 1 &lt;&lt; n;
+        将操作数中第n位置0，其他位不变：num = num &amp; ～（1 &lt;&lt; n）;
+    6）优先级：算术运算符 &gt; 移位运算符 &gt; 关系运算符 &gt; 位运算符 &gt; 逻辑运算符 &gt; 条件运算符 &gt; 赋值运算符 &gt; 符合赋值运算符 &gt; 逗号运算符  
+</code></pre>
+<blockquote></blockquote>
+<h3 id="五-输入输出专题"><a class="markdownIt-Anchor" href="#五-输入输出专题"></a> <strong>五、输入，输出专题</strong></h3>
+<p>input &amp;&amp; output ----&gt; I/O(标准IO，文件IO或系统IO)</p>
+<blockquote></blockquote>
+<pre><code>1. 格式化输入输出函数：scanf printf  
+    1）int printf(const char *format, ...);
+    2） int scanf(const char *format, ...);
+2. 字符输入输出函数：getchar ,putchar
+3. 字符串输入输出函数：fgets fputs
+</code></pre>
+<blockquote></blockquote>
+<h3 id="六-流程控制"><a class="markdownIt-Anchor" href="#六-流程控制"></a> <strong>六、流程控制</strong></h3>
+<p>顺序，选择，循环<br />
+简单结构与复杂结构：自然流程<br />
+NS图，流程图            工具Dia</p>
+<blockquote></blockquote>
+<pre><code>1. 关键字：
+2. if else switch case while do while continue break
+</code></pre>
+<blockquote></blockquote>
+<h3 id="七-数组"><a class="markdownIt-Anchor" href="#七-数组"></a> <strong>七、数组</strong></h3>
+<p>一维数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义：【存储类型】数据类型 标识符【下标】 下标：必须是整形常量或整形表达式。  
+2. 初始化    
+    不初始化    
+    部分初始化    
+    全部初始化    
+3. 元素引用  
+4. 数组名  
+5. 数组越界  
+</code></pre>
+<blockquote></blockquote>
+<p>二维数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义，初始化  
+2. 元素引用  
+3. 存储形式  
+4. 深入理解二维数组  
+</code></pre>
+<blockquote></blockquote>
+<p>字符数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义，初始化存储特点
+    【存储类型】数据类型 标识符【下标】
+    单个字符初始化
+    用字符串常量初始化
+2. 输入输出
+3. 常用函数
+</code></pre>
+<blockquote></blockquote>
+<p>多维数组</p>
+<blockquote></blockquote>
+<blockquote></blockquote>
+<h3 id="八-指针"><a class="markdownIt-Anchor" href="#八-指针"></a> <strong>八、指针</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 变量与地址
+2. 指针与指针变量
+3. 直接访问与简接访问
+4. 空指针与野指针
+5. 空类型
+6. 指针与初始化的书写规则
+7. 指针与运算
+    &amp; * 关系运算 ++ --
+8. 指针与数组
+    指针与一维数组
+    指针与二维数组
+    指针与字符数组
+9. const 与指针
+10. 指针数组与数组指针
+11. 多级指针
+</code></pre>
+<blockquote></blockquote>
+<h3 id="九-函数"><a class="markdownIt-Anchor" href="#九-函数"></a> <strong>九、函数</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 函数的定义
+    数据类型 函数名（【形式参数说明表】）
+2. 函数的传参
+    值传递
+    地址传递
+    全局变量
+3. 函数的调用
+    嵌套调用
+    递归
+4. 函数与数组
+5. 函数与指针
+    指针函数
+        返回值 *函数名（形参）；
+        如：int * func(int);
+    函数指针
+        类型 （*指针名）（形参）；
+        如：int （*p)(int);
+</code></pre>
+<blockquote></blockquote>
+<h3 id="十-构造类型"><a class="markdownIt-Anchor" href="#十-构造类型"></a> <strong>十、构造类型</strong></h3>
+<p>结构体</p>
+<blockquote></blockquote>
+<pre><code>1. 产生即意义
+2. 类型描述
+    struct 结构体名
+    &#123;
+        数据类型 成员1；
+        数据类型 成员2；
+        ...
+    &#125;;
+3. 嵌套定义
+    
+4. 定义变量（变量，数组，指针），初始化及成员引用
+        成员引用：变量名.成员名
+            指针-&gt;成员名
+            （*指针）.成员名
+5. 占用内存空间大小
+6. 函数传参（值，地址）
+</code></pre>
+<blockquote></blockquote>
+<p>共用体</p>
+<blockquote></blockquote>
+<pre><code>1. 产生及意义
+2. 类型描述
+3. 嵌套定义
+4. 定义变量（变量，数组，指针），初始化及成员引用
+5. 占用内存大小
+6. 函数传参（值，地址）
+7. 位域
+</code></pre>
+<blockquote></blockquote>
+<p>枚举</p>
+<blockquote></blockquote>
+<pre><code>enum 标识符
+&#123;
+    成员 1，
+    成员 2，
+    成员 3
+&#125;;
+</code></pre>
+<blockquote></blockquote>
+<h3 id="十一-动态内存管理"><a class="markdownIt-Anchor" href="#十一-动态内存管理"></a> <strong>十一、动态内存管理</strong></h3>
+<p><em>malloc ralloc realloc free</em></p>
+<blockquote></blockquote>
+<pre><code>1. 规则：谁申请，谁释放。
+</code></pre>
+<blockquote></blockquote>
+]]></content>
+      <tags>
+        <tag>CS</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -3029,272 +4066,6 @@ visibility属性默认值是show，如果设置为hidden，元素会隐藏。<br
       </tags>
   </entry>
   <entry>
-    <title>C语言</title>
-    <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
-    <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
-<span id="more"></span>
-<blockquote>
-<ul>
-<li>the history of c programing</li>
-<li>c 语言的特点<br />
-1. 基础性语言<br />
-2. 语法简洁，紧凑，方便，灵活<br />
-3. 运算符，结构丰富<br />
-4. 结构化，模块化编程<br />
-5. 移植性好，执行效率高<br />
-6. 允许对硬件直接操作</li>
-<li>c 语言学习建议
-<ul>
-<li>概念的正确性</li>
-<li>动手</li>
-<li>阅读优秀的程序段</li>
-<li>大量练习,面试题</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<h3 id="c课程讲解思路"><a class="markdownIt-Anchor" href="#c课程讲解思路"></a> <strong>c课程讲解思路</strong></h3>
-<blockquote></blockquote>
-<pre><code>    1. 基本概念
-    2. 数据类型，运算符和表达式
-    3. 输入输出专题
-    4. 流程控制
-    5. 数组
-    6. 指针
-    7. 函数 
-    8. 构造类型
-    9. 动态内存管理
-    10. 调试工具和调试技巧
-    11. 常用库函数
-</code></pre>
-<blockquote></blockquote>
-<p>hello.c ：<br />
-c源文件 — 预处理 —编译 —汇编— 链接 — 可执行程序</p>
-<blockquote></blockquote>
-<hr />
-<h3 id="一-基本概念"><a class="markdownIt-Anchor" href="#一-基本概念"></a> <strong>一、基本概念</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 以helloworld 为例对写程序的思路提出如下要求：
-2. 头文件正确包含的重要性
-3. 以函数为单位来进行程序的编写
-4. 声明部分+实现部分
-5. return 0 (exit(0) 给他的父进程看的)
-6. echo $?    
-</code></pre>
-<blockquote></blockquote>
-<p>算法：解决问题的方法</p>
-<blockquote></blockquote>
-<pre><code>1. 流程图
-2. NS 图
-3. FSM 有限状态机
-</code></pre>
-<blockquote></blockquote>
-<p>程序：用某种语言实现算法</p>
-<h3 id="二-数据类型运算符和表达式"><a class="markdownIt-Anchor" href="#二-数据类型运算符和表达式"></a> <strong>二、数据类型，运算符和表达式</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 数据类型：（基本类型,构造类型，指针类型，空类型void)
-2. 数据存储（占用的字节数）
-3. 不同类型的数据间进行转换
-4. 特殊性：
-5. bool 类型
-6. float 类型的比较
-7. char 类型的符号（c 标准未定义）
-8. 不同形式的零直
-</code></pre>
-<blockquote></blockquote>
-<h3 id="三-常量与变量"><a class="markdownIt-Anchor" href="#三-常量与变量"></a> <strong>三、常量与变量</strong></h3>
-<blockquote></blockquote>
-<ol>
-<li>
-<p>常量：<br />
-分类：<br />
-1）整形常量 1，790， 67，52<br />
-2）实行常量：3.14， 52.26<br />
-3）字符常量：‘\015’, ‘\x7f’<br />
-4）字符串常量：“helloworld”， “”<br />
-5）标识常量： #define，处理在程序的预处理阶段，不检查语法，只是单纯宏名和宏体的替换。</p>
-</li>
-<li>
-<p>变量：用来保存一些特定的内容，并且在程序执行过程中变化的量。<br />
-1） 定义：【存储类型】 数据类型 标识符<br />
-2）                 TYPE NAME = VALUE；<br />
-3）标识符：由字母 数字 下划线组成且不能以数字开头的表示序列。<br />
-4）存储类型： auto static register extern（说明型）<br />
-1》auto: 默认，自动分配空间<br />
-2》register:（建议型）寄存器类型，只能定义局部变量，不能定义全局变量。一个寄存器类型的变量无法打印地址。<br />
-3》static :静态型，自动初始化为0值或空值，且其值具有继承性。<br />
-4》extern : 说明型，不能改变变量的类型。</p>
-</li>
-<li>
-<p>变量的生命周期和作用范围：<br />
-1）全局变量和局部变量<br />
-2）局部变量和局部变量</p>
-</li>
-</ol>
-<blockquote></blockquote>
-<h3 id="四-运算符和表达式"><a class="markdownIt-Anchor" href="#四-运算符和表达式"></a> <strong>四、运算符和表达式</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 表达式与语句的区别  
-2. 运算符部分：  
-    1）每个运算符所需要的参与运算的操作数的个数  
-    2）结合性  
-    3）优先级  
-    4）运算符的特殊用法  
-        如：  %， = 与==，逻辑运算符的短路特性
-    5）位运算的重要意义  
-        将操作数中第n位置1，其他位不变：num = num | 1 &lt;&lt; n;
-        将操作数中第n位置0，其他位不变：num = num &amp; ～（1 &lt;&lt; n）;
-    6）优先级：算术运算符 &gt; 移位运算符 &gt; 关系运算符 &gt; 位运算符 &gt; 逻辑运算符 &gt; 条件运算符 &gt; 赋值运算符 &gt; 符合赋值运算符 &gt; 逗号运算符  
-</code></pre>
-<blockquote></blockquote>
-<h3 id="五-输入输出专题"><a class="markdownIt-Anchor" href="#五-输入输出专题"></a> <strong>五、输入，输出专题</strong></h3>
-<p>input &amp;&amp; output ----&gt; I/O(标准IO，文件IO或系统IO)</p>
-<blockquote></blockquote>
-<pre><code>1. 格式化输入输出函数：scanf printf  
-    1）int printf(const char *format, ...);
-    2） int scanf(const char *format, ...);
-2. 字符输入输出函数：getchar ,putchar
-3. 字符串输入输出函数：fgets fputs
-</code></pre>
-<blockquote></blockquote>
-<h3 id="六-流程控制"><a class="markdownIt-Anchor" href="#六-流程控制"></a> <strong>六、流程控制</strong></h3>
-<p>顺序，选择，循环<br />
-简单结构与复杂结构：自然流程<br />
-NS图，流程图            工具Dia</p>
-<blockquote></blockquote>
-<pre><code>1. 关键字：
-2. if else switch case while do while continue break
-</code></pre>
-<blockquote></blockquote>
-<h3 id="七-数组"><a class="markdownIt-Anchor" href="#七-数组"></a> <strong>七、数组</strong></h3>
-<p>一维数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义：【存储类型】数据类型 标识符【下标】 下标：必须是整形常量或整形表达式。  
-2. 初始化    
-    不初始化    
-    部分初始化    
-    全部初始化    
-3. 元素引用  
-4. 数组名  
-5. 数组越界  
-</code></pre>
-<blockquote></blockquote>
-<p>二维数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义，初始化  
-2. 元素引用  
-3. 存储形式  
-4. 深入理解二维数组  
-</code></pre>
-<blockquote></blockquote>
-<p>字符数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义，初始化存储特点
-    【存储类型】数据类型 标识符【下标】
-    单个字符初始化
-    用字符串常量初始化
-2. 输入输出
-3. 常用函数
-</code></pre>
-<blockquote></blockquote>
-<p>多维数组</p>
-<blockquote></blockquote>
-<blockquote></blockquote>
-<h3 id="八-指针"><a class="markdownIt-Anchor" href="#八-指针"></a> <strong>八、指针</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 变量与地址
-2. 指针与指针变量
-3. 直接访问与简接访问
-4. 空指针与野指针
-5. 空类型
-6. 指针与初始化的书写规则
-7. 指针与运算
-    &amp; * 关系运算 ++ --
-8. 指针与数组
-    指针与一维数组
-    指针与二维数组
-    指针与字符数组
-9. const 与指针
-10. 指针数组与数组指针
-11. 多级指针
-</code></pre>
-<blockquote></blockquote>
-<h3 id="九-函数"><a class="markdownIt-Anchor" href="#九-函数"></a> <strong>九、函数</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 函数的定义
-    数据类型 函数名（【形式参数说明表】）
-2. 函数的传参
-    值传递
-    地址传递
-    全局变量
-3. 函数的调用
-    嵌套调用
-    递归
-4. 函数与数组
-5. 函数与指针
-    指针函数
-        返回值 *函数名（形参）；
-        如：int * func(int);
-    函数指针
-        类型 （*指针名）（形参）；
-        如：int （*p)(int);
-</code></pre>
-<blockquote></blockquote>
-<h3 id="十-构造类型"><a class="markdownIt-Anchor" href="#十-构造类型"></a> <strong>十、构造类型</strong></h3>
-<p>结构体</p>
-<blockquote></blockquote>
-<pre><code>1. 产生即意义
-2. 类型描述
-    struct 结构体名
-    &#123;
-        数据类型 成员1；
-        数据类型 成员2；
-        ...
-    &#125;;
-3. 嵌套定义
-    
-4. 定义变量（变量，数组，指针），初始化及成员引用
-        成员引用：变量名.成员名
-            指针-&gt;成员名
-            （*指针）.成员名
-5. 占用内存空间大小
-6. 函数传参（值，地址）
-</code></pre>
-<blockquote></blockquote>
-<p>共用体</p>
-<blockquote></blockquote>
-<pre><code>1. 产生及意义
-2. 类型描述
-3. 嵌套定义
-4. 定义变量（变量，数组，指针），初始化及成员引用
-5. 占用内存大小
-6. 函数传参（值，地址）
-7. 位域
-</code></pre>
-<blockquote></blockquote>
-<p>枚举</p>
-<blockquote></blockquote>
-<pre><code>enum 标识符
-&#123;
-    成员 1，
-    成员 2，
-    成员 3
-&#125;;
-</code></pre>
-<blockquote></blockquote>
-<h3 id="十一-动态内存管理"><a class="markdownIt-Anchor" href="#十一-动态内存管理"></a> <strong>十一、动态内存管理</strong></h3>
-<p><em>malloc ralloc realloc free</em></p>
-<blockquote></blockquote>
-<pre><code>1. 规则：谁申请，谁释放。
-</code></pre>
-<blockquote></blockquote>
-]]></content>
-      <tags>
-        <tag>C</tag>
-        <tag>CS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>英语词根记忆法(20000words)</title>
     <url>/2025/03/02/english-%E8%AF%8D%E6%A0%B9%E8%AE%B0%E5%BF%86%E6%B3%95/</url>
     <content><![CDATA[<p>简介：英语词根记忆法是一种通过学习和理解单词的基本构成部分——词根、前缀和后缀来增强词汇量和理解能力的学习策略。这种方法基于许多英语单词都是由拉丁语和希腊语的词根演变而来的事实，因此掌握这些基本组成部分可以帮助学习者更轻松地推测出大量单词的意思。</p>
@@ -4160,777 +4931,6 @@ checked属性：让该复选框默认选中。</p>
       </tags>
   </entry>
   <entry>
-    <title>Linux基础</title>
-    <url>/2023/05/29/linux%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<p>前言：Linux是一套免费使用和自由传播的类Unix操作系统，是一个基于POSIX和UNIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。</p>
-<span id="more"></span>
-<p>Linux系统一般有四个主要部分：内核、shell、文件系统、应用程序。前三者一起构成了基本的操作系统，应用程序则是在这个基础上运行的。</p>
-<h3 id="part-1-标准io"><a class="markdownIt-Anchor" href="#part-1-标准io"></a> <strong>Part 1: 标准IO</strong></h3>
-<p>I/O：input &amp; output,是一切实现的基础</p>
-<blockquote></blockquote>
-<pre><code>stdio 标准IO  
-sysio 系统调用IO（文件IO）
-</code></pre>
-<blockquote></blockquote>
-<p>stdio: FILE类型贯穿始终</p>
-<blockquote></blockquote>
-<pre><code>fopen();
-fclose();
-fgetc();
-fputc();
-fgets();
-fputs();
-fread();    binary read
-fwrite();   binary write
-
-printf();
-scanf();
-
-fseek();
-ftell();
-int fseeko(FILE *stream, off_t offset, int whence);  
-     node: On  some  architectures,  both off_t and long are 32-bit types, but    
-     
-     defining _FILE_OFFSET_BITS 64 
-     
-     with the value 64 (before including any header   files) will turn off_t into a 64-bit type.  
-
-off_t ftello(FILE *stream);
-
-rewind();
-fflush();
-    1. 缓冲区的作用：大多数情况下是好事，合并系统调用。
-    2. 行缓冲：换行时候刷新，满了的时候刷新，强制刷新（标准输出是这样的，因为是终端设备）
-    3. 全缓冲：满了的时候刷新，强制刷新（默认是全缓冲，只要不是终端设备）
-    4. 无缓冲：如stderr, 需要立即输出的内容
-    5. 更改缓冲模式的函数 setvbuf()--- 一般用不上
-</code></pre>
-<blockquote></blockquote>
-<h3 id="part-2-系统io文件io"><a class="markdownIt-Anchor" href="#part-2-系统io文件io"></a> <strong>Part 2: 系统IO/文件IO</strong></h3>
-<p>fd 是在文件IO中贯穿始终的类型<br />
-文件描述符的概念：<br />
-<img src="/images/fd_desc.png" alt="文件描述符的概念" /></p>
-<blockquote></blockquote>
-<pre><code>1. 实质：整形数---数组的下标，优先使用当前可用范围最小的。
-2. 当前数组是在一个进程空间中的，不同进程不会共用。
-3. 是进程用来访问操作系统对象的“指针”。
-</code></pre>
-<blockquote></blockquote>
-<p>文件IO相关操作：</p>
-<blockquote></blockquote>
-<pre><code>1. open(const char *pathname, int flags); flags --- 位图
-2. flags must be:  O_RDONLY,  O_WRONLY,  or O_RDWR.  
-3. or has O_CLOEXEC,  O_CREAT,  O_DIRECTORY,  O_EXCL,  O_NOCTTY,O_NOFOLLOW,  O_TMPFILE,  O_TRUNC... see man 2 open.
-4. r ---    O_RDONLY
-5. r+ ----  O_RDWR
-6. w ----   O_WRONLY|O_CREATE|O_TRUNC
-7. w+ ----  O_RDWR|O_TRUNC|O_CREATE
-8. read()
-9. write()
-10. close()
-11. lseek
-</code></pre>
-<blockquote></blockquote>
-<p>文件IO和标准IO的区别</p>
-<blockquote></blockquote>
-<pre><code>1. 响应速度 &amp; 吞吐量
-2. 如何使一个程序变快？主要考虑上面两个方面进行回答。
-3. 标准IO和系统IO 不可混用
-</code></pre>
-<blockquote></blockquote>
-<p>IO的效率问题</p>
-<blockquote></blockquote>
-<pre><code>bufsize 的大小会影响效率，但有一个最佳的bufsize 大小，需要测试。
-</code></pre>
-<blockquote></blockquote>
-<p>文件共享</p>
-<blockquote></blockquote>
-<pre><code>线程共享，在一个进程空间多次打开文件。
-进程共享，在两个进程中去打开文件，利用进程间共享。
-试题：写一个程序删除一个文件的第10行。
-</code></pre>
-<blockquote></blockquote>
-<p>原子操作</p>
-<blockquote></blockquote>
-<pre><code>1. 不可分割的操作
-2. 不可分割的最小单位
-3. 解决竞争和冲突
-4. 如：tmpnam()
-</code></pre>
-<blockquote></blockquote>
-<p>程序中的重定向：dup dup2</p>
-<blockquote></blockquote>
-<pre><code>dup2(old_fd, new_fd) : 把old_fd 从定向到new_fd,第一，关闭new_fd。 第二，copy old_fd 到new_fd。第三，如果old_fd == new_fd时，什么都不做。
-</code></pre>
-<blockquote></blockquote>
-<p>同步：sync fsync, fdatasysnc</p>
-<blockquote></blockquote>
-<pre><code>1. sync - commit buffer cache to disk,同步内核层面的buf cache
-2. 解除设备挂载时用到。 man 2 sync see the details.
-</code></pre>
-<blockquote></blockquote>
-<p>fcntl()</p>
-<blockquote></blockquote>
-<pre><code>1. 文件描述符所变的魔术几乎都来源与该函数。
-</code></pre>
-<blockquote></blockquote>
-<p>ioctl()</p>
-<blockquote></blockquote>
-<pre><code>1. 设备相关的内容
-</code></pre>
-<blockquote></blockquote>
-<p>/dev/fd/目录</p>
-<blockquote></blockquote>
-<pre><code>1. 虚目录
-</code></pre>
-<blockquote></blockquote>
-<h3 id="part-3-file-system"><a class="markdownIt-Anchor" href="#part-3-file-system"></a> <strong>Part 3: File System</strong></h3>
-<p>文件系统：<br />
-一、目录和文件</p>
-<blockquote></blockquote>
-<pre><code>1. 获取文件属性
-    stat()：通过文件路径获取属性，面对符号链接文件时获取的是所指向的属性。
-    fstat():通过文件描述符获取属性。
-    lstat():面对符号链接文件时获取的是符号链接文件的属性。
-    文件类型：7种 --- dcb-lsp d:目录文件 c:字符设备文件 b:块设备文件 -：常规文件  
-    l:链接文件（符号链接文件）s:网络套接字socket 文件 p:管道文件
-2. 文件访问权限
-    st_mode 是一个16位的位图，用于表示文件类型，文件访问权限，特殊权限位
-3. umask
-    作用：防止产生权限过松的文件
-4. 文件权限的更改/管理
-    chmod();
-        chmod a+x big.c --- a+x：所有可读可写可执行 rwxrwxrwx. u+x 代表user rwx.
-        g+x: group rwx. o+x :other x.
-    fchmod();
-5. 粘住位
-    t 位 /tmp 目录有t位
-6. 文件系统：FAT，UFS
-    文件或数据的存储和管理
-7. 硬链接，符号链接
-    硬链接与目录项是同义词，且建立硬链接有限制：不能给目录建立，不能给分区建立。
-    符号链接优点：可跨分区，可以给目录建立。
-    link() ---&gt; ln src dest/ln -s src dest.
-     unlink()
-    remove() ---&gt; rm
-    rename() ---&gt; mv
-8. utime
-    change file last access and modification times.
-9. 目录的创建和销毁
-    mkdir()
-    rmdir()
-10. 更改当前工作路径
-    chdir(); ---&gt; cd: change working directory.
-    fchdir();
-    getcwd();---&gt; pwd: get current working directory.
-11. 分析目录/读取目录内容
-    glob()：解析模式/ 统配符 可以实现以下方法的集合。
-
-    opendir();
-    closedir();
-    readdir();
-    rewinddir();
-    fseekdir();
-    seekdir();
-    telldir();
-</code></pre>
-<blockquote></blockquote>
-<p>二、系统数据文件和信息</p>
-<blockquote></blockquote>
-<pre><code>1. /etc/passed
-    getpwuid();
-    getpwnam();
-
-2. /etc/group
-    getgrgid();
-    getgrgnam();
-3. /etc/shadow
-    getspnam();
-    crypt();
-    getpass();
-
-4. 时间戳: time_t   char *   struct tm
-    time();
-    gmtime();
-    localtime();
-    mktime();
-    strftime(); 
-</code></pre>
-<blockquote></blockquote>
-<p>三、进程环境</p>
-<blockquote></blockquote>
-<pre><code>1. main() 函数
-    int main(int argc, char **argv);
-2. 进程的终止
-    正常终止：
-        1）从main 函数返回
-        2）调用exit()
-        3) 调用_exit() 或_Exit()
-        4) 最后一个线程从其启动例程返回
-        5) 最后一个线程调用pthread_exit()
-    异常终止：
-        1）调用abort()
-        2) 接到一个信号并终止
-        3) 最后一个线程对其取消请求作出响应 
-    atexit();
-        在进程正常结束时钩子函数逆序被调用，但是进程如果是调用_exit()或_Exit()不会执行钩子函数
-3. 命令行参数的分析
-     getopt()
-     getopt_long()
-4. 环境变量
-    key=value
-    getenv();
-    setenv();
-    putenv();
-5. c程序的存储空间布局 (pmap p_id)
-</code></pre>
-<p><img src="/images/c_program_layout.png" alt="c程序的存储空间布局" /></p>
-<pre><code>6. 库  
-    动态库  
-    静态库  
-    手工装载库  
-        dlopen();  
-        dlerror();  
-        dlsym();  
-        dlclose();  
-7. 函数跳转
-    setjmp();
-        设置跳转点
-    longjmp();
-        安全跨函数的跳转
-8. 资源的获取及控制
-    getrlimit();
-    setrlimit();
-</code></pre>
-<blockquote></blockquote>
-<h3 id="part-4-process"><a class="markdownIt-Anchor" href="#part-4-process"></a> <strong>Part 4: Process</strong></h3>
-<p>进程基本知识， 已经进入多进程。</p>
-<blockquote></blockquote>
-<pre><code>1. 进程标识符 pid
-    1）类型pid_t 有符号16位整数（现在已经扩展根据机器环境有不同的大小）
-    2）命令ps (man ps) 例如： ps axf ps axm ps ax -L 
-    3）进程号是顺次向下使用
-    4）getpid();
-    5）getppid(); 
-2. 进程的产生
-    1）fork();
-    2）注意理解关键字：duplicating，意味着拷贝，克隆，一模一样等含义，代码从fork()的位置开始一式两份。  
-    3）fork后父子进程的区别：fork的返回值不一样，pid不同，ppid也不同，未决信号和文件锁不继承，资源利用量清零。
-    4）init进程：是所有进程的祖先进程 进程号是1号
-    5）调度器的调度策略决定了哪个进程先运行，不可假设。
-    6）fork() 之前fflush() 的重要性。
-    7）子进程exit() 的重要性。
-    8）vfork()
-
-3. 进程的消亡及释放资源
-    wait();
-    waitpid()
-    wait3();
-    wait4();
-4. exec函数族
-    execl();
-    execlp();
-    execle();
-    execv();
-    execvp();
-    注意：exec组函数使用注意fflush 的使用。
-5. 用户权限及组权限
-    u + s
-    g + s
-    getuid();
-    geteuid();
-    getgid();
-    getegid();
-    setuid();// 常用 例子：mysu.c
-    setgid();
-    setreuid();
-    setregid();
-    seteuid();
-    setguid();
-    chown root ./mysu
-    chmod u+s ./mysu
-
-6. 解释器文件
-    #！  /bin/bash
-
-7. system();
-    理解：fork + exec + wait 封装
-    例子： 
-    fork() + exec(&quot;/bin/sh&quot;, &quot;sh&quot;, &quot;date + %s &lt; /dev/null&quot;, NULL) + wait()的一个简单封装
-8. 进程会计
-    acct();
-
-9. 进程时间
-    进程时间
-    times() ---&gt; time ./myexec 
-
-10. 守护进程
-    会话 session
-        是一个容器，承载进程组。
-        标识sid
-        setsid() 
-            creates a new session if the calling process is not a process   
-            group leader.The calling process is the leader of the new session,
-            the process group leader of the new process group,
-            and has no controlling tty.
-    终端
-        输入和输出
-    setpgid();
-    getpgid();
-    getpgrp();
-    单实例的守护进程：用的是锁文件 /var/run/xxx.pid
-    启动脚本文件：/etc/rc1./xx
-
-11. 系统日志
-    存放的位置： /var/log
-    rsyslogd 服务
-    openlog();
-    syslog();
-    closelog();
-</code></pre>
-<blockquote></blockquote>
-<h3 id="part-5-concurrency"><a class="markdownIt-Anchor" href="#part-5-concurrency"></a> <strong>Part 5: Concurrency</strong></h3>
-<p>同步<br />
-异步<br />
-异步事件的处理：查询法，通知法。<br />
-异步事件发生的很稀疏通知法是合适的，发生很频繁用查询法。</p>
-<p>一、信号</p>
-<blockquote></blockquote>
-<pre><code>1. 信号的概念
-    信号是软件层面的中断。
-    信号的响应依赖于中断。
-
-2. signal();
-    kill -l 显示信号
-    SIGINT ---&gt; ctrl + c
-    信号会打断阻塞的系统调用。
-
-3. 信号的不可靠
-    指信号行为的不可靠
-
-4. 可重入函数
-    所有的系统调用都是可重入的，一部分库函数也是可重入的。memcpy()可重入，rand()不可重入，
-    rand_r() 可重入。
-
-5. 信号的响应过程
-    信号从受到到响应有一个不可避免的延迟  
-    思考：信号如何忽略掉一个信号的？  
-    标准信号为什么要丢失？
-    标准信号的响应没有严格的顺序。  
-    不能从信号处理函数中随意的往外跳
-</code></pre>
-<p><img src="/images/process_mask_pending.png" alt="信号的响应过程" /></p>
-<pre><code>6. 常用函数
-    kill(); -- send signal to a process
-    raise();-- send a signal to the caller
-
-    alarm();
-    setitimer();
-    例：使用单一计时器，setitimer()或alarm()构造一组函数，实现任意数量的计时器。
-
-    pause();-- wait a signal
-    abort();-- create a core dump file
-    system();
-        During execution of the command, SIGCHLD will  
-        be blocked and SIGINT and SIGQUIT will be  ignored,  
-        in  the  process  that  calls  system().
-    sleep();
-    usleep();
-    nanosleep();
-    select();
-    
-7. 信号集
-    类型：sigset_t
-    sigemptyset();
-    sigfillset();
-    sigaddset();
-    sigismember();
-
-8. 信号屏蔽子/pending 集的处理
-    sigprocmask(); 例子：block.c
-    sigpending(); --- 不常用
-
-
-9. 扩展集
-    sigsuspend(); -- wait for a signal
-        解除信号集马上进入等待一个信号
-    sigaction(); -- signal()
-
-10. 实时信号
-    范围： [SIGRTMIN, SIGRTMAX]
-    不丢失排队，排队的多少查看ulimit -a
-</code></pre>
-<blockquote></blockquote>
-<p>二、线程</p>
-<blockquote></blockquote>
-<pre><code>1. 线程的概念
-    一个正在运行的函数  
-    posix 线程是一套标准，而不是实现  
-    openmp线程  
-    线程标识：pthread_t
-    pthread_equal();
-    pthread_self(); -- obtain ID of the calling thread.
-
-2. 线程的创建
-    pthread_create();
-    线程的调度取决于调度器策略
-
-    线程的终止
-        3种方式：
-            1）线程从启动例程返回，返回值就是线程的退出码
-            2）线程可以被同一进程中的其他线程取消
-            3）线程调用pthread_exit()函数
-        pthread_join() -- join with a terminated thread
-
-    栈的清理
-        pthread_cleanup_push();
-        pthread_cleanup_pop();
-
-    线程的取消选项
-        线程取消： pthread_cancel();
-        取消有2种状态： 允许和不允许
-        允许取消又分为：异步cancel,推迟cancel(默认)，推迟至cancel点在响应。
-        cancel点：posix定义的cancel点，都是可能引发阻塞的系统调用。
-        pthread_setcancelstate(): 设置是否允许取消
-        pthread_setcanceltype(): 设置取消方式
-        pthread_testcancel(): 本函数什么都不做，就是一个取消点。
-
-    线程分离：
-        pthread_detach();
-
-3. 线程的同步
-    互斥量： 
-        pthread_mutex_t
-        pthread_mutex_init();
-        pthread_mutex_destroy();
-        pthread_mutex_lock();
-        pthread_mutex_trylock();
-        pthread_mutex_unlock();
-        pthread_once(); // 只执行一次
-
-    条件变量：
-        pthread_cond_t
-        pthread_cond_init();
-        pthread_cond_destroy();
-        pthread_cond_broadcast();
-        pthread_cond_signal();
-        pthread_cond_wait(); -- 解锁等待 被通知后抢锁
-        pthread_cond_timedwait();
-
-    信号量：
-    多写锁：读锁 ---&gt; 共享锁    写锁 ---&gt; 互斥锁
-
-4. 线程属性
-    pthread_attr_t 
-    pthread_attr_init();
-    pthread_attr_destroy();
-    pthread_attr_setstacksize();
-    见 man pthread_attr_init 的see also
-
-    线程同步的属性
-        互斥量属性：
-            pthread_mutexattr_init();
-            pthread_mutexattr_destroy();
-            pthread_mutexattr_setpshared();
-            pthread_mutexattr_getpshared();
-            clone();
-            pthread_mutexattr_gettype();
-            pthread_mutexattr_settype();
-        
-        条件变量：
-            pthread_condattr_init();
-            pthread_condattr_destroy();
-
-        读写锁属性：
-
-5. 重入
-    多线程中的IO
-    线程与信号
-        pthread_sigmask();
-        sigwait();
-        pthread_kill();
-
-    线程与fork
-</code></pre>
-<blockquote></blockquote>
-<h3 id="part-6-advanced-io"><a class="markdownIt-Anchor" href="#part-6-advanced-io"></a> <strong>Part 6: Advanced IO</strong></h3>
-<p>非阻塞IO – 阻塞IO<br />
-补充：有限状态机编程</p>
-<blockquote></blockquote>
-<pre><code>1. 非阻塞IO
-    简单流程：自然流程是结构化的
-    复杂流程：自然流程不是结构化的
-
-2. IO 多路转接
-    select(); --- 古老
-        以事件（读，写，异常）为单位，来组织文件描述符
-        缺陷：监视现场和监视结果是放在同一空间，只要select 有返回，除了你感兴趣的事件，  
-        其他的集合都清空，需要重新布置监视现场。监视的事件太单一。
-
-        void FD_CLR(int fd, fd_set *set); ---&gt; 删除
-        int  FD_ISSET(int fd, fd_set *set); ---&gt; 测试
-        void FD_SET(int fd, fd_set *set); ---&gt; 添加
-        void FD_ZERO(fd_set *set); ---&gt; 清空
-
-    poll(); --- 可移植，wait for some events on a fd.
-        以文件描述符为单位，来组织事件
-
-    epoll(); --- linux 方言
-        epoll_create();
-        epoll_ctl();
-        epoll_wait();
-
-3. 其他读写函数
-    readv();
-    writev();
-
-4. 存储映射IO
-    mmap(); ---&gt; 映射
-    munmap(); ---&gt; 解除映射
-
-5. 文件锁
-    fcntl()
-    lockf()
-    flock()
-</code></pre>
-<blockquote></blockquote>
-<h3 id="part-7-ipc"><a class="markdownIt-Anchor" href="#part-7-ipc"></a> <strong>Part 7: IPC</strong></h3>
-<blockquote></blockquote>
-<pre><code>1.管道
-    内核提供，单工（一端为读，一端为写），自同步机制
-    匿名管道
-        pipe()
-    命名管道
-        mkfifo()
-
-
-2. XSI -&gt; SysV
-    IPC -&gt; Inter-Process Communication
-    主动端：先发包的一方
-    被动端：先发包的一方（先运行）
-
-    key:ftok 
-
-    Message Queues
-
-    Shared Memory Segments
-
-    Semaphore Arrays
-
-    以上创建方法都是：xxxget xxxop xxxctl for exmaple:man msgget msgop msgctl semget 
-    semop semctl man shemget ...
-
-
-3. 网络套接字socket
-    讨论：跨主机的传输要注意的问题
-        1 字节序问题：
-            大端模式：就是高位字节排放在内存的低地址端，低位字节排放在内存的高地址端。
-            小端模式：就是低字节排放在内存的低地址端，高位字节排放在内存的高地址端。
-            主机字节序：host
-            网络字节序：network
-            解决：_to__: htons, htols, ntohs, ntohs
-</code></pre>
-<p><img src="/images/big_endian.png" alt="大端存储" /><br />
-<img src="/images/little_endian.png" alt="小端存储" /></p>
-<pre><code>        2 对齐：
-            <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> f;</span><br><span class="line">    <span class="type">char</span> ch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-            解决：不对齐（让编译器不对齐）
-
-        3 类型长度问题：
-            int
-            char
-            解决：int32_t, uint32_t, int64_t int8_t uint8_t
-
-    Socket 是什么？
-
-    报式套接字：
-        被动端：(先运行)
-            1 取得socket
-            2 给socket 绑定地址（本地地址、端口）
-            3 收/发 消息
-            4 关闭socket
-        主动端：
-            1 取得socket
-            2 给socket 绑定地址（可省略，系统会自动分配一个端口）
-            3 发/收 消息
-            4 关闭socket
-
-        UDP 包的推荐长度是512byte， 报头长度为8byte.
-        socket()
-        bind()
-        sendto()
-        recvfrom()
-        inet_pton()
-        inet_ntop()
-        setsockopt()
-        getsockopt()
-
-        多点通讯：广播（全网广播，子网广播）， 多播/组播
-
-    流式套接子：
-        C 端（主动端）
-            1 获得socket
-            2 给socket 绑定地址（可省略）
-            3 发送连接
-            4 收/发消息
-            5 关闭
-
-
-        S 端（被动端）
-            1 获得socket
-            2 给socket 绑定地址
-            3 将socket 置为监听模式
-            4 接受链接
-            5 收/发消息
-            6 关闭
-</code></pre>
-<blockquote></blockquote>
-]]></content>
-      <tags>
-        <tag>CS</tag>
-        <tag>Linux</tag>
-        <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux常用命令</title>
-    <url>/2023/05/29/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。</p>
-<span id="more"></span>
-<h2 id="linux常用命令"><a class="markdownIt-Anchor" href="#linux常用命令"></a> Linux常用命令</h2>
-<h3 id="file"><a class="markdownIt-Anchor" href="#file"></a> File</h3>
-<ul>
-<li>ls /etc/a*.conf (匹配查找文件)</li>
-<li>grep “#define container_of” -R .(当前目录递归查找)</li>
-<li>diff /etc/service tmp (比较文件的差异)</li>
-<li>cat tmp</li>
-<li>tail -n 10 out.log (-f 动态模式)</li>
-<li>chmod a+x a.out (更改文件的权限 常用权限664可读可写可执行)</li>
-<li>chown root a.out（将 a.out文件的所有者更改为 root 用户）</li>
-<li>./a.out -&gt; sudo !! (当执行a.out 没有权限时可以使用 sudo !! 获得权限执行)</li>
-<li>chmod u+s mysu
-<blockquote>
-<p>设置文件或目录的 setuid 位。当一个带有 setuid 位的文件或目录被执行时，它会以该文件或目录的所有者的权限而不是执行它的用户的权限来运行。这对于需要以提升的权限运行但不能作为 root 运行的程序非常有用。如果您想允许用户运行需要 root 权限的程序而不给他们访问 root 帐户，可以在程序文件上设置 setuid 位。</p>
-</blockquote>
-</li>
-<li>du abc.c/directory (分析文件/目录占用磁盘空间大小 默认是以k字节为单位)</li>
-<li>primer0 | wc -l (统计primer0执行输出结果的行数)</li>
-<li>cat file | wc -l (统计file文件内容的行数)</li>
-<li>file a.out (查看文件的类型)</li>
-<li>ls -lh (较好的方式显示文件的大小)</li>
-</ul>
-<hr />
-<h3 id="system"><a class="markdownIt-Anchor" href="#system"></a> System</h3>
-<ul>
-<li>ulimit -a (查看当前用户的资源限制，如最大打开文件数、最大进程数等等)</li>
-<li>strace ./a.out (看可执行文件的系统调用是如何发生的)</li>
-<li>time ./a.out (查看调用时间)</li>
-<li>export (显示所有的环境变量)</li>
-<li>ps axf（显示进程,及进程下子进程）</li>
-<li>ps axm（显示进程不显示递进关系）</li>
-<li>ps axj（显示进程的状态信息，包括进程的 PID、PPID、CPU 占用率、内存占用率等等）</li>
-<li>ps ax -L（显示进程和线程）</li>
-<li>pstree (打印系统进程树)</li>
-<li>pmap p_id（查看程序的进程空间的分布）</li>
-<li>kill -l（list all signal）</li>
-<li>kill pid（杀死进程）</li>
-<li>ipcs (查看系统进程间通信的信息)</li>
-</ul>
-<hr />
-<h3 id="network"><a class="markdownIt-Anchor" href="#network"></a> Network</h3>
-<ul>
-<li>ip addr (查看网络环境)</li>
-<li>ip add sh(查看网卡信息)</li>
-<li>ip ro sh(查看ip路由表的命令)</li>
-<li>ip ro add default via 192.168.1.125（添加默认路由）</li>
-<li>ipcs（显示系统IPC）</li>
-<li>netstat -anu(local pc udp info)</li>
-<li>netstat -ant(local pc tcp info)</li>
-</ul>
-<hr />
-<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> GCC</h3>
-<ul>
-<li>gcc -E hello.c</li>
-<li>gcc -E hello.c &gt; hello.i</li>
-<li>gcc -S hello.i</li>
-<li>gcc -c hello.s</li>
-<li>gcc hello.o -o hello</li>
-<li>gcc hello.c</li>
-<li>gcc hello.c -o myhello</li>
-<li>make hello</li>
-<li>objdump -d a.out （反汇编 汇编码-d）</li>
-<li>strace -f gcc a.c (追踪gcc a.c 的过程，包括gcc 启动的其他程序) strace -f gcc a.c 2&gt;&amp;1 | grep execve</li>
-<li>strip test_sqlist (移除调试信息)</li>
-</ul>
-<hr />
-<h3 id="gdb"><a class="markdownIt-Anchor" href="#gdb"></a> GDB</h3>
-<ul>
-<li>gdb a.out (载入程序)</li>
-<li>run/r	(开始运行程序)</li>
-<li>starti (运行第一条指令)</li>
-<li>layout asm (查看汇编代码)</li>
-<li>si (单步查看-&gt;汇编单步)</li>
-<li>info registers (查看寄存器代码)</li>
-<li>bt (打印系统调用栈)</li>
-<li>info inferiors（打印可执行程序的进程号）</li>
-<li>print/p $rdx (打印寄存器rdx的值)</li>
-<li>target record-full (开始记录)</li>
-<li>watch $rax（观察寄存器rax的值）</li>
-<li>watch *0x7c00 (在地址7c00处设置监视点)</li>
-<li>rsi (单步回退查看-&gt;汇编单步)</li>
-<li>layout src(调试源代码)</li>
-<li>set scheduler-locking on (可以使其他处理器（线程)不要干扰）</li>
-<li>thread 1（switching to thread 1）</li>
-</ul>
-<h2 id="vps科学上网"><a class="markdownIt-Anchor" href="#vps科学上网"></a> vps+科学上网</h2>
-<h3 id="v2ray和xray"><a class="markdownIt-Anchor" href="#v2ray和xray"></a> v2ray和xray</h3>
-<ul>
-<li>安装mulit-v2ray和xray</li>
-<li>source &lt;(curl -sL <a href="https://multi.netlify.app/v2ray.sh">https://multi.netlify.app/v2ray.sh</a>) --zh（安装v2ray）</li>
-<li>systemctl stop firewalld.service  （关闭防火墙）</li>
-<li>systemctl disable firewalld.service</li>
-<li>sudo ufw disable (Debian禁用ufw防火墙)</li>
-</ul>
-<h3 id="安装tls"><a class="markdownIt-Anchor" href="#安装tls"></a> 安装tls</h3>
-<ul>
-<li>安装acme证书</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://get.acme.sh | sh</span><br></pre></td></tr></table></figure>
-<ul>
-<li>安装socat</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install socat</span><br></pre></td></tr></table></figure>
-<ul>
-<li>添加软链接</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /usr/local/bin</span><br><span class="line">1n -s/root/.acme.sh/acme.sh /usr/local/bin/acme.sh</span><br></pre></td></tr></table></figure>
-<ul>
-<li>设置默认的CA</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --set-default-ca --server letsencrypt</span><br></pre></td></tr></table></figure>
-<ul>
-<li>开放80端口：非必需</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw allow 80</span><br></pre></td></tr></table></figure>
-<ul>
-<li>申请证书ipv4默认方式</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --issue -d freeqing.dpdns.org --standalone -k ec-256</span><br></pre></td></tr></table></figure>
-<ul>
-<li>申请证书ipv6方式</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --issue -d freeqing.dpdns.org --standalone -k ec-256 --listen-v6 --insecure</span><br></pre></td></tr></table></figure>
-<ul>
-<li>安装或复制证书到特定位置，非必须</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acme.sh --installcert -d freeqing.dpdns.org --ecc --key-file  /etc/v2ray/server.key --fullchain-file /etc/v2ray/server.crt</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>CS</tag>
-        <tag>Linux</tag>
-        <tag>工具命令</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>计算机网络</title>
     <url>/2023/05/29/network-%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<p>前言：计算机网络是指将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及网络通信协议的管理和协调下，实现资源共享和信息传递的计算机系统。计算机网络的基础知识，包括TCP / UDP协议、Http协议、Socket等方面。</p>
@@ -5622,8 +5622,8 @@ Internet 协议栈
 </ul>
 ]]></content>
       <tags>
-        <tag>CS</tag>
         <tag>Linux</tag>
+        <tag>CS</tag>
         <tag>操作系统</tag>
       </tags>
   </entry>
