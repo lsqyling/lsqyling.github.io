@@ -3040,272 +3040,6 @@ sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];</li>
       </tags>
   </entry>
   <entry>
-    <title>C语言</title>
-    <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
-    <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
-<span id="more"></span>
-<blockquote>
-<ul>
-<li>the history of c programing</li>
-<li>c 语言的特点<br />
-1. 基础性语言<br />
-2. 语法简洁，紧凑，方便，灵活<br />
-3. 运算符，结构丰富<br />
-4. 结构化，模块化编程<br />
-5. 移植性好，执行效率高<br />
-6. 允许对硬件直接操作</li>
-<li>c 语言学习建议
-<ul>
-<li>概念的正确性</li>
-<li>动手</li>
-<li>阅读优秀的程序段</li>
-<li>大量练习,面试题</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<h3 id="c课程讲解思路"><a class="markdownIt-Anchor" href="#c课程讲解思路"></a> <strong>c课程讲解思路</strong></h3>
-<blockquote></blockquote>
-<pre><code>    1. 基本概念
-    2. 数据类型，运算符和表达式
-    3. 输入输出专题
-    4. 流程控制
-    5. 数组
-    6. 指针
-    7. 函数 
-    8. 构造类型
-    9. 动态内存管理
-    10. 调试工具和调试技巧
-    11. 常用库函数
-</code></pre>
-<blockquote></blockquote>
-<p>hello.c ：<br />
-c源文件 — 预处理 —编译 —汇编— 链接 — 可执行程序</p>
-<blockquote></blockquote>
-<hr />
-<h3 id="一-基本概念"><a class="markdownIt-Anchor" href="#一-基本概念"></a> <strong>一、基本概念</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 以helloworld 为例对写程序的思路提出如下要求：
-2. 头文件正确包含的重要性
-3. 以函数为单位来进行程序的编写
-4. 声明部分+实现部分
-5. return 0 (exit(0) 给他的父进程看的)
-6. echo $?    
-</code></pre>
-<blockquote></blockquote>
-<p>算法：解决问题的方法</p>
-<blockquote></blockquote>
-<pre><code>1. 流程图
-2. NS 图
-3. FSM 有限状态机
-</code></pre>
-<blockquote></blockquote>
-<p>程序：用某种语言实现算法</p>
-<h3 id="二-数据类型运算符和表达式"><a class="markdownIt-Anchor" href="#二-数据类型运算符和表达式"></a> <strong>二、数据类型，运算符和表达式</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 数据类型：（基本类型,构造类型，指针类型，空类型void)
-2. 数据存储（占用的字节数）
-3. 不同类型的数据间进行转换
-4. 特殊性：
-5. bool 类型
-6. float 类型的比较
-7. char 类型的符号（c 标准未定义）
-8. 不同形式的零直
-</code></pre>
-<blockquote></blockquote>
-<h3 id="三-常量与变量"><a class="markdownIt-Anchor" href="#三-常量与变量"></a> <strong>三、常量与变量</strong></h3>
-<blockquote></blockquote>
-<ol>
-<li>
-<p>常量：<br />
-分类：<br />
-1）整形常量 1，790， 67，52<br />
-2）实行常量：3.14， 52.26<br />
-3）字符常量：‘\015’, ‘\x7f’<br />
-4）字符串常量：“helloworld”， “”<br />
-5）标识常量： #define，处理在程序的预处理阶段，不检查语法，只是单纯宏名和宏体的替换。</p>
-</li>
-<li>
-<p>变量：用来保存一些特定的内容，并且在程序执行过程中变化的量。<br />
-1） 定义：【存储类型】 数据类型 标识符<br />
-2）                 TYPE NAME = VALUE；<br />
-3）标识符：由字母 数字 下划线组成且不能以数字开头的表示序列。<br />
-4）存储类型： auto static register extern（说明型）<br />
-1》auto: 默认，自动分配空间<br />
-2》register:（建议型）寄存器类型，只能定义局部变量，不能定义全局变量。一个寄存器类型的变量无法打印地址。<br />
-3》static :静态型，自动初始化为0值或空值，且其值具有继承性。<br />
-4》extern : 说明型，不能改变变量的类型。</p>
-</li>
-<li>
-<p>变量的生命周期和作用范围：<br />
-1）全局变量和局部变量<br />
-2）局部变量和局部变量</p>
-</li>
-</ol>
-<blockquote></blockquote>
-<h3 id="四-运算符和表达式"><a class="markdownIt-Anchor" href="#四-运算符和表达式"></a> <strong>四、运算符和表达式</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 表达式与语句的区别  
-2. 运算符部分：  
-    1）每个运算符所需要的参与运算的操作数的个数  
-    2）结合性  
-    3）优先级  
-    4）运算符的特殊用法  
-        如：  %， = 与==，逻辑运算符的短路特性
-    5）位运算的重要意义  
-        将操作数中第n位置1，其他位不变：num = num | 1 &lt;&lt; n;
-        将操作数中第n位置0，其他位不变：num = num &amp; ～（1 &lt;&lt; n）;
-    6）优先级：算术运算符 &gt; 移位运算符 &gt; 关系运算符 &gt; 位运算符 &gt; 逻辑运算符 &gt; 条件运算符 &gt; 赋值运算符 &gt; 符合赋值运算符 &gt; 逗号运算符  
-</code></pre>
-<blockquote></blockquote>
-<h3 id="五-输入输出专题"><a class="markdownIt-Anchor" href="#五-输入输出专题"></a> <strong>五、输入，输出专题</strong></h3>
-<p>input &amp;&amp; output ----&gt; I/O(标准IO，文件IO或系统IO)</p>
-<blockquote></blockquote>
-<pre><code>1. 格式化输入输出函数：scanf printf  
-    1）int printf(const char *format, ...);
-    2） int scanf(const char *format, ...);
-2. 字符输入输出函数：getchar ,putchar
-3. 字符串输入输出函数：fgets fputs
-</code></pre>
-<blockquote></blockquote>
-<h3 id="六-流程控制"><a class="markdownIt-Anchor" href="#六-流程控制"></a> <strong>六、流程控制</strong></h3>
-<p>顺序，选择，循环<br />
-简单结构与复杂结构：自然流程<br />
-NS图，流程图            工具Dia</p>
-<blockquote></blockquote>
-<pre><code>1. 关键字：
-2. if else switch case while do while continue break
-</code></pre>
-<blockquote></blockquote>
-<h3 id="七-数组"><a class="markdownIt-Anchor" href="#七-数组"></a> <strong>七、数组</strong></h3>
-<p>一维数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义：【存储类型】数据类型 标识符【下标】 下标：必须是整形常量或整形表达式。  
-2. 初始化    
-    不初始化    
-    部分初始化    
-    全部初始化    
-3. 元素引用  
-4. 数组名  
-5. 数组越界  
-</code></pre>
-<blockquote></blockquote>
-<p>二维数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义，初始化  
-2. 元素引用  
-3. 存储形式  
-4. 深入理解二维数组  
-</code></pre>
-<blockquote></blockquote>
-<p>字符数组</p>
-<blockquote></blockquote>
-<pre><code>1. 定义，初始化存储特点
-    【存储类型】数据类型 标识符【下标】
-    单个字符初始化
-    用字符串常量初始化
-2. 输入输出
-3. 常用函数
-</code></pre>
-<blockquote></blockquote>
-<p>多维数组</p>
-<blockquote></blockquote>
-<blockquote></blockquote>
-<h3 id="八-指针"><a class="markdownIt-Anchor" href="#八-指针"></a> <strong>八、指针</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 变量与地址
-2. 指针与指针变量
-3. 直接访问与简接访问
-4. 空指针与野指针
-5. 空类型
-6. 指针与初始化的书写规则
-7. 指针与运算
-    &amp; * 关系运算 ++ --
-8. 指针与数组
-    指针与一维数组
-    指针与二维数组
-    指针与字符数组
-9. const 与指针
-10. 指针数组与数组指针
-11. 多级指针
-</code></pre>
-<blockquote></blockquote>
-<h3 id="九-函数"><a class="markdownIt-Anchor" href="#九-函数"></a> <strong>九、函数</strong></h3>
-<blockquote></blockquote>
-<pre><code>1. 函数的定义
-    数据类型 函数名（【形式参数说明表】）
-2. 函数的传参
-    值传递
-    地址传递
-    全局变量
-3. 函数的调用
-    嵌套调用
-    递归
-4. 函数与数组
-5. 函数与指针
-    指针函数
-        返回值 *函数名（形参）；
-        如：int * func(int);
-    函数指针
-        类型 （*指针名）（形参）；
-        如：int （*p)(int);
-</code></pre>
-<blockquote></blockquote>
-<h3 id="十-构造类型"><a class="markdownIt-Anchor" href="#十-构造类型"></a> <strong>十、构造类型</strong></h3>
-<p>结构体</p>
-<blockquote></blockquote>
-<pre><code>1. 产生即意义
-2. 类型描述
-    struct 结构体名
-    &#123;
-        数据类型 成员1；
-        数据类型 成员2；
-        ...
-    &#125;;
-3. 嵌套定义
-    
-4. 定义变量（变量，数组，指针），初始化及成员引用
-        成员引用：变量名.成员名
-            指针-&gt;成员名
-            （*指针）.成员名
-5. 占用内存空间大小
-6. 函数传参（值，地址）
-</code></pre>
-<blockquote></blockquote>
-<p>共用体</p>
-<blockquote></blockquote>
-<pre><code>1. 产生及意义
-2. 类型描述
-3. 嵌套定义
-4. 定义变量（变量，数组，指针），初始化及成员引用
-5. 占用内存大小
-6. 函数传参（值，地址）
-7. 位域
-</code></pre>
-<blockquote></blockquote>
-<p>枚举</p>
-<blockquote></blockquote>
-<pre><code>enum 标识符
-&#123;
-    成员 1，
-    成员 2，
-    成员 3
-&#125;;
-</code></pre>
-<blockquote></blockquote>
-<h3 id="十一-动态内存管理"><a class="markdownIt-Anchor" href="#十一-动态内存管理"></a> <strong>十一、动态内存管理</strong></h3>
-<p><em>malloc ralloc realloc free</em></p>
-<blockquote></blockquote>
-<pre><code>1. 规则：谁申请，谁释放。
-</code></pre>
-<blockquote></blockquote>
-]]></content>
-      <tags>
-        <tag>C</tag>
-        <tag>CS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CSS-前端开发</title>
     <url>/2025/03/02/css/</url>
     <content><![CDATA[<p>CSS（层叠样式表，Cascading Style Sheets）是一种用于描述HTML或XML（包括如SVG、MathML或XHTML等XML文档）文档外观和格式的样式表语言。CSS的主要目的是分离文档的内容与展示方式，使得页面的设计和内容管理更加容易和高效。</p>
@@ -5284,6 +5018,272 @@ visibility属性默认值是show，如果设置为hidden，元素会隐藏。<br
       </tags>
   </entry>
   <entry>
+    <title>C语言</title>
+    <url>/2023/05/29/c%E8%AF%AD%E8%A8%80/</url>
+    <content><![CDATA[<p>前言：C语言是一种高效、快速、通用的编程语言，被广泛应用于操作系统、数据库、编译器、网络驱动程序、游戏开发等领域。C语言的历史可以追溯到20世纪70年代，由贝尔实验室的Dennis Ritchie于1972年推出。C语言是一种中级语言，它结合了低级语言速度快的特点，以及高级语言开发方便的特点。C语言的特点包括：简洁、紧凑、表达力强、可移植性好、运算符丰富等。</p>
+<span id="more"></span>
+<blockquote>
+<ul>
+<li>the history of c programing</li>
+<li>c 语言的特点<br />
+1. 基础性语言<br />
+2. 语法简洁，紧凑，方便，灵活<br />
+3. 运算符，结构丰富<br />
+4. 结构化，模块化编程<br />
+5. 移植性好，执行效率高<br />
+6. 允许对硬件直接操作</li>
+<li>c 语言学习建议
+<ul>
+<li>概念的正确性</li>
+<li>动手</li>
+<li>阅读优秀的程序段</li>
+<li>大量练习,面试题</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="c课程讲解思路"><a class="markdownIt-Anchor" href="#c课程讲解思路"></a> <strong>c课程讲解思路</strong></h3>
+<blockquote></blockquote>
+<pre><code>    1. 基本概念
+    2. 数据类型，运算符和表达式
+    3. 输入输出专题
+    4. 流程控制
+    5. 数组
+    6. 指针
+    7. 函数 
+    8. 构造类型
+    9. 动态内存管理
+    10. 调试工具和调试技巧
+    11. 常用库函数
+</code></pre>
+<blockquote></blockquote>
+<p>hello.c ：<br />
+c源文件 — 预处理 —编译 —汇编— 链接 — 可执行程序</p>
+<blockquote></blockquote>
+<hr />
+<h3 id="一-基本概念"><a class="markdownIt-Anchor" href="#一-基本概念"></a> <strong>一、基本概念</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 以helloworld 为例对写程序的思路提出如下要求：
+2. 头文件正确包含的重要性
+3. 以函数为单位来进行程序的编写
+4. 声明部分+实现部分
+5. return 0 (exit(0) 给他的父进程看的)
+6. echo $?    
+</code></pre>
+<blockquote></blockquote>
+<p>算法：解决问题的方法</p>
+<blockquote></blockquote>
+<pre><code>1. 流程图
+2. NS 图
+3. FSM 有限状态机
+</code></pre>
+<blockquote></blockquote>
+<p>程序：用某种语言实现算法</p>
+<h3 id="二-数据类型运算符和表达式"><a class="markdownIt-Anchor" href="#二-数据类型运算符和表达式"></a> <strong>二、数据类型，运算符和表达式</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 数据类型：（基本类型,构造类型，指针类型，空类型void)
+2. 数据存储（占用的字节数）
+3. 不同类型的数据间进行转换
+4. 特殊性：
+5. bool 类型
+6. float 类型的比较
+7. char 类型的符号（c 标准未定义）
+8. 不同形式的零直
+</code></pre>
+<blockquote></blockquote>
+<h3 id="三-常量与变量"><a class="markdownIt-Anchor" href="#三-常量与变量"></a> <strong>三、常量与变量</strong></h3>
+<blockquote></blockquote>
+<ol>
+<li>
+<p>常量：<br />
+分类：<br />
+1）整形常量 1，790， 67，52<br />
+2）实行常量：3.14， 52.26<br />
+3）字符常量：‘\015’, ‘\x7f’<br />
+4）字符串常量：“helloworld”， “”<br />
+5）标识常量： #define，处理在程序的预处理阶段，不检查语法，只是单纯宏名和宏体的替换。</p>
+</li>
+<li>
+<p>变量：用来保存一些特定的内容，并且在程序执行过程中变化的量。<br />
+1） 定义：【存储类型】 数据类型 标识符<br />
+2）                 TYPE NAME = VALUE；<br />
+3）标识符：由字母 数字 下划线组成且不能以数字开头的表示序列。<br />
+4）存储类型： auto static register extern（说明型）<br />
+1》auto: 默认，自动分配空间<br />
+2》register:（建议型）寄存器类型，只能定义局部变量，不能定义全局变量。一个寄存器类型的变量无法打印地址。<br />
+3》static :静态型，自动初始化为0值或空值，且其值具有继承性。<br />
+4》extern : 说明型，不能改变变量的类型。</p>
+</li>
+<li>
+<p>变量的生命周期和作用范围：<br />
+1）全局变量和局部变量<br />
+2）局部变量和局部变量</p>
+</li>
+</ol>
+<blockquote></blockquote>
+<h3 id="四-运算符和表达式"><a class="markdownIt-Anchor" href="#四-运算符和表达式"></a> <strong>四、运算符和表达式</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 表达式与语句的区别  
+2. 运算符部分：  
+    1）每个运算符所需要的参与运算的操作数的个数  
+    2）结合性  
+    3）优先级  
+    4）运算符的特殊用法  
+        如：  %， = 与==，逻辑运算符的短路特性
+    5）位运算的重要意义  
+        将操作数中第n位置1，其他位不变：num = num | 1 &lt;&lt; n;
+        将操作数中第n位置0，其他位不变：num = num &amp; ～（1 &lt;&lt; n）;
+    6）优先级：算术运算符 &gt; 移位运算符 &gt; 关系运算符 &gt; 位运算符 &gt; 逻辑运算符 &gt; 条件运算符 &gt; 赋值运算符 &gt; 符合赋值运算符 &gt; 逗号运算符  
+</code></pre>
+<blockquote></blockquote>
+<h3 id="五-输入输出专题"><a class="markdownIt-Anchor" href="#五-输入输出专题"></a> <strong>五、输入，输出专题</strong></h3>
+<p>input &amp;&amp; output ----&gt; I/O(标准IO，文件IO或系统IO)</p>
+<blockquote></blockquote>
+<pre><code>1. 格式化输入输出函数：scanf printf  
+    1）int printf(const char *format, ...);
+    2） int scanf(const char *format, ...);
+2. 字符输入输出函数：getchar ,putchar
+3. 字符串输入输出函数：fgets fputs
+</code></pre>
+<blockquote></blockquote>
+<h3 id="六-流程控制"><a class="markdownIt-Anchor" href="#六-流程控制"></a> <strong>六、流程控制</strong></h3>
+<p>顺序，选择，循环<br />
+简单结构与复杂结构：自然流程<br />
+NS图，流程图            工具Dia</p>
+<blockquote></blockquote>
+<pre><code>1. 关键字：
+2. if else switch case while do while continue break
+</code></pre>
+<blockquote></blockquote>
+<h3 id="七-数组"><a class="markdownIt-Anchor" href="#七-数组"></a> <strong>七、数组</strong></h3>
+<p>一维数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义：【存储类型】数据类型 标识符【下标】 下标：必须是整形常量或整形表达式。  
+2. 初始化    
+    不初始化    
+    部分初始化    
+    全部初始化    
+3. 元素引用  
+4. 数组名  
+5. 数组越界  
+</code></pre>
+<blockquote></blockquote>
+<p>二维数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义，初始化  
+2. 元素引用  
+3. 存储形式  
+4. 深入理解二维数组  
+</code></pre>
+<blockquote></blockquote>
+<p>字符数组</p>
+<blockquote></blockquote>
+<pre><code>1. 定义，初始化存储特点
+    【存储类型】数据类型 标识符【下标】
+    单个字符初始化
+    用字符串常量初始化
+2. 输入输出
+3. 常用函数
+</code></pre>
+<blockquote></blockquote>
+<p>多维数组</p>
+<blockquote></blockquote>
+<blockquote></blockquote>
+<h3 id="八-指针"><a class="markdownIt-Anchor" href="#八-指针"></a> <strong>八、指针</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 变量与地址
+2. 指针与指针变量
+3. 直接访问与简接访问
+4. 空指针与野指针
+5. 空类型
+6. 指针与初始化的书写规则
+7. 指针与运算
+    &amp; * 关系运算 ++ --
+8. 指针与数组
+    指针与一维数组
+    指针与二维数组
+    指针与字符数组
+9. const 与指针
+10. 指针数组与数组指针
+11. 多级指针
+</code></pre>
+<blockquote></blockquote>
+<h3 id="九-函数"><a class="markdownIt-Anchor" href="#九-函数"></a> <strong>九、函数</strong></h3>
+<blockquote></blockquote>
+<pre><code>1. 函数的定义
+    数据类型 函数名（【形式参数说明表】）
+2. 函数的传参
+    值传递
+    地址传递
+    全局变量
+3. 函数的调用
+    嵌套调用
+    递归
+4. 函数与数组
+5. 函数与指针
+    指针函数
+        返回值 *函数名（形参）；
+        如：int * func(int);
+    函数指针
+        类型 （*指针名）（形参）；
+        如：int （*p)(int);
+</code></pre>
+<blockquote></blockquote>
+<h3 id="十-构造类型"><a class="markdownIt-Anchor" href="#十-构造类型"></a> <strong>十、构造类型</strong></h3>
+<p>结构体</p>
+<blockquote></blockquote>
+<pre><code>1. 产生即意义
+2. 类型描述
+    struct 结构体名
+    &#123;
+        数据类型 成员1；
+        数据类型 成员2；
+        ...
+    &#125;;
+3. 嵌套定义
+    
+4. 定义变量（变量，数组，指针），初始化及成员引用
+        成员引用：变量名.成员名
+            指针-&gt;成员名
+            （*指针）.成员名
+5. 占用内存空间大小
+6. 函数传参（值，地址）
+</code></pre>
+<blockquote></blockquote>
+<p>共用体</p>
+<blockquote></blockquote>
+<pre><code>1. 产生及意义
+2. 类型描述
+3. 嵌套定义
+4. 定义变量（变量，数组，指针），初始化及成员引用
+5. 占用内存大小
+6. 函数传参（值，地址）
+7. 位域
+</code></pre>
+<blockquote></blockquote>
+<p>枚举</p>
+<blockquote></blockquote>
+<pre><code>enum 标识符
+&#123;
+    成员 1，
+    成员 2，
+    成员 3
+&#125;;
+</code></pre>
+<blockquote></blockquote>
+<h3 id="十一-动态内存管理"><a class="markdownIt-Anchor" href="#十一-动态内存管理"></a> <strong>十一、动态内存管理</strong></h3>
+<p><em>malloc ralloc realloc free</em></p>
+<blockquote></blockquote>
+<pre><code>1. 规则：谁申请，谁释放。
+</code></pre>
+<blockquote></blockquote>
+]]></content>
+      <tags>
+        <tag>C</tag>
+        <tag>CS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>英语词根记忆法(20000words)</title>
     <url>/2025/03/02/english-%E8%AF%8D%E6%A0%B9%E8%AE%B0%E5%BF%86%E6%B3%95/</url>
     <content><![CDATA[<p>简介：英语词根记忆法是一种通过学习和理解单词的基本构成部分——词根、前缀和后缀来增强词汇量和理解能力的学习策略。这种方法基于许多英语单词都是由拉丁语和希腊语的词根演变而来的事实，因此掌握这些基本组成部分可以帮助学习者更轻松地推测出大量单词的意思。</p>
@@ -6107,46 +6107,40 @@ checked属性：让该复选框默认选中。</p>
       </tags>
   </entry>
   <entry>
-    <title>Lambda-expression</title>
-    <url>/2024/01/02/lambda-expression/</url>
-    <content><![CDATA[<p>前言：Lambda表达式是现代编程语言的一个基础特性，比如LISP、Python、C#等都具备该该特性。<em>C++11</em>标准为我们提供Lambda表达式的支持，而且语法非常简洁明了。</p>
+    <title>hstring测试报告</title>
+    <url>/2026/03/02/hstringvsstring/</url>
+    <content><![CDATA[<h1 id="hstring字符串操作类设计与实现"><a class="markdownIt-Anchor" href="#hstring字符串操作类设计与实现"></a> <code>hstring</code>字符串操作类设计与实现</h1>
+<h2 id="一-项目概要说明"><a class="markdownIt-Anchor" href="#一-项目概要说明"></a> 一、项目概要说明</h2>
+<p>目标：设计并实现字符串操作类hstring，实现自定义字符串的增、删、改、查等核心功能，通过缓冲区机制减少内存频繁分配／释放的开销，<br />
+全面考察类设计、运算符重载及算法实现能力。</p>
 <span id="more"></span>
-<h2 id="lambda表达式的语法"><a class="markdownIt-Anchor" href="#lambda表达式的语法"></a> Lambda表达式的语法</h2>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[captures](params) specifiers exception -&gt; ret &#123; body &#125;</span><br></pre></td></tr></table></figure>
+<p>核心特性：</p>
 <ul>
-<li>[captures]—捕获列表，捕获列表中的变量存在于两个作用域，一是lambda表达式定义的函数作用域。二是lambda表达式函数体中的作用域。前者是为了捕获变量后者是为了使用变量。标准还规定，捕获变量必须是自动存储的类型，简单说就是非静态的局部变量。</li>
-<li>(params) —可选参数列表，语法和普通函数一样，在不需要参数的时候可以省略。</li>
-<li>specifiers — 可选限定符。<em>C++11</em>中可以mutable，它允许我们在lambda表达式函数体内改变值捕获的变量，或调用非const的成员函数。</li>
-<li>exception — 可选异常说明符。noexcept来指明lambda不抛出异常</li>
-<li>ret — 可选的返回类型</li>
-<li>{body} — lambda表达式的函数体。</li>
-<li>C++ 最简单的表达式: []{}</li>
+<li>不依赖C++标准库string类，完全自主实现底层逻辑；</li>
+<li>SSO优化，简化内存结构</li>
 </ul>
-<h3 id="lambda表达式按值和按引用捕获的例子"><a class="markdownIt-Anchor" href="#lambda表达式按值和按引用捕获的例子"></a> Lambda表达式按值和按引用捕获的例子</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5, y = 8;</span><br><span class="line">auto foo = [x, &amp;y]() mutable &#123;</span><br><span class="line">        x += 1;</span><br><span class="line">        y += 2;</span><br><span class="line">        std::cout &lt;&lt; &quot;lambda x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">        return x * y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call1  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call2  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    // 结果如下：</span><br><span class="line">    lambda x = 6, y = 10</span><br><span class="line">    call1  x = 5, y = 10</span><br><span class="line">    lambda x = 7, y = 12</span><br><span class="line">    call2  x = 5, y = 12</span><br></pre></td></tr></table></figure>
-<p><strong>注意：捕获值的变量在lambda表达式定义的时候已经固定下来了，无论函数在lambda表达式后如何修改外部变量的值，lambda表达式捕获的值都不会变。</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5, y = 8;</span><br><span class="line">    auto foo = [x, &amp;y]() mutable &#123;</span><br><span class="line">        x += 1;</span><br><span class="line">        y += 2;</span><br><span class="line">        std::cout &lt;&lt; &quot;lambda x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">        return x * y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    x = 9;</span><br><span class="line">    y = 20;</span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call1  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">    //结果如下：</span><br><span class="line">    lambda x = 6, y = 22</span><br><span class="line">    call1  x = 9, y = 22</span><br></pre></td></tr></table></figure>
-<h3 id="广义捕获"><a class="markdownIt-Anchor" href="#广义捕获"></a> 广义捕获</h3>
-<p>说明：<em>C++14</em>标准定义了广义捕获，其实是两种捕获方式，一种是<em>C++11</em>中定义的。第二种，初始化捕获。<br />
-初始化捕获的代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5;</span><br><span class="line">auto foo = [r = x + 1] &#123; return r; &#125;;</span><br><span class="line">std::string y = &quot;hello, c++&quot;;</span><br><span class="line">auto foo1 = [y = std::move(y)] &#123; return y + &quot;world!&quot;; &#125;;</span><br></pre></td></tr></table></figure>
-<p>初始化捕获的第二场景：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class work</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    work() : value_(42) &#123;&#125;</span><br><span class="line">    std::future&lt;int&gt; spawn()</span><br><span class="line">    &#123;</span><br><span class="line">        return std::async([=, tmp = *this]() &#123; return tmp.value_; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    int value_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>注意：第二场景实在异步调用时复制this对象，防止lambda表达式被调用时因原始this 对象被析构造成未定义的行为。</p>
-<h3 id="常量lambda表达式和捕获this"><a class="markdownIt-Anchor" href="#常量lambda表达式和捕获this"></a> 常量lambda表达式和捕获*this</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// SSO 缓冲区大小（包括结尾的 &#x27;\0&#x27;），可存储 small_capacity 个字符（不含 null）</span></span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> size_type small_capacity = <span class="number">15</span>;          <span class="comment">// 例如 15 + 1 = 16 字节</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存储联合体：大字符串用 dynamic，小字符串用 local</span></span><br><span class="line">    <span class="keyword">union</span> <span class="title class_">Storage</span> &#123;</span><br><span class="line">        <span class="keyword">struct</span> &#123;</span><br><span class="line">            value_type * data;         <span class="comment">// 指向动态分配的字符数组（包含结尾 &#x27;\0&#x27;）</span></span><br><span class="line">            size_type capacity; <span class="comment">// 分配的容量（包含结尾 &#x27;\0&#x27; 的空间）</span></span><br><span class="line">        &#125; dynamic;</span><br><span class="line">        value_type  local[small_capacity + <span class="number">1</span>];   <span class="comment">// 本地缓冲区，始终以 &#x27;\0&#x27; 结尾</span></span><br><span class="line">    &#125; m_storage;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 大小与标志位的编码：</span></span><br><span class="line">    <span class="comment">// 最高位为 1 表示小字符串，其余位存储实际长度；</span></span><br><span class="line">    <span class="comment">// 最高位为 0 表示大字符串，其余位存储实际长度。</span></span><br><span class="line">    size_type m_size;   <span class="comment">// 编码后的大小</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <ul>
-<li><em>C++17</em>开始，lambda表达式在条件允许的情况下都会隐式声明为constexpr.</li>
-<li><em>C++17</em>在捕获列表直接[*this]来简化<em>C++14</em>初始化[tmp = *this]的用法，[*this]的语法让程序生成了一个*this的对象的副本并存储在lambda表达式内，可以在lambda表达式内直接访问这个复制对象的成员，消除了通过tmp访问对象成员的尴尬。</li>
+<li>强异常的安全保证（copy-and-swap技术）</li>
+<li>迭代器与标准库std::string的兼容</li>
+<li>支持运算符重载</li>
+<li>常用增删改查的api，增加算法find_kmp结构</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class work</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    work() : value_(42) &#123;&#125;</span><br><span class="line">    std::future&lt;int&gt; spawn()</span><br><span class="line">    &#123;</span><br><span class="line">        return std::async([=, *this]() &#123; return value_; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    int value_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="捕获-this"><a class="markdownIt-Anchor" href="#捕获-this"></a> 捕获[=, this]</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> my &#123;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">string</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 常用类型定义</span></span><br><span class="line">    <span class="keyword">using</span> value_type             = <span class="type">char</span>;</span><br><span class="line">    <span class="keyword">using</span> size_type              = std::<span class="type">size_t</span>;</span><br><span class="line">    <span class="keyword">using</span> difference_type        = std::<span class="type">ptrdiff_t</span>;</span><br><span class="line">    <span class="keyword">using</span> reference              = value_type&amp;;</span><br><span class="line">    <span class="keyword">using</span> const_reference        = <span class="type">const</span> value_type&amp;;</span><br><span class="line">    <span class="keyword">using</span> pointer                = value_type*;</span><br><span class="line">    <span class="keyword">using</span> const_pointer          = <span class="type">const</span> value_type*;</span><br><span class="line">    <span class="keyword">using</span> iterator               = pointer;</span><br><span class="line">    <span class="keyword">using</span> const_iterator         = const_pointer;</span><br><span class="line"></span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> size_type npos = <span class="built_in">static_cast</span>&lt;size_type&gt;(<span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 构造 / 析构 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 默认构造：空字符串（小字符串）</span></span><br><span class="line">    <span class="built_in">string</span>() <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 std::string 构造</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> std::string &amp;s) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 C 字符串构造（允许 nullptr 视为空）</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> value_type * s) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 C 字符串 + 长度构造</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> <span class="type">char</span>* s, size_type count) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝构造</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> string&amp; other) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动构造</span></span><br><span class="line">    <span class="built_in">string</span>(string&amp;&amp; other) <span class="keyword">noexcept</span> ;j</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 赋值运算符 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝赋值（使用 copy-and-swap，强异常安全）</span></span><br><span class="line">    string&amp; <span class="keyword">operator</span>=(<span class="type">const</span> string&amp; other) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动赋值（简单交换资源，noexcept）</span></span><br><span class="line">    string&amp; <span class="keyword">operator</span>=(string&amp;&amp; other) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 C 字符串赋值</span></span><br><span class="line">    string&amp; <span class="keyword">operator</span>=(<span class="type">const</span> <span class="type">char</span>* s) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 元素访问 ----------</span></span><br><span class="line"></span><br><span class="line">    reference <span class="keyword">operator</span>[](size_type pos) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    const_reference <span class="keyword">operator</span>[](size_type pos) <span class="type">const</span> <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    <span class="function">reference <span class="title">at</span><span class="params">(size_type pos)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_reference <span class="title">at</span><span class="params">(size_type pos)</span> <span class="type">const</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">reference <span class="title">front</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_reference <span class="title">front</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">reference <span class="title">back</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_reference <span class="title">back</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_pointer <span class="title">c_str</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_pointer <span class="title">data</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 迭代器 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="function">iterator <span class="title">begin</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">begin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">cbegin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">iterator <span class="title">end</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">end</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">cend</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 容量 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">size</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">length</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">capacity</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">reserve</span><span class="params">(size_type new_cap)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">shrink_to_fit</span><span class="params">()</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 修改操作 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">clear</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push_back</span><span class="params">(<span class="type">char</span> ch)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pop_back</span><span class="params">()</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string&amp; <span class="title">append</span><span class="params">(<span class="type">const</span> string&amp; str)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string&amp; <span class="title">append</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* s, size_type count)</span> </span>;</span><br><span class="line"></span><br><span class="line">    string&amp; <span class="keyword">operator</span>+=(<span class="type">const</span> string&amp; str) ;</span><br><span class="line"></span><br><span class="line">    string&amp; <span class="keyword">operator</span>+=(<span class="type">char</span> ch) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入、擦除、替换等可类似实现，此处仅给出简单 erase 示例</span></span><br><span class="line">    <span class="function">string&amp; <span class="title">erase</span><span class="params">(size_type pos = <span class="number">0</span>, size_type count = npos)</span> </span>;</span><br><span class="line">    <span class="function">string &amp;<span class="title">insert</span><span class="params">(size_type pos, <span class="type">const</span> string &amp;str)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string &amp;<span class="title">insert</span><span class="params">(size_type pos, <span class="type">const</span> <span class="type">char</span> *s)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string &amp;<span class="title">insert</span><span class="params">(size_type pos, <span class="type">const</span> <span class="type">char</span> *s, size_type count)</span> </span>;</span><br><span class="line">    <span class="comment">// 4. 在迭代器位置 p 之前插入一个字符 ch，返回指向插入字符的迭代器</span></span><br><span class="line">    <span class="function">iterator <span class="title">insert</span><span class="params">(const_iterator p, value_type ch)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在迭代器位置 p 之前插入 count 个相同字符 ch，返回指向第一个插入字符的迭代器</span></span><br><span class="line">    <span class="function">iterator <span class="title">insert</span><span class="params">(const_iterator p, size_type count, value_type ch)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 交换</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(string&amp; other)</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 查找 ----------</span></span><br><span class="line">    <span class="function">size_type <span class="title">find</span><span class="params">(<span class="type">const</span> string&amp; str, size_type pos = <span class="number">0</span>)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 KMP 算法查找子串 str，从位置 pos 开始</span></span><br><span class="line">    <span class="function">size_type <span class="title">find_kmp</span><span class="params">(<span class="type">const</span> string&amp; str, size_type pos = <span class="number">0</span>)</span> <span class="type">const</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 KMP 算法查找子串 s（长度为 count），从位置 pos 开始</span></span><br><span class="line">    <span class="function">size_type <span class="title">find_kmp</span><span class="params">(const_pointer s, size_type pos, size_type count)</span> <span class="type">const</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">find</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* s, size_type pos, size_type count)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 比较 ----------</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">compare</span><span class="params">(<span class="type">const</span> string&amp; other)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 子串 ----------</span></span><br><span class="line">    <span class="function">string <span class="title">substr</span><span class="params">(size_type pos = <span class="number">0</span>, size_type count = npos)</span> <span class="type">const</span> </span>;</span><br><span class="line">    <span class="comment">// ---------- 分隔 ----------</span></span><br><span class="line">    <span class="function">std::vector&lt;string&gt; <span class="title">split</span><span class="params">(<span class="type">char</span> delimiter, <span class="type">bool</span> skip_empty = <span class="literal">true</span>)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;string&gt; <span class="title">split</span><span class="params">(<span class="type">const</span> string &amp;delimiter, <span class="type">bool</span> skip_empty = <span class="literal">true</span>)</span></span>;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ---------- 非成员运算符重载 ----------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>!=(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="built_in">operator</span>&lt;=(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&gt;(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&gt;=(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与 C 字符串的比较</span></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> <span class="type">char</span>* rhs) ;</span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> <span class="type">char</span>* lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"><span class="comment">// ... 其他比较运算符可类似定义</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> <span class="type">char</span>* rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> <span class="type">char</span>* lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> string&amp; lhs, <span class="type">char</span> rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">char</span> lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出流支持</span></span><br><span class="line"><span class="keyword">inline</span> std::ostream&amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="type">const</span> string&amp; str) ;</span><br><span class="line">&#125; <span class="comment">// namespace my</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> hstring = my::string;</span><br></pre></td></tr></table></figure>
+<h2 id="二-性能测试与标准库stdstring的比较windows-10-64bit-ubuntu2204"><a class="markdownIt-Anchor" href="#二-性能测试与标准库stdstring的比较windows-10-64bit-ubuntu2204"></a> 二、性能测试与标准库<code>std::string</code>的比较（windows 10, 64bit, Ubuntu22.04）</h2>
 <ul>
-<li><em>C++20</em>标准中，[=, this]捕获this指针的语法，它实际上表达的意思和[=]相同，目的是让程序员区分他与[=, *this]的不同；</li>
+<li><code>benchmark</code> 输出数据格式（release mode）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Running D:\dev\workspace\clion\cppbase\cmake-build-release\test\test_hstring_benchmark.exe</span><br><span class="line">Run on (4 X 2904 MHz CPU s)</span><br><span class="line">CPU Caches:</span><br><span class="line">  L1 Data 32 KiB (x2)</span><br><span class="line">  L1 Instruction 32 KiB (x2)</span><br><span class="line">  L2 Unified 256 KiB (x2)</span><br><span class="line">  L3 Unified 4096 KiB (x1)</span><br><span class="line">------------------------------------------------------------------------</span><br><span class="line">Benchmark                              Time             CPU   Iterations</span><br><span class="line">------------------------------------------------------------------------</span><br><span class="line">std_string_construct_long/0         9.45 ns         9.03 ns     64000000</span><br><span class="line">std_string_construct_long/1          125 ns          126 ns      5600000</span><br><span class="line">std_string_construct_long/0         9.37 ns         9.42 ns     89600000</span><br><span class="line">std_string_construct_long/1          126 ns          126 ns      5600000</span><br><span class="line">hstring_construct_long/0            7.31 ns         7.32 ns     89600000</span><br><span class="line">hstring_construct_long/1             122 ns          120 ns      6400000</span><br><span class="line">hstring_construct_long/0            7.25 ns         6.98 ns    112000000</span><br><span class="line">hstring_construct_long/1             126 ns          126 ns      5600000</span><br><span class="line">std_string_copy_long/0              4.02 ns         3.99 ns    172307692</span><br><span class="line">std_string_copy_long/1              93.8 ns         88.9 ns      8960000</span><br><span class="line">std_string_copy_long/0              3.94 ns         3.77 ns    165925926</span><br><span class="line">std_string_copy_long/1              75.2 ns         75.0 ns      8960000</span><br><span class="line">hstring_copy_long/0                 5.49 ns         5.47 ns    100000000</span><br><span class="line">hstring_copy_long/1                 72.9 ns         73.2 ns      8960000</span><br><span class="line">hstring_copy_long/0                 5.55 ns         5.58 ns    112000000</span><br><span class="line">hstring_copy_long/1                 73.8 ns         73.2 ns      8960000</span><br><span class="line">std_string_move_long/0              8.34 ns         8.20 ns     89600000</span><br><span class="line">std_string_move_long/1              79.2 ns         79.5 ns      7466667</span><br><span class="line">std_string_move_long/0              8.23 ns         8.37 ns     89600000</span><br><span class="line">std_string_move_long/1              80.5 ns         79.5 ns      7466667</span><br><span class="line">hstring_move_long/0                 10.9 ns         10.7 ns     64000000</span><br><span class="line">hstring_move_long/1                 77.1 ns         76.7 ns      8960000</span><br><span class="line">hstring_move_long/0                 10.3 ns         10.3 ns     64000000</span><br><span class="line">hstring_move_long/1                 76.6 ns         76.7 ns      8960000</span><br><span class="line">std_string_copy_assign_long/0       6.45 ns         6.45 ns     89600000</span><br><span class="line">std_string_copy_assign_long/1       9.08 ns         9.03 ns     64000000</span><br><span class="line">std_string_copy_assign_long/0       6.82 ns         6.80 ns     89600000</span><br><span class="line">std_string_copy_assign_long/1       8.83 ns         8.58 ns     74666667</span><br><span class="line">hstring_copy_assign_long/0          7.91 ns         8.02 ns     89600000</span><br><span class="line">hstring_copy_assign_long/1          75.0 ns         73.2 ns      7466667</span><br><span class="line">hstring_copy_assign_long/0          7.87 ns         8.02 ns     89600000</span><br><span class="line">hstring_copy_assign_long/1          77.9 ns         78.5 ns      8960000</span><br><span class="line">std_string_move_assign_long/0       7.37 ns         7.50 ns     89600000</span><br><span class="line">std_string_move_assign_long/1       77.3 ns         76.7 ns      8960000</span><br><span class="line">std_string_move_assign_long/0       7.40 ns         7.39 ns    112000000</span><br><span class="line">std_string_move_assign_long/1       81.7 ns         80.2 ns      8960000</span><br><span class="line">hstring_move_assign_long/0          11.0 ns         11.0 ns     64000000</span><br><span class="line">hstring_move_assign_long/1          76.7 ns         76.7 ns      8960000</span><br><span class="line">hstring_move_assign_long/0          11.9 ns         12.0 ns     64000000</span><br><span class="line">hstring_move_assign_long/1          77.8 ns         78.1 ns      6400000</span><br><span class="line">std_string_index_long/0             9.45 ns         9.21 ns     74666667</span><br><span class="line">std_string_index_long/1              188 ns          188 ns      3733333</span><br><span class="line">std_string_index_long/0             10.7 ns         10.7 ns     74666667</span><br><span class="line">std_string_index_long/1              190 ns          184 ns      3733333</span><br><span class="line">hstring_index_long/0                8.37 ns         8.37 ns     74666667</span><br><span class="line">hstring_index_long/1                 182 ns          184 ns      4072727</span><br><span class="line">hstring_index_long/0                11.1 ns         11.0 ns     64000000</span><br><span class="line">hstring_index_long/1                 197 ns          195 ns      3200000</span><br><span class="line">std_string_shrink_long/0            2.39 ns         2.35 ns    298666667</span><br><span class="line">std_string_shrink_long/1            3.97 ns         4.02 ns    186666667</span><br><span class="line">std_string_shrink_long/0            2.32 ns         2.34 ns    280000000</span><br><span class="line">std_string_shrink_long/1            3.53 ns         3.52 ns    186666667</span><br><span class="line">hstring_shrink_long/0               1.87 ns         1.86 ns    320000000</span><br><span class="line">hstring_shrink_long/1               2.37 ns         2.34 ns    320000000</span><br><span class="line">hstring_shrink_long/0               1.80 ns         1.80 ns    407272727</span><br><span class="line">hstring_shrink_long/1               2.39 ns         2.41 ns    298666667</span><br><span class="line">std_string_push_back_long/0         12.5 ns         12.6 ns     56000000</span><br><span class="line">std_string_push_back_long/1         2.86 ns         2.89 ns    248888889</span><br><span class="line">std_string_push_back_long/0         12.5 ns         12.3 ns     56000000</span><br><span class="line">std_string_push_back_long/1         2.84 ns         2.76 ns    248888889</span><br><span class="line">hstring_push_back_long/0            18.0 ns         18.0 ns     37333333</span><br><span class="line">hstring_push_back_long/1            4.18 ns         4.14 ns    165925926</span><br><span class="line">hstring_push_back_long/0            18.0 ns         18.0 ns     37333333</span><br><span class="line">hstring_push_back_long/1            4.19 ns         4.24 ns    165925926</span><br><span class="line">std_string_append_long/0            7.70 ns         7.53 ns     74666667</span><br><span class="line">std_string_append_long/1            96.4 ns         95.2 ns      6400000</span><br><span class="line">std_string_append_long/0            9.59 ns         9.63 ns     74666667</span><br><span class="line">std_string_append_long/1             108 ns         97.7 ns      6400000</span><br><span class="line">hstring_append_long/0               16.5 ns         16.5 ns     40727273</span><br><span class="line">hstring_append_long/1                148 ns          150 ns      4480000</span><br><span class="line">hstring_append_long/0               16.1 ns         16.0 ns     44800000</span><br><span class="line">hstring_append_long/1                147 ns          146 ns      4480000</span><br><span class="line">std_string_insert_long/0            16.0 ns         15.7 ns     44800000</span><br><span class="line">std_string_insert_long/1            91.8 ns         92.1 ns      7466667</span><br><span class="line">std_string_insert_long/0            15.9 ns         15.7 ns     40727273</span><br><span class="line">std_string_insert_long/1             277 ns          226 ns      4977778</span><br><span class="line">hstring_insert_long/0               15.1 ns         15.3 ns     40727273</span><br><span class="line">hstring_insert_long/1                154 ns          150 ns      4480000</span><br><span class="line">hstring_insert_long/0               14.5 ns         14.4 ns     49777778</span><br><span class="line">hstring_insert_long/1                153 ns          151 ns      4977778</span><br><span class="line">std_string_erase_long/0             8.01 ns         7.85 ns     89600000</span><br><span class="line">std_string_erase_long/1             82.9 ns         82.0 ns      8960000</span><br><span class="line">std_string_erase_long/0             7.85 ns         7.95 ns    112000000</span><br><span class="line">std_string_erase_long/1             81.4 ns         81.6 ns      7466667</span><br><span class="line">hstring_erase_long/0                11.6 ns         11.7 ns     64000000</span><br><span class="line">hstring_erase_long/1                78.2 ns         77.4 ns      7466667</span><br><span class="line">hstring_erase_long/0                12.4 ns         12.3 ns     56000000</span><br><span class="line">hstring_erase_long/1                78.6 ns         78.5 ns      8960000</span><br><span class="line">std_string_find_long/0              5.23 ns         5.30 ns    112000000</span><br><span class="line">std_string_find_long/1              53.3 ns         53.0 ns     11200000</span><br><span class="line">std_string_find_long/0              5.29 ns         5.30 ns    112000000</span><br><span class="line">std_string_find_long/1              53.3 ns         53.0 ns     11200000</span><br><span class="line">hstring_find_long/0                 8.30 ns         8.02 ns     89600000</span><br><span class="line">hstring_find_long/1                 54.0 ns         54.4 ns     11200000</span><br><span class="line">hstring_find_long/0                 8.08 ns         7.95 ns     74666667</span><br><span class="line">hstring_find_long/1                 54.1 ns         53.0 ns     11200000</span><br><span class="line">hstring_find_kmp_long/0             86.5 ns         85.8 ns      7466667</span><br><span class="line">hstring_find_kmp_long/0             86.5 ns         87.2 ns      8960000</span><br><span class="line">hstring_find_kmp_long/1              279 ns          276 ns      2488889</span><br><span class="line">std_string_compare_long/0           6.82 ns         6.80 ns     89600000</span><br><span class="line">std_string_compare_long/1           10.2 ns         10.3 ns     64000000</span><br><span class="line">std_string_compare_long/0           6.87 ns         6.84 ns    112000000</span><br><span class="line">std_string_compare_long/1           10.0 ns         10.0 ns     64000000</span><br><span class="line">hstring_compare_long/0              8.01 ns         8.02 ns     89600000</span><br><span class="line">hstring_compare_long/1              11.5 ns         11.5 ns     64000000</span><br><span class="line">hstring_compare_long/0              8.62 ns         8.54 ns     89600000</span><br><span class="line">hstring_compare_long/1              11.3 ns         11.2 ns     64000000</span><br><span class="line">std_string_iterate_long/0           9.61 ns         9.63 ns     74666667</span><br><span class="line">std_string_iterate_long/1            168 ns          167 ns      4480000</span><br><span class="line">std_string_iterate_long/0           9.68 ns         9.63 ns     74666667</span><br><span class="line">std_string_iterate_long/1            160 ns          160 ns      4480000</span><br><span class="line">hstring_iterate_long/0              12.5 ns         12.6 ns     56000000</span><br><span class="line">hstring_iterate_long/1               220 ns          220 ns      3200000</span><br><span class="line">hstring_iterate_long/0              12.8 ns         12.6 ns     56000000</span><br><span class="line">hstring_iterate_long/1               228 ns          229 ns      3200000</span><br><span class="line">std_string_substr_long/0            8.12 ns         8.20 ns     89600000</span><br><span class="line">std_string_substr_long/1            8.56 ns         8.58 ns     74666667</span><br><span class="line">std_string_substr_long/0            7.90 ns         7.74 ns     74666667</span><br><span class="line">std_string_substr_long/1            7.96 ns         7.95 ns     74666667</span><br><span class="line">hstring_substr_long/0               7.32 ns         7.32 ns     89600000</span><br><span class="line">hstring_substr_long/1               7.58 ns         7.50 ns     89600000</span><br><span class="line">hstring_substr_long/0               7.58 ns         7.67 ns    112000000</span><br><span class="line">hstring_substr_long/1               7.54 ns         7.53 ns    112000000</span><br><span class="line">BM_MyStringSplitChar                4936 ns         5000 ns       100000</span><br><span class="line">BM_MyStringSplitString              5077 ns         5156 ns       100000</span><br></pre></td></tr></table></figure>
+<ul>
+<li>性能对比图表：<code>std::string vs hstring</code><br />
+说明：短字符串和长字符串多次测试，取平均值</li>
+</ul>
+<p><img src="/images/benchmark_comparison.png" alt="std::string vs hstring" /></p>
+<ul>
+<li><strong>结论：<code>hstring</code> 的性能基本上和 std::string 相当（append,copy_assign,insert较std::string慢2倍作用，其他相当）</strong></li>
 </ul>
 ]]></content>
-      <tags>
-        <tag>C++</tag>
-      </tags>
   </entry>
   <entry>
     <title>JavaScript教程</title>
@@ -6635,6 +6629,48 @@ const声明的常量也会产生块作用域</p>
         <tag>Javascript</tag>
         <tag>Qml</tag>
         <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Lambda-expression</title>
+    <url>/2024/01/02/lambda-expression/</url>
+    <content><![CDATA[<p>前言：Lambda表达式是现代编程语言的一个基础特性，比如LISP、Python、C#等都具备该该特性。<em>C++11</em>标准为我们提供Lambda表达式的支持，而且语法非常简洁明了。</p>
+<span id="more"></span>
+<h2 id="lambda表达式的语法"><a class="markdownIt-Anchor" href="#lambda表达式的语法"></a> Lambda表达式的语法</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[captures](params) specifiers exception -&gt; ret &#123; body &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>[captures]—捕获列表，捕获列表中的变量存在于两个作用域，一是lambda表达式定义的函数作用域。二是lambda表达式函数体中的作用域。前者是为了捕获变量后者是为了使用变量。标准还规定，捕获变量必须是自动存储的类型，简单说就是非静态的局部变量。</li>
+<li>(params) —可选参数列表，语法和普通函数一样，在不需要参数的时候可以省略。</li>
+<li>specifiers — 可选限定符。<em>C++11</em>中可以mutable，它允许我们在lambda表达式函数体内改变值捕获的变量，或调用非const的成员函数。</li>
+<li>exception — 可选异常说明符。noexcept来指明lambda不抛出异常</li>
+<li>ret — 可选的返回类型</li>
+<li>{body} — lambda表达式的函数体。</li>
+<li>C++ 最简单的表达式: []{}</li>
+</ul>
+<h3 id="lambda表达式按值和按引用捕获的例子"><a class="markdownIt-Anchor" href="#lambda表达式按值和按引用捕获的例子"></a> Lambda表达式按值和按引用捕获的例子</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5, y = 8;</span><br><span class="line">auto foo = [x, &amp;y]() mutable &#123;</span><br><span class="line">        x += 1;</span><br><span class="line">        y += 2;</span><br><span class="line">        std::cout &lt;&lt; &quot;lambda x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">        return x * y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call1  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call2  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    // 结果如下：</span><br><span class="line">    lambda x = 6, y = 10</span><br><span class="line">    call1  x = 5, y = 10</span><br><span class="line">    lambda x = 7, y = 12</span><br><span class="line">    call2  x = 5, y = 12</span><br></pre></td></tr></table></figure>
+<p><strong>注意：捕获值的变量在lambda表达式定义的时候已经固定下来了，无论函数在lambda表达式后如何修改外部变量的值，lambda表达式捕获的值都不会变。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5, y = 8;</span><br><span class="line">    auto foo = [x, &amp;y]() mutable &#123;</span><br><span class="line">        x += 1;</span><br><span class="line">        y += 2;</span><br><span class="line">        std::cout &lt;&lt; &quot;lambda x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">        return x * y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    x = 9;</span><br><span class="line">    y = 20;</span><br><span class="line">    foo();</span><br><span class="line">    std::cout &lt;&lt; &quot;call1  x = &quot; &lt;&lt; x &lt;&lt; &quot;, y = &quot; &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">    //结果如下：</span><br><span class="line">    lambda x = 6, y = 22</span><br><span class="line">    call1  x = 9, y = 22</span><br></pre></td></tr></table></figure>
+<h3 id="广义捕获"><a class="markdownIt-Anchor" href="#广义捕获"></a> 广义捕获</h3>
+<p>说明：<em>C++14</em>标准定义了广义捕获，其实是两种捕获方式，一种是<em>C++11</em>中定义的。第二种，初始化捕获。<br />
+初始化捕获的代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int x = 5;</span><br><span class="line">auto foo = [r = x + 1] &#123; return r; &#125;;</span><br><span class="line">std::string y = &quot;hello, c++&quot;;</span><br><span class="line">auto foo1 = [y = std::move(y)] &#123; return y + &quot;world!&quot;; &#125;;</span><br></pre></td></tr></table></figure>
+<p>初始化捕获的第二场景：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class work</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    work() : value_(42) &#123;&#125;</span><br><span class="line">    std::future&lt;int&gt; spawn()</span><br><span class="line">    &#123;</span><br><span class="line">        return std::async([=, tmp = *this]() &#123; return tmp.value_; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    int value_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>注意：第二场景实在异步调用时复制this对象，防止lambda表达式被调用时因原始this 对象被析构造成未定义的行为。</p>
+<h3 id="常量lambda表达式和捕获this"><a class="markdownIt-Anchor" href="#常量lambda表达式和捕获this"></a> 常量lambda表达式和捕获*this</h3>
+<ul>
+<li><em>C++17</em>开始，lambda表达式在条件允许的情况下都会隐式声明为constexpr.</li>
+<li><em>C++17</em>在捕获列表直接[*this]来简化<em>C++14</em>初始化[tmp = *this]的用法，[*this]的语法让程序生成了一个*this的对象的副本并存储在lambda表达式内，可以在lambda表达式内直接访问这个复制对象的成员，消除了通过tmp访问对象成员的尴尬。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class work</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    work() : value_(42) &#123;&#125;</span><br><span class="line">    std::future&lt;int&gt; spawn()</span><br><span class="line">    &#123;</span><br><span class="line">        return std::async([=, *this]() &#123; return value_; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    int value_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="捕获-this"><a class="markdownIt-Anchor" href="#捕获-this"></a> 捕获[=, this]</h3>
+<ul>
+<li><em>C++20</em>标准中，[=, this]捕获this指针的语法，它实际上表达的意思和[=]相同，目的是让程序员区分他与[=, *this]的不同；</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -8850,293 +8886,6 @@ IEEE 754浮点数的格式如下：</p>
       </tags>
   </entry>
   <entry>
-    <title>Vim 教程</title>
-    <url>/2025/03/02/vim/</url>
-    <content><![CDATA[<h2 id="什么是vim"><a class="markdownIt-Anchor" href="#什么是vim"></a> 什么是Vim</h2>
-<ul>
-<li>Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉</li>
-<li>社区活跃，插件丰富，生态优秀</li>
-<li>许多IDE都支持Vim模式：VSCode、JetBrains系列</li>
-</ul>
-<span id="more"></span>
-<h2 id="vim-在编程中的小tips"><a class="markdownIt-Anchor" href="#vim-在编程中的小tips"></a> vim 在编程中的小Tips</h2>
-<ol>
-<li>光标在函数上时，gd 跳转到函数定义或声明；gd— go to definition</li>
-<li>gt —在标签中向后跳转; gT — 在标签中向前跳转；gi—快速跳转到上次编辑的位置进入插入模式；</li>
-<li>ctrl + o 依次返回光标的位置；</li>
-<li>ctrl + i：跳回下一个位置;</li>
-<li>在终端中输入命令 如 git clone xxxxxxxxxxxxxxxxxxxxxxxxxx或时其他复杂命令很长的修改该过程如下：ctrl+a 移动行首；<br />
-ctrl+e 移动行尾；ctrl+f 往后移动；ctrl+b 往前移动；</li>
-</ol>
-<h2 id="normal模式基本移动"><a class="markdownIt-Anchor" href="#normal模式基本移动"></a> Normal模式：基本移动</h2>
-<ul>
-<li>hjkl：上下左右</li>
-<li>gg：跳到第一行(类似Home键) G：跳到最后一行（类似End键）</li>
-<li>&lt;Ctrl-u&gt;/&lt;Ctrl-b&gt;：往上翻半页/一页(类似PageUp键) &lt;Ctrl-d&gt;/&lt;Ctrl-f&gt;：往下翻半页/一页（类似PageDown键）</li>
-<li>{Lineno}gg：跳到第lineno 行</li>
-<li>zz/zt/zb：光标行设置为屏幕居中/屏幕第一行/屏幕最后一行</li>
-<li>L — 移动屏幕尾；H—移动屏幕首；M—移动到屏幕中；</li>
-</ul>
-<h2 id="进入insert模式"><a class="markdownIt-Anchor" href="#进入insert模式"></a> 进入Insert模式</h2>
-<p>Normal模式下通过特定命令进入Insert模式</p>
-<ul>
-<li>i：代表&quot;insert&quot;，当前光标之前开始输入</li>
-<li>a：代表&quot;append&quot;，当前光标之后开始输入</li>
-<li>o: 下方插入新的一行，然后开始输入</li>
-<li>s：删除当前光标的字符，然后开始输入</li>
-<li>r: 替换模式，ra — 将当前字符替换为a</li>
-<li>R: 替换模式，替换行，输入内容会覆盖当前内容；</li>
-<li>I：在本行的开头开始输入</li>
-<li>A：在本行的末尾开始输入</li>
-<li>O：上方插入新的一行，然后开始输入</li>
-<li>S：删除当前行，然后开始输入<br />
-Tips：大写字母和小写字母的操作存在关联，可以一起记忆</li>
-</ul>
-<h2 id="进入command模式"><a class="markdownIt-Anchor" href="#进入command模式"></a> 进入Command模式</h2>
-<p>Normal模式下输入：进入Command模式</p>
-<ul>
-<li>w：保存当前文件:q：退出</li>
-<li>q！：放弃当前更改，然后退出:wq：保存当前更改，然后退出</li>
-<li>h{command}：显示关于命令的帮助</li>
-<li>&lt;Esc&gt;回到Normal模式</li>
-</ul>
-<h2 id="进入visual模式"><a class="markdownIt-Anchor" href="#进入visual模式"></a> 进入Visual模式</h2>
-<ul>
-<li>Normal模式下按v进入可视模式</li>
-<li>进入可视模式后可以用Normal模式下的移动命令选择文本</li>
-<li>可视模式下×/y：剪切/复制；</li>
-<li>回到Normal模式下p：粘贴</li>
-<li>Normal模式下按V进入行可视模式，一次选中一整行，在需要选中多行时很方便</li>
-<li>&lt;Esc&gt;回到Normal模式</li>
-</ul>
-<h2 id="vim移动与编辑"><a class="markdownIt-Anchor" href="#vim移动与编辑"></a> Vim：移动与编辑</h2>
-<h3 id="基于单词的移动"><a class="markdownIt-Anchor" href="#基于单词的移动"></a> 基于单词的移动</h3>
-<p>简单的hjkl显然无法满足我们的需要</p>
-<ul>
-<li>w：代表&quot;word&quot;，跳转到下一处单词的开头</li>
-<li>b：代表&quot;back&quot;，跳转到上一处单词的开头</li>
-<li>e：代表&quot;end&quot;，跳转到下一处单词的结尾</li>
-<li>ge：e的反向版本，跳转到上一处单词的结尾<br />
-wbe大写版本WBE对应的单词是连续的非空字符</li>
-</ul>
-<h3 id="基于搜索的移动行内搜索"><a class="markdownIt-Anchor" href="#基于搜索的移动行内搜索"></a> 基于搜索的移动行内搜索</h3>
-<ul>
-<li>f{char}/t{char}：跳转到本行下一个char字符出现处/出现前</li>
-<li>；/，：快速向后/向前重复ft查找</li>
-<li>F{char}/T{char}：往前搜索而非往后文件中搜索：</li>
-<li>/{pattern}：跳转到本文件中下一个pattern出现的地方</li>
-<li>？{pattern}：跳转到本文件中上一个pattern出现的地方</li>
-<li>pattern可以是正则表达式</li>
-<li>*：等价于/{pattern}，pattern是当前光标下的单词</li>
-<li>nN：快速重复／查找</li>
-</ul>
-<h3 id="基于标记的移动"><a class="markdownIt-Anchor" href="#基于标记的移动"></a> 基于标记的移动</h3>
-<ul>
-<li>m{mark}：把当前位置标记为mark</li>
-<li>`{mark}：跳转到名为mark的标记位置<br />
-mark是a-z的字符<br />
-常用场景：当需要临时离开当前光标处，做一些事情后再快速地回来<br />
-我比较习惯用的标记是mm<br />
-内置标记：</li>
-<li>``：上次跳转前的位置</li>
-<li>`.: 上次修改的位置</li>
-<li>`^：上次插入的位置</li>
-</ul>
-<h3 id="其它实用的跳转"><a class="markdownIt-Anchor" href="#其它实用的跳转"></a> 其它实用的跳转</h3>
-<ul>
-<li>^／$：跳转到本行的开始/结尾</li>
-<li>%：跳到匹配的配对符（括号等）处</li>
-</ul>
-<h3 id="快速编辑"><a class="markdownIt-Anchor" href="#快速编辑"></a> 快速编辑</h3>
-<p><img src="/images/vim-Action.png" alt="Vim-Action" /></p>
-<h3 id="重复操作命令"><a class="markdownIt-Anchor" href="#重复操作命令"></a> 重复操作：.命令</h3>
-<ul>
-<li>.：重复上一次修改</li>
-<li>u：撤销上一次修改</li>
-<li>&lt;Ctrl-r&gt;：重做上一次修改<br />
-. 命令非常适合用于需要多次重复某一个修改动作的场景省去了重复输入命令，大大提高效率</li>
-</ul>
-<h3 id="批量操作数字动作"><a class="markdownIt-Anchor" href="#批量操作数字动作"></a> 批量操作：数字+动作</h3>
-<p>{count}{action}：重复count次action<br />
-动作动作可以是移动动作或是编辑动作</p>
-<ul>
-<li>4j：向下移动4行</li>
-<li>3dw：删除3个单词</li>
-<li>2yy：复制2行</li>
-<li>4p：粘贴4次</li>
-</ul>
-<p>数字+动作，是一种重要的批量操作方式，命令直观，语义明确</p>
-<ul>
-<li>．命令可以直观地看到每一次的变化，在合适的时候停止</li>
-<li>数字+动作则需要预先知道动作的次数</li>
-</ul>
-<h3 id="文本对象操作"><a class="markdownIt-Anchor" href="#文本对象操作"></a> 文本对象操作</h3>
-<p>textobjects：语义化的文本片段<br />
-格式：i/a+对象常见的对象：</p>
-<ul>
-<li>w／w，s，p，t，b,（， <code>[</code>, <code>&#123;</code>：单词/联单词、句子、段落、标签、()、[]、{}；<br />
-*（／），［/」，{／}，&lt;／&gt;，‘／“：配对符定义的对象<br />
-i代表&quot;inner”，内部；<br />
-a代表&quot;a&quot;，额外包括周围的空格或配对符</li>
-</ul>
-<h3 id="文本对象操作例子"><a class="markdownIt-Anchor" href="#文本对象操作例子"></a> 文本对象操作：例子</h3>
-<p>文本对象提供了为文本赋予了结构化的含义，允许我们以一个语义对象作为操作单元<br />
-<strong>[count]{operator}{textobjects}</strong></p>
-<ul>
-<li>diw：删除一个单词</li>
-<li>ci<code>(</code>：修改小括号内部</li>
-<li>yi<code>&#123;</code>：复制大括号内部</li>
-</ul>
-<p>通过组合operator与textobjects，可以对不同的语义对象实施不同的操作，不仅十分灵活，而且语义明确，容易记忆<br />
-配合：命令或【count】可以简单地完成多次对特定语义对象的操作</p>
-<h3 id="textobjectsvsmotion"><a class="markdownIt-Anchor" href="#textobjectsvsmotion"></a> textobjectsVSmotion</h3>
-<p>{operator}{motion}与{operator}{textobjects} 解耦了操作与操作的对象，大大提升了操作效率</p>
-<ul>
-<li>motion是能够移动光标的命令，可以独立使用（如wbe）</li>
-<li>文本对象只能跟在operator后面，不能独立使用（如iw）</li>
-<li>motion通过光标的移动确定operator的作用范围，范围更加灵活但不够明确</li>
-<li>textobjects则是显式地指定操作的对象，范围明确</li>
-</ul>
-<h3 id="操作符与命令补充"><a class="markdownIt-Anchor" href="#操作符与命令补充"></a> 操作符与命令补充</h3>
-<ul>
-<li>gu/gU/g~：操作符，转小写/转大写/翻转大小写 例如：guiw, gUiw, 符合{Operator}{textobjects} 或者 {operator}{motion}</li>
-<li>J：join，连接两行</li>
-<li>&lt;Ctrl-a&gt;/&lt;Ctrl-x&gt;：增加数字/减少数字</li>
-<li>g&lt;Ctrl-A&gt;：创建递增序列</li>
-<li>&lt;/&gt;：左/右缩进</li>
-</ul>
-<p><strong>建议：让你的命令更模块化<br />
-尽量使你的命令更模块化，具有清晰的含义与作用范围，以便于与·等命令协同例如：daw比dw具有更清晰的语义，也更模块化</strong></p>
-<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
-<p>Vim提供了许多寄存器用于存放内容，可以理解为剪贴板<br />
-一个字符对应一个寄存器（如a-z，0-9）特别的寄存器：</p>
-<ul>
-<li>&quot;：默认寄存器，平时复制、删除的内容都放在里面</li>
-<li>%：当前文件名</li>
-<li>.：上一次插入的内容</li>
-<li>:：上一次执行的命令</li>
-</ul>
-<p>通过：reg{register}查看对应寄存器中的内容</p>
-<h3 id="指定寄存器"><a class="markdownIt-Anchor" href="#指定寄存器"></a> 指定寄存器</h3>
-<p>在复制/删除/粘贴等操作前加上&quot;{register}就可以指定本次操作所用的寄存器<br />
-只要涉及寄存器操作的都可以这样指定</p>
-<ul>
-<li>&quot;ayy：将这一行复制到a寄存器中</li>
-<li>&quot;bdiw：将单词删除，保存到b寄存器中</li>
-<li>&quot;cp：将c寄存器中的内容粘贴出来</li>
-</ul>
-<p>常见用途：将想要持久保存的文本放到特定寄存器里，随时进行粘贴，避免被覆盖<br />
-<strong>寄存器字符大写：添加（append）而非覆盖</strong></p>
-<p><strong>宏</strong><br />
-宏（Macro）：录制一系列键盘操作，并允许我们重放这些操作操作序列存储在指定的寄存器中</p>
-<ul>
-<li>q{register}：开始录制宏，存在寄存器register 中</li>
-<li>录制过程中按q退出录制</li>
-<li>@{register}：重放寄存器register中的操作</li>
-<li>@@：重放上一次宏操作</li>
-</ul>
-<p><strong>常见用法：q{register}录制一段操作，@{register}重放，然后一直@@重放注意：：命令对宏不生效，．命令只记录上一次修改，而宏可能包含多次修改</strong><br />
-命令：.,$ normal @a</p>
-<p><em>建议：让你的宏对连续重放友好</em></p>
-<ol>
-<li>让你的光标移动更加general</li>
-<li>假设你要在多个特定的位置进行特定的操作，一个好的习惯是在宏录制的最后，跳转到下一个需要编辑的位置<br />
-即，宏包括【编辑动作】+【跳转到下一个需要编辑的位置】<br />
-这样一来，连续重放就可以实现对所有需要编辑的位置进行编辑操作通过大写的寄存器，在宏的后面添加命令<br />
-如果宏是重放友好的，允许我们使用[count]@{register}直接重放count次</li>
-</ol>
-<h2 id="vim-命令模式"><a class="markdownIt-Anchor" href="#vim-命令模式"></a> vim 命令模式</h2>
-<ol>
-<li>前面的教程大多集中在Normal模式</li>
-<li>命令模式提供了除了Normal模式的编辑方式</li>
-<li>命令模式的操作对象以“行”为基本单位</li>
-<li>normal和global命令提供强大的批量行操作</li>
-</ol>
-<h3 id="ex命令格式"><a class="markdownIt-Anchor" href="#ex命令格式"></a> Ex命令格式</h3>
-<p>：[range] {excommand} [args]</p>
-<ul>
-<li>range：作用的范围，不给的话默认是本行</li>
-<li>excommand：特殊的命令，适用于Command模式</li>
-<li>args：后续的参数，视命令而定</li>
-</ul>
-<p>一些ExCommand（[x]为寄存器，是可选项）：</p>
-<ul>
-<li>：[range] delete[x]：删除range中的行（到寄存器x），delete可简写为 d</li>
-<li>：[range] yank[x]：复制range中的行（到寄存器x），yank可简写为y</li>
-<li>：[range] print：将range 中行打印出来，print 可简写为p</li>
-</ul>
-<h3 id="range与address指定范围"><a class="markdownIt-Anchor" href="#range与address指定范围"></a> range与address：指定范围</h3>
-<p>range由一个或两个address构成，即{address}或{address}，{address} address可以是：</p>
-<ul>
-<li>{lineno}：行号，如3代表第三行（o代表第一行上面的虚拟行）</li>
-<li>$：最后一行</li>
-<li>.：光标所在行</li>
-<li>/{pattern}/：下一个pattern所在的行<br />
-address可以做加减法，.+3代表光标往下第三行，$-3代表倒数第4行</li>
-</ul>
-<h3 id="address组合成range"><a class="markdownIt-Anchor" href="#address组合成range"></a> address组合成range</h3>
-<p>address组合出range（可以混用）：</p>
-<ul>
-<li>1，3：文件的1-3行</li>
-<li>.，·+4：当前-当前往下4行 (共5 行)</li>
-<li>$-3，$：文件的最后4行</li>
-<li>%：特殊的range，代表当前文件的所有行</li>
-<li>&lt;／'&gt;：可视模式中选中范围的开头和结尾（可视模式下直接按：可以直接设置）<br />
-例子：</li>
-<li>:1，3 delete：删除1~3行</li>
-<li>:.，.+4 yank：复制当前-当前往下4 行</li>
-<li>:$-3，$ print: 打印文件的最后4行</li>
-</ul>
-<p>行的复制、移动、粘贴</p>
-<ul>
-<li>：[range]copy{address}：把range中的行复制到address后面</li>
-<li>：[range]move{address}：把range中的行移动到address后面</li>
-<li>：[address]put[x]：把寄存器×的内容粘贴到address后面</li>
-</ul>
-<p>0作为虚拟行的address，可以用来将内容插入第一行</p>
-<h3 id="批量操作normal命令"><a class="markdownIt-Anchor" href="#批量操作normal命令"></a> 批量操作：normal命令</h3>
-<p>格式：：[range]normal{commands}<br />
-含义：对range中的所有行执行Normal模式下的命令commands</p>
-<ul>
-<li>将range设置为%，可以对整个文件的所有行执行</li>
-<li>：[range] normal. ：配合，命令，效果拔群<br />
-常用做法：先做一次修改操作，再用normal命令在指定的行上完成操作</li>
-<li>.命令只能记录一次修改，用宏可以实现记录多个操作:[range] noraml @{register}<br />
-常用做法：先把想要的操作录制成宏，再用normal命令在指定的行上重放宏</li>
-</ul>
-<h2 id="批量操作global命令"><a class="markdownIt-Anchor" href="#批量操作global命令"></a> 批量操作：global命令</h2>
-<ul>
-<li>格式：：[range]global/{pattern}/[cmd]</li>
-<li>含义：对range中包含pattern的所有行执行Command模式下的Ex命令</li>
-<li>[cmd]：Ex命令，不给的话默认是打印（print）注意，normal命令也是Ex命令！</li>
-<li>：[range]global/{pattern}/normal{commands}：对range中所有带pattern的<br />
-行，执行Normal模式下的命令commands</li>
-</ul>
-<p>例子：</p>
-<ul>
-<li>·：%global/TODo/delete：删除所有带TODO的行</li>
-</ul>
-<h2 id="替换命令"><a class="markdownIt-Anchor" href="#替换命令"></a> 替换命令</h2>
-<p><strong>：[range]s/{pattern}/{string}/[flags]</strong><br />
-将pattern替换为string<br />
-flags:</p>
-<ul>
-<li>g：替换每一行的所有匹配</li>
-<li>i：忽视大小写</li>
-<li>c：替换前进行确认</li>
-<li>n：计数而不是替换</li>
-</ul>
-<dl>
-<dt>：%s/Vim//gn：统计文件中所有Vim出现的次数（此时替换为什么无所谓，加了n就不会执行替换操作）</dt>
-<dd>%s /\&lt;vim\&gt;/str/g；精确匹配vim这个单词比如 abc_vim是无法匹配的。</dd>
-</dl>
-]]></content>
-      <tags>
-        <tag>工具命令</tag>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python核心教程</title>
     <url>/2025/04/15/python%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<p>前言：  什么是<code>Python</code>？ 优缺点？<code>Python</code>是一个叫龟叔的荷兰老头写的（89年）擅长： 1.爬虫 2.自动化 3.科学计算 4.人工智能;<br />
@@ -10834,39 +10583,290 @@ x_3
       </tags>
   </entry>
   <entry>
-    <title>hstring测试报告</title>
-    <url>/2026/03/02/hstringvsstring/</url>
-    <content><![CDATA[<h1 id="hstring字符串操作类设计与实现"><a class="markdownIt-Anchor" href="#hstring字符串操作类设计与实现"></a> <code>hstring</code>字符串操作类设计与实现</h1>
-<h2 id="一-项目概要说明"><a class="markdownIt-Anchor" href="#一-项目概要说明"></a> 一、项目概要说明</h2>
-<p>目标：设计并实现字符串操作类hstring，实现自定义字符串的增、删、改、查等核心功能，通过缓冲区机制减少内存频繁分配／释放的开销，<br />
-全面考察类设计、运算符重载及算法实现能力。</p>
+    <title>Vim 教程</title>
+    <url>/2025/03/02/vim/</url>
+    <content><![CDATA[<h2 id="什么是vim"><a class="markdownIt-Anchor" href="#什么是vim"></a> 什么是Vim</h2>
+<ul>
+<li>Vim是最流行的文本编辑软件之一，有&quot;编辑器之神&quot;的美誉</li>
+<li>社区活跃，插件丰富，生态优秀</li>
+<li>许多IDE都支持Vim模式：VSCode、JetBrains系列</li>
+</ul>
 <span id="more"></span>
-<p>核心特性：</p>
+<h2 id="vim-在编程中的小tips"><a class="markdownIt-Anchor" href="#vim-在编程中的小tips"></a> vim 在编程中的小Tips</h2>
+<ol>
+<li>光标在函数上时，gd 跳转到函数定义或声明；gd— go to definition</li>
+<li>gt —在标签中向后跳转; gT — 在标签中向前跳转；gi—快速跳转到上次编辑的位置进入插入模式；</li>
+<li>ctrl + o 依次返回光标的位置；</li>
+<li>ctrl + i：跳回下一个位置;</li>
+<li>在终端中输入命令 如 git clone xxxxxxxxxxxxxxxxxxxxxxxxxx或时其他复杂命令很长的修改该过程如下：ctrl+a 移动行首；<br />
+ctrl+e 移动行尾；ctrl+f 往后移动；ctrl+b 往前移动；</li>
+</ol>
+<h2 id="normal模式基本移动"><a class="markdownIt-Anchor" href="#normal模式基本移动"></a> Normal模式：基本移动</h2>
 <ul>
-<li>不依赖C++标准库string类，完全自主实现底层逻辑；</li>
-<li>SSO优化，简化内存结构</li>
+<li>hjkl：上下左右</li>
+<li>gg：跳到第一行(类似Home键) G：跳到最后一行（类似End键）</li>
+<li>&lt;Ctrl-u&gt;/&lt;Ctrl-b&gt;：往上翻半页/一页(类似PageUp键) &lt;Ctrl-d&gt;/&lt;Ctrl-f&gt;：往下翻半页/一页（类似PageDown键）</li>
+<li>{Lineno}gg：跳到第lineno 行</li>
+<li>zz/zt/zb：光标行设置为屏幕居中/屏幕第一行/屏幕最后一行</li>
+<li>L — 移动屏幕尾；H—移动屏幕首；M—移动到屏幕中；</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// SSO 缓冲区大小（包括结尾的 &#x27;\0&#x27;），可存储 small_capacity 个字符（不含 null）</span></span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> size_type small_capacity = <span class="number">15</span>;          <span class="comment">// 例如 15 + 1 = 16 字节</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存储联合体：大字符串用 dynamic，小字符串用 local</span></span><br><span class="line">    <span class="keyword">union</span> <span class="title class_">Storage</span> &#123;</span><br><span class="line">        <span class="keyword">struct</span> &#123;</span><br><span class="line">            value_type * data;         <span class="comment">// 指向动态分配的字符数组（包含结尾 &#x27;\0&#x27;）</span></span><br><span class="line">            size_type capacity; <span class="comment">// 分配的容量（包含结尾 &#x27;\0&#x27; 的空间）</span></span><br><span class="line">        &#125; dynamic;</span><br><span class="line">        value_type  local[small_capacity + <span class="number">1</span>];   <span class="comment">// 本地缓冲区，始终以 &#x27;\0&#x27; 结尾</span></span><br><span class="line">    &#125; m_storage;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 大小与标志位的编码：</span></span><br><span class="line">    <span class="comment">// 最高位为 1 表示小字符串，其余位存储实际长度；</span></span><br><span class="line">    <span class="comment">// 最高位为 0 表示大字符串，其余位存储实际长度。</span></span><br><span class="line">    size_type m_size;   <span class="comment">// 编码后的大小</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="进入insert模式"><a class="markdownIt-Anchor" href="#进入insert模式"></a> 进入Insert模式</h2>
+<p>Normal模式下通过特定命令进入Insert模式</p>
 <ul>
-<li>强异常的安全保证（copy-and-swap技术）</li>
-<li>迭代器与标准库std::string的兼容</li>
-<li>支持运算符重载</li>
-<li>常用增删改查的api，增加算法find_kmp结构</li>
+<li>i：代表&quot;insert&quot;，当前光标之前开始输入</li>
+<li>a：代表&quot;append&quot;，当前光标之后开始输入</li>
+<li>o: 下方插入新的一行，然后开始输入</li>
+<li>s：删除当前光标的字符，然后开始输入</li>
+<li>r: 替换模式，ra — 将当前字符替换为a</li>
+<li>R: 替换模式，替换行，输入内容会覆盖当前内容；</li>
+<li>I：在本行的开头开始输入</li>
+<li>A：在本行的末尾开始输入</li>
+<li>O：上方插入新的一行，然后开始输入</li>
+<li>S：删除当前行，然后开始输入<br />
+Tips：大写字母和小写字母的操作存在关联，可以一起记忆</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> my &#123;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">string</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 常用类型定义</span></span><br><span class="line">    <span class="keyword">using</span> value_type             = <span class="type">char</span>;</span><br><span class="line">    <span class="keyword">using</span> size_type              = std::<span class="type">size_t</span>;</span><br><span class="line">    <span class="keyword">using</span> difference_type        = std::<span class="type">ptrdiff_t</span>;</span><br><span class="line">    <span class="keyword">using</span> reference              = value_type&amp;;</span><br><span class="line">    <span class="keyword">using</span> const_reference        = <span class="type">const</span> value_type&amp;;</span><br><span class="line">    <span class="keyword">using</span> pointer                = value_type*;</span><br><span class="line">    <span class="keyword">using</span> const_pointer          = <span class="type">const</span> value_type*;</span><br><span class="line">    <span class="keyword">using</span> iterator               = pointer;</span><br><span class="line">    <span class="keyword">using</span> const_iterator         = const_pointer;</span><br><span class="line"></span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> size_type npos = <span class="built_in">static_cast</span>&lt;size_type&gt;(<span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 构造 / 析构 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 默认构造：空字符串（小字符串）</span></span><br><span class="line">    <span class="built_in">string</span>() <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 std::string 构造</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> std::string &amp;s) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 C 字符串构造（允许 nullptr 视为空）</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> value_type * s) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 C 字符串 + 长度构造</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> <span class="type">char</span>* s, size_type count) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝构造</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> string&amp; other) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动构造</span></span><br><span class="line">    <span class="built_in">string</span>(string&amp;&amp; other) <span class="keyword">noexcept</span> ;j</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 赋值运算符 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝赋值（使用 copy-and-swap，强异常安全）</span></span><br><span class="line">    string&amp; <span class="keyword">operator</span>=(<span class="type">const</span> string&amp; other) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动赋值（简单交换资源，noexcept）</span></span><br><span class="line">    string&amp; <span class="keyword">operator</span>=(string&amp;&amp; other) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 C 字符串赋值</span></span><br><span class="line">    string&amp; <span class="keyword">operator</span>=(<span class="type">const</span> <span class="type">char</span>* s) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 元素访问 ----------</span></span><br><span class="line"></span><br><span class="line">    reference <span class="keyword">operator</span>[](size_type pos) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    const_reference <span class="keyword">operator</span>[](size_type pos) <span class="type">const</span> <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line">    <span class="function">reference <span class="title">at</span><span class="params">(size_type pos)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_reference <span class="title">at</span><span class="params">(size_type pos)</span> <span class="type">const</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">reference <span class="title">front</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_reference <span class="title">front</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">reference <span class="title">back</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_reference <span class="title">back</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_pointer <span class="title">c_str</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_pointer <span class="title">data</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 迭代器 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="function">iterator <span class="title">begin</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">begin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">cbegin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">iterator <span class="title">end</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">end</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">const_iterator <span class="title">cend</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 容量 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">size</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">length</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">capacity</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">reserve</span><span class="params">(size_type new_cap)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">shrink_to_fit</span><span class="params">()</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 修改操作 ----------</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">clear</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push_back</span><span class="params">(<span class="type">char</span> ch)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pop_back</span><span class="params">()</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string&amp; <span class="title">append</span><span class="params">(<span class="type">const</span> string&amp; str)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string&amp; <span class="title">append</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* s, size_type count)</span> </span>;</span><br><span class="line"></span><br><span class="line">    string&amp; <span class="keyword">operator</span>+=(<span class="type">const</span> string&amp; str) ;</span><br><span class="line"></span><br><span class="line">    string&amp; <span class="keyword">operator</span>+=(<span class="type">char</span> ch) ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入、擦除、替换等可类似实现，此处仅给出简单 erase 示例</span></span><br><span class="line">    <span class="function">string&amp; <span class="title">erase</span><span class="params">(size_type pos = <span class="number">0</span>, size_type count = npos)</span> </span>;</span><br><span class="line">    <span class="function">string &amp;<span class="title">insert</span><span class="params">(size_type pos, <span class="type">const</span> string &amp;str)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string &amp;<span class="title">insert</span><span class="params">(size_type pos, <span class="type">const</span> <span class="type">char</span> *s)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">string &amp;<span class="title">insert</span><span class="params">(size_type pos, <span class="type">const</span> <span class="type">char</span> *s, size_type count)</span> </span>;</span><br><span class="line">    <span class="comment">// 4. 在迭代器位置 p 之前插入一个字符 ch，返回指向插入字符的迭代器</span></span><br><span class="line">    <span class="function">iterator <span class="title">insert</span><span class="params">(const_iterator p, value_type ch)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在迭代器位置 p 之前插入 count 个相同字符 ch，返回指向第一个插入字符的迭代器</span></span><br><span class="line">    <span class="function">iterator <span class="title">insert</span><span class="params">(const_iterator p, size_type count, value_type ch)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 交换</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(string&amp; other)</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 查找 ----------</span></span><br><span class="line">    <span class="function">size_type <span class="title">find</span><span class="params">(<span class="type">const</span> string&amp; str, size_type pos = <span class="number">0</span>)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 KMP 算法查找子串 str，从位置 pos 开始</span></span><br><span class="line">    <span class="function">size_type <span class="title">find_kmp</span><span class="params">(<span class="type">const</span> string&amp; str, size_type pos = <span class="number">0</span>)</span> <span class="type">const</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 KMP 算法查找子串 s（长度为 count），从位置 pos 开始</span></span><br><span class="line">    <span class="function">size_type <span class="title">find_kmp</span><span class="params">(const_pointer s, size_type pos, size_type count)</span> <span class="type">const</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">size_type <span class="title">find</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* s, size_type pos, size_type count)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 比较 ----------</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">compare</span><span class="params">(<span class="type">const</span> string&amp; other)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ---------- 子串 ----------</span></span><br><span class="line">    <span class="function">string <span class="title">substr</span><span class="params">(size_type pos = <span class="number">0</span>, size_type count = npos)</span> <span class="type">const</span> </span>;</span><br><span class="line">    <span class="comment">// ---------- 分隔 ----------</span></span><br><span class="line">    <span class="function">std::vector&lt;string&gt; <span class="title">split</span><span class="params">(<span class="type">char</span> delimiter, <span class="type">bool</span> skip_empty = <span class="literal">true</span>)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;string&gt; <span class="title">split</span><span class="params">(<span class="type">const</span> string &amp;delimiter, <span class="type">bool</span> skip_empty = <span class="literal">true</span>)</span></span>;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ---------- 非成员运算符重载 ----------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>!=(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="built_in">operator</span>&lt;=(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&gt;(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&gt;=(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) <span class="keyword">noexcept</span> ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与 C 字符串的比较</span></span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> <span class="type">char</span>* rhs) ;</span><br><span class="line"><span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> <span class="type">char</span>* lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"><span class="comment">// ... 其他比较运算符可类似定义</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> string&amp; lhs, <span class="type">const</span> <span class="type">char</span>* rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> <span class="type">char</span>* lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">const</span> string&amp; lhs, <span class="type">char</span> rhs) ;</span><br><span class="line"><span class="keyword">inline</span> string <span class="keyword">operator</span>+(<span class="type">char</span> lhs, <span class="type">const</span> string&amp; rhs) ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出流支持</span></span><br><span class="line"><span class="keyword">inline</span> std::ostream&amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="type">const</span> string&amp; str) ;</span><br><span class="line">&#125; <span class="comment">// namespace my</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> hstring = my::string;</span><br></pre></td></tr></table></figure>
-<h2 id="二-性能测试与标准库stdstring的比较windows-10-64bit-ubuntu2204"><a class="markdownIt-Anchor" href="#二-性能测试与标准库stdstring的比较windows-10-64bit-ubuntu2204"></a> 二、性能测试与标准库<code>std::string</code>的比较（windows 10, 64bit, Ubuntu22.04）</h2>
+<h2 id="进入command模式"><a class="markdownIt-Anchor" href="#进入command模式"></a> 进入Command模式</h2>
+<p>Normal模式下输入：进入Command模式</p>
 <ul>
-<li><code>benchmark</code> 输出数据格式</li>
+<li>w：保存当前文件:q：退出</li>
+<li>q！：放弃当前更改，然后退出:wq：保存当前更改，然后退出</li>
+<li>h{command}：显示关于命令的帮助</li>
+<li>&lt;Esc&gt;回到Normal模式</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CPU Caches:</span><br><span class="line">  L1 Data 32 KiB (x2)</span><br><span class="line">  L1 Instruction 32 KiB (x2)</span><br><span class="line">  L2 Unified 256 KiB (x2)</span><br><span class="line">  L3 Unified 4096 KiB (x1)</span><br><span class="line">***WARNING*** Library was built as DEBUG. Timings may be affected.</span><br><span class="line">------------------------------------------------------------------------</span><br><span class="line">Benchmark                              Time             CPU   Iterations</span><br><span class="line">------------------------------------------------------------------------</span><br><span class="line">std_string_construct_long/0          475 ns          460 ns      1493333</span><br><span class="line">std_string_construct_long/1         1061 ns         1050 ns       640000</span><br><span class="line">std_string_construct_long/0          474 ns          476 ns      1445161</span><br><span class="line">std_string_construct_long/1         1080 ns         1074 ns       640000</span><br><span class="line">hstring_construct_long/0            30.6 ns         30.7 ns     22400000</span><br><span class="line">hstring_construct_long/1             309 ns          302 ns      2635294</span><br><span class="line">hstring_construct_long/0            27.4 ns         26.7 ns     26352941</span><br><span class="line">hstring_construct_long/1             291 ns          292 ns      2357895</span><br><span class="line">std_string_copy_long/0               465 ns          465 ns      1544828</span><br><span class="line">std_string_copy_long/1               978 ns          942 ns       746667</span><br><span class="line">std_string_copy_long/0               503 ns          502 ns      1120000</span><br><span class="line">std_string_copy_long/1              1078 ns         1046 ns       896000</span><br><span class="line">hstring_copy_long/0                 33.8 ns         31.8 ns     18666667</span><br><span class="line">hstring_copy_long/1                  278 ns          279 ns      2635294</span><br><span class="line">hstring_copy_long/0                 28.7 ns         28.3 ns     24888889</span><br><span class="line">hstring_copy_long/1                  283 ns          285 ns      2357895</span><br><span class="line">std_string_move_long/0               912 ns          903 ns       640000</span><br><span class="line">std_string_move_long/1              1296 ns         1311 ns       560000</span><br><span class="line">std_string_move_long/0               929 ns          942 ns       746667</span><br><span class="line">std_string_move_long/1              1296 ns         1311 ns       560000</span><br><span class="line">hstring_move_long/0                 63.3 ns         62.8 ns      8960000</span><br><span class="line">hstring_move_long/1                  315 ns          315 ns      2133333</span><br><span class="line">hstring_move_long/0                 62.3 ns         62.8 ns     11200000</span><br><span class="line">hstring_move_long/1                  320 ns          318 ns      2357895</span><br><span class="line">std_string_copy_assign_long/0       46.7 ns         47.5 ns     15448276</span><br><span class="line">std_string_copy_assign_long/1       54.0 ns         53.0 ns     11200000</span><br><span class="line">std_string_copy_assign_long/0       46.8 ns         47.1 ns     14933333</span><br><span class="line">std_string_copy_assign_long/1       54.5 ns         54.4 ns     11200000</span><br><span class="line">hstring_copy_assign_long/0          70.9 ns         71.1 ns      7466667</span><br><span class="line">hstring_copy_assign_long/1           332 ns          322 ns      2133333</span><br><span class="line">hstring_copy_assign_long/0          70.9 ns         71.1 ns     11200000</span><br><span class="line">hstring_copy_assign_long/1           332 ns          330 ns      2133333</span><br><span class="line">std_string_move_assign_long/0        623 ns          614 ns      1120000</span><br><span class="line">std_string_move_assign_long/1        996 ns         1001 ns       640000</span><br><span class="line">std_string_move_assign_long/0        624 ns          628 ns      1120000</span><br><span class="line">std_string_move_assign_long/1       1024 ns         1025 ns       640000</span><br><span class="line">hstring_move_assign_long/0          66.9 ns         67.0 ns     11200000</span><br><span class="line">hstring_move_assign_long/1           315 ns          308 ns      1723077</span><br><span class="line">hstring_move_assign_long/0          66.5 ns         67.0 ns     11200000</span><br><span class="line">hstring_move_assign_long/1           318 ns          318 ns      2357895</span><br><span class="line">std_string_index_long/0             65.6 ns         65.6 ns     11200000</span><br><span class="line">std_string_index_long/1             1229 ns         1228 ns       560000</span><br><span class="line">std_string_index_long/0             65.3 ns         65.6 ns     11200000</span><br><span class="line">std_string_index_long/1             1215 ns         1193 ns       497778</span><br><span class="line">hstring_index_long/0                60.2 ns         61.4 ns     11200000</span><br><span class="line">hstring_index_long/1                1056 ns         1050 ns       640000</span><br><span class="line">hstring_index_long/0                60.7 ns         61.4 ns     11200000</span><br><span class="line">hstring_index_long/1                1054 ns         1050 ns       640000</span><br><span class="line">std_string_shrink_long/0            23.9 ns         24.0 ns     28000000</span><br><span class="line">std_string_shrink_long/1            53.9 ns         54.4 ns     11200000</span><br><span class="line">std_string_shrink_long/0            23.5 ns         23.5 ns     29866667</span><br><span class="line">std_string_shrink_long/1            53.9 ns         53.0 ns     11200000</span><br><span class="line">hstring_shrink_long/0               26.2 ns         26.1 ns     26352941</span><br><span class="line">hstring_shrink_long/1               28.8 ns         29.2 ns     23578947</span><br><span class="line">hstring_shrink_long/0               28.8 ns         28.5 ns     26352941</span><br><span class="line">hstring_shrink_long/1               28.9 ns         28.9 ns     24888889</span><br><span class="line">std_string_push_back_long/0         37.4 ns         37.7 ns     18666667</span><br><span class="line">std_string_push_back_long/1         42.6 ns         42.6 ns     17230769</span><br><span class="line">std_string_push_back_long/0         37.9 ns         38.4 ns     15448276</span><br><span class="line">std_string_push_back_long/1         40.5 ns         40.8 ns     17230769</span><br><span class="line">hstring_push_back_long/0            48.1 ns         48.7 ns     14451613</span><br><span class="line">hstring_push_back_long/1            47.5 ns         47.4 ns     11200000</span><br><span class="line">hstring_push_back_long/0            49.3 ns         49.2 ns     14933333</span><br><span class="line">hstring_push_back_long/1            48.2 ns         47.6 ns     14451613</span><br><span class="line">std_string_append_long/0             499 ns          500 ns      1000000</span><br><span class="line">std_string_append_long/1             895 ns          900 ns       746667</span><br><span class="line">std_string_append_long/0             518 ns          531 ns      1000000</span><br><span class="line">std_string_append_long/1             908 ns          921 ns       746667</span><br><span class="line">hstring_append_long/0               70.9 ns         71.5 ns      8960000</span><br><span class="line">hstring_append_long/1                594 ns          600 ns      1120000</span><br><span class="line">hstring_append_long/0               71.4 ns         71.1 ns     11200000</span><br><span class="line">hstring_append_long/1                587 ns          575 ns       896000</span><br><span class="line">std_string_insert_long/0             535 ns          516 ns      1120000</span><br><span class="line">std_string_insert_long/1             921 ns          921 ns       746667</span><br><span class="line">std_string_insert_long/0             541 ns          530 ns      1120000</span><br><span class="line">std_string_insert_long/1             939 ns          942 ns       746667</span><br><span class="line">hstring_insert_long/0               70.3 ns         71.1 ns     11200000</span><br><span class="line">hstring_insert_long/1                616 ns          614 ns      1120000</span><br><span class="line">hstring_insert_long/0               69.2 ns         69.8 ns     11200000</span><br><span class="line">hstring_insert_long/1                619 ns          614 ns      1120000</span><br><span class="line">std_string_erase_long/0              503 ns          502 ns      1120000</span><br><span class="line">std_string_erase_long/1              912 ns          900 ns       746667</span><br><span class="line">std_string_erase_long/0              506 ns          516 ns      1000000</span><br><span class="line">std_string_erase_long/1              878 ns          879 ns       746667</span><br><span class="line">hstring_erase_long/0                49.5 ns         50.2 ns     14933333</span><br><span class="line">hstring_erase_long/1                 301 ns          305 ns      2357895</span><br><span class="line">hstring_erase_long/0                47.2 ns         46.0 ns     11200000</span><br><span class="line">hstring_erase_long/1                 298 ns          298 ns      2357895</span><br><span class="line">std_string_find_long/0              32.7 ns         32.5 ns     23578947</span><br><span class="line">std_string_find_long/1              53.5 ns         53.1 ns     10000000</span><br><span class="line">std_string_find_long/0              31.0 ns         30.0 ns     22400000</span><br><span class="line">std_string_find_long/1              51.2 ns         50.0 ns     10000000</span><br><span class="line">hstring_find_long/0                 43.2 ns         43.3 ns     16592593</span><br><span class="line">hstring_find_long/1                 61.0 ns         61.4 ns     11200000</span><br><span class="line">hstring_find_long/0                 41.4 ns         40.8 ns     17230769</span><br><span class="line">hstring_find_long/1                 62.6 ns         62.8 ns     11200000</span><br><span class="line">hstring_find_kmp_long/0              810 ns          795 ns       746667</span><br><span class="line">hstring_find_kmp_long/0              849 ns          837 ns       746667</span><br><span class="line">hstring_find_kmp_long/1             1018 ns         1025 ns       640000</span><br><span class="line">std_string_compare_long/0           33.7 ns         33.7 ns     21333333</span><br><span class="line">std_string_compare_long/1           41.3 ns         41.7 ns     17230769</span><br><span class="line">std_string_compare_long/0           33.8 ns         33.8 ns     20363636</span><br><span class="line">std_string_compare_long/1           39.5 ns         39.2 ns     17920000</span><br><span class="line">hstring_compare_long/0              45.9 ns         46.0 ns     14933333</span><br><span class="line">hstring_compare_long/1              49.9 ns         50.2 ns     11200000</span><br><span class="line">hstring_compare_long/0              50.3 ns         50.6 ns     15448276</span><br><span class="line">hstring_compare_long/1              49.9 ns         47.4 ns     11200000</span><br><span class="line">std_string_iterate_long/0            949 ns          952 ns       640000</span><br><span class="line">std_string_iterate_long/1          15193 ns        15346 ns        44800</span><br><span class="line">std_string_iterate_long/0            942 ns          942 ns       746667</span><br><span class="line">std_string_iterate_long/1          15324 ns        15346 ns        44800</span><br><span class="line">hstring_iterate_long/0              95.0 ns         96.3 ns      7466667</span><br><span class="line">hstring_iterate_long/1              1311 ns         1283 ns       560000</span><br><span class="line">hstring_iterate_long/0              96.2 ns         96.3 ns      7466667</span><br><span class="line">hstring_iterate_long/1              1244 ns         1256 ns       560000</span><br><span class="line">std_string_substr_long/0             500 ns          505 ns      1454377</span><br><span class="line">std_string_substr_long/1             505 ns          502 ns      1120000</span><br><span class="line">std_string_substr_long/0             506 ns          516 ns      1000000</span><br><span class="line">std_string_substr_long/1             501 ns          502 ns      1120000</span><br><span class="line">hstring_substr_long/0               36.7 ns         36.9 ns     19478261</span><br><span class="line">hstring_substr_long/1               38.0 ns         37.7 ns     18666667</span><br><span class="line">hstring_substr_long/0               36.8 ns         36.8 ns     20363636</span><br><span class="line">hstring_substr_long/1               38.9 ns         39.3 ns     18666667</span><br><span class="line">BM_MyStringSplitChar                6931 ns         6975 ns       112000</span><br><span class="line">BM_MyStringSplitString              7513 ns         7499 ns        89600</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="进入visual模式"><a class="markdownIt-Anchor" href="#进入visual模式"></a> 进入Visual模式</h2>
 <ul>
-<li>性能对比图表：<code>std::string vs hstring</code><br />
-说明：短字符串和长字符串多次测试，取平均值</li>
+<li>Normal模式下按v进入可视模式</li>
+<li>进入可视模式后可以用Normal模式下的移动命令选择文本</li>
+<li>可视模式下×/y：剪切/复制；</li>
+<li>回到Normal模式下p：粘贴</li>
+<li>Normal模式下按V进入行可视模式，一次选中一整行，在需要选中多行时很方便</li>
+<li>&lt;Esc&gt;回到Normal模式</li>
 </ul>
-<p><img src="/images/benchmark_comparison.png" alt="std::string vs hstring" /></p>
+<h2 id="vim移动与编辑"><a class="markdownIt-Anchor" href="#vim移动与编辑"></a> Vim：移动与编辑</h2>
+<h3 id="基于单词的移动"><a class="markdownIt-Anchor" href="#基于单词的移动"></a> 基于单词的移动</h3>
+<p>简单的hjkl显然无法满足我们的需要</p>
 <ul>
-<li><strong>结论：<code>hstring</code> 的性能基本上是 std::string 的5倍（find, compare比标准库稍低）</strong></li>
+<li>w：代表&quot;word&quot;，跳转到下一处单词的开头</li>
+<li>b：代表&quot;back&quot;，跳转到上一处单词的开头</li>
+<li>e：代表&quot;end&quot;，跳转到下一处单词的结尾</li>
+<li>ge：e的反向版本，跳转到上一处单词的结尾<br />
+wbe大写版本WBE对应的单词是连续的非空字符</li>
 </ul>
+<h3 id="基于搜索的移动行内搜索"><a class="markdownIt-Anchor" href="#基于搜索的移动行内搜索"></a> 基于搜索的移动行内搜索</h3>
+<ul>
+<li>f{char}/t{char}：跳转到本行下一个char字符出现处/出现前</li>
+<li>；/，：快速向后/向前重复ft查找</li>
+<li>F{char}/T{char}：往前搜索而非往后文件中搜索：</li>
+<li>/{pattern}：跳转到本文件中下一个pattern出现的地方</li>
+<li>？{pattern}：跳转到本文件中上一个pattern出现的地方</li>
+<li>pattern可以是正则表达式</li>
+<li>*：等价于/{pattern}，pattern是当前光标下的单词</li>
+<li>nN：快速重复／查找</li>
+</ul>
+<h3 id="基于标记的移动"><a class="markdownIt-Anchor" href="#基于标记的移动"></a> 基于标记的移动</h3>
+<ul>
+<li>m{mark}：把当前位置标记为mark</li>
+<li>`{mark}：跳转到名为mark的标记位置<br />
+mark是a-z的字符<br />
+常用场景：当需要临时离开当前光标处，做一些事情后再快速地回来<br />
+我比较习惯用的标记是mm<br />
+内置标记：</li>
+<li>``：上次跳转前的位置</li>
+<li>`.: 上次修改的位置</li>
+<li>`^：上次插入的位置</li>
+</ul>
+<h3 id="其它实用的跳转"><a class="markdownIt-Anchor" href="#其它实用的跳转"></a> 其它实用的跳转</h3>
+<ul>
+<li>^／$：跳转到本行的开始/结尾</li>
+<li>%：跳到匹配的配对符（括号等）处</li>
+</ul>
+<h3 id="快速编辑"><a class="markdownIt-Anchor" href="#快速编辑"></a> 快速编辑</h3>
+<p><img src="/images/vim-Action.png" alt="Vim-Action" /></p>
+<h3 id="重复操作命令"><a class="markdownIt-Anchor" href="#重复操作命令"></a> 重复操作：.命令</h3>
+<ul>
+<li>.：重复上一次修改</li>
+<li>u：撤销上一次修改</li>
+<li>&lt;Ctrl-r&gt;：重做上一次修改<br />
+. 命令非常适合用于需要多次重复某一个修改动作的场景省去了重复输入命令，大大提高效率</li>
+</ul>
+<h3 id="批量操作数字动作"><a class="markdownIt-Anchor" href="#批量操作数字动作"></a> 批量操作：数字+动作</h3>
+<p>{count}{action}：重复count次action<br />
+动作动作可以是移动动作或是编辑动作</p>
+<ul>
+<li>4j：向下移动4行</li>
+<li>3dw：删除3个单词</li>
+<li>2yy：复制2行</li>
+<li>4p：粘贴4次</li>
+</ul>
+<p>数字+动作，是一种重要的批量操作方式，命令直观，语义明确</p>
+<ul>
+<li>．命令可以直观地看到每一次的变化，在合适的时候停止</li>
+<li>数字+动作则需要预先知道动作的次数</li>
+</ul>
+<h3 id="文本对象操作"><a class="markdownIt-Anchor" href="#文本对象操作"></a> 文本对象操作</h3>
+<p>textobjects：语义化的文本片段<br />
+格式：i/a+对象常见的对象：</p>
+<ul>
+<li>w／w，s，p，t，b,（， <code>[</code>, <code>&#123;</code>：单词/联单词、句子、段落、标签、()、[]、{}；<br />
+*（／），［/」，{／}，&lt;／&gt;，‘／“：配对符定义的对象<br />
+i代表&quot;inner”，内部；<br />
+a代表&quot;a&quot;，额外包括周围的空格或配对符</li>
+</ul>
+<h3 id="文本对象操作例子"><a class="markdownIt-Anchor" href="#文本对象操作例子"></a> 文本对象操作：例子</h3>
+<p>文本对象提供了为文本赋予了结构化的含义，允许我们以一个语义对象作为操作单元<br />
+<strong>[count]{operator}{textobjects}</strong></p>
+<ul>
+<li>diw：删除一个单词</li>
+<li>ci<code>(</code>：修改小括号内部</li>
+<li>yi<code>&#123;</code>：复制大括号内部</li>
+</ul>
+<p>通过组合operator与textobjects，可以对不同的语义对象实施不同的操作，不仅十分灵活，而且语义明确，容易记忆<br />
+配合：命令或【count】可以简单地完成多次对特定语义对象的操作</p>
+<h3 id="textobjectsvsmotion"><a class="markdownIt-Anchor" href="#textobjectsvsmotion"></a> textobjectsVSmotion</h3>
+<p>{operator}{motion}与{operator}{textobjects} 解耦了操作与操作的对象，大大提升了操作效率</p>
+<ul>
+<li>motion是能够移动光标的命令，可以独立使用（如wbe）</li>
+<li>文本对象只能跟在operator后面，不能独立使用（如iw）</li>
+<li>motion通过光标的移动确定operator的作用范围，范围更加灵活但不够明确</li>
+<li>textobjects则是显式地指定操作的对象，范围明确</li>
+</ul>
+<h3 id="操作符与命令补充"><a class="markdownIt-Anchor" href="#操作符与命令补充"></a> 操作符与命令补充</h3>
+<ul>
+<li>gu/gU/g~：操作符，转小写/转大写/翻转大小写 例如：guiw, gUiw, 符合{Operator}{textobjects} 或者 {operator}{motion}</li>
+<li>J：join，连接两行</li>
+<li>&lt;Ctrl-a&gt;/&lt;Ctrl-x&gt;：增加数字/减少数字</li>
+<li>g&lt;Ctrl-A&gt;：创建递增序列</li>
+<li>&lt;/&gt;：左/右缩进</li>
+</ul>
+<p><strong>建议：让你的命令更模块化<br />
+尽量使你的命令更模块化，具有清晰的含义与作用范围，以便于与·等命令协同例如：daw比dw具有更清晰的语义，也更模块化</strong></p>
+<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
+<p>Vim提供了许多寄存器用于存放内容，可以理解为剪贴板<br />
+一个字符对应一个寄存器（如a-z，0-9）特别的寄存器：</p>
+<ul>
+<li>&quot;：默认寄存器，平时复制、删除的内容都放在里面</li>
+<li>%：当前文件名</li>
+<li>.：上一次插入的内容</li>
+<li>:：上一次执行的命令</li>
+</ul>
+<p>通过：reg{register}查看对应寄存器中的内容</p>
+<h3 id="指定寄存器"><a class="markdownIt-Anchor" href="#指定寄存器"></a> 指定寄存器</h3>
+<p>在复制/删除/粘贴等操作前加上&quot;{register}就可以指定本次操作所用的寄存器<br />
+只要涉及寄存器操作的都可以这样指定</p>
+<ul>
+<li>&quot;ayy：将这一行复制到a寄存器中</li>
+<li>&quot;bdiw：将单词删除，保存到b寄存器中</li>
+<li>&quot;cp：将c寄存器中的内容粘贴出来</li>
+</ul>
+<p>常见用途：将想要持久保存的文本放到特定寄存器里，随时进行粘贴，避免被覆盖<br />
+<strong>寄存器字符大写：添加（append）而非覆盖</strong></p>
+<p><strong>宏</strong><br />
+宏（Macro）：录制一系列键盘操作，并允许我们重放这些操作操作序列存储在指定的寄存器中</p>
+<ul>
+<li>q{register}：开始录制宏，存在寄存器register 中</li>
+<li>录制过程中按q退出录制</li>
+<li>@{register}：重放寄存器register中的操作</li>
+<li>@@：重放上一次宏操作</li>
+</ul>
+<p><strong>常见用法：q{register}录制一段操作，@{register}重放，然后一直@@重放注意：：命令对宏不生效，．命令只记录上一次修改，而宏可能包含多次修改</strong><br />
+命令：.,$ normal @a</p>
+<p><em>建议：让你的宏对连续重放友好</em></p>
+<ol>
+<li>让你的光标移动更加general</li>
+<li>假设你要在多个特定的位置进行特定的操作，一个好的习惯是在宏录制的最后，跳转到下一个需要编辑的位置<br />
+即，宏包括【编辑动作】+【跳转到下一个需要编辑的位置】<br />
+这样一来，连续重放就可以实现对所有需要编辑的位置进行编辑操作通过大写的寄存器，在宏的后面添加命令<br />
+如果宏是重放友好的，允许我们使用[count]@{register}直接重放count次</li>
+</ol>
+<h2 id="vim-命令模式"><a class="markdownIt-Anchor" href="#vim-命令模式"></a> vim 命令模式</h2>
+<ol>
+<li>前面的教程大多集中在Normal模式</li>
+<li>命令模式提供了除了Normal模式的编辑方式</li>
+<li>命令模式的操作对象以“行”为基本单位</li>
+<li>normal和global命令提供强大的批量行操作</li>
+</ol>
+<h3 id="ex命令格式"><a class="markdownIt-Anchor" href="#ex命令格式"></a> Ex命令格式</h3>
+<p>：[range] {excommand} [args]</p>
+<ul>
+<li>range：作用的范围，不给的话默认是本行</li>
+<li>excommand：特殊的命令，适用于Command模式</li>
+<li>args：后续的参数，视命令而定</li>
+</ul>
+<p>一些ExCommand（[x]为寄存器，是可选项）：</p>
+<ul>
+<li>：[range] delete[x]：删除range中的行（到寄存器x），delete可简写为 d</li>
+<li>：[range] yank[x]：复制range中的行（到寄存器x），yank可简写为y</li>
+<li>：[range] print：将range 中行打印出来，print 可简写为p</li>
+</ul>
+<h3 id="range与address指定范围"><a class="markdownIt-Anchor" href="#range与address指定范围"></a> range与address：指定范围</h3>
+<p>range由一个或两个address构成，即{address}或{address}，{address} address可以是：</p>
+<ul>
+<li>{lineno}：行号，如3代表第三行（o代表第一行上面的虚拟行）</li>
+<li>$：最后一行</li>
+<li>.：光标所在行</li>
+<li>/{pattern}/：下一个pattern所在的行<br />
+address可以做加减法，.+3代表光标往下第三行，$-3代表倒数第4行</li>
+</ul>
+<h3 id="address组合成range"><a class="markdownIt-Anchor" href="#address组合成range"></a> address组合成range</h3>
+<p>address组合出range（可以混用）：</p>
+<ul>
+<li>1，3：文件的1-3行</li>
+<li>.，·+4：当前-当前往下4行 (共5 行)</li>
+<li>$-3，$：文件的最后4行</li>
+<li>%：特殊的range，代表当前文件的所有行</li>
+<li>&lt;／'&gt;：可视模式中选中范围的开头和结尾（可视模式下直接按：可以直接设置）<br />
+例子：</li>
+<li>:1，3 delete：删除1~3行</li>
+<li>:.，.+4 yank：复制当前-当前往下4 行</li>
+<li>:$-3，$ print: 打印文件的最后4行</li>
+</ul>
+<p>行的复制、移动、粘贴</p>
+<ul>
+<li>：[range]copy{address}：把range中的行复制到address后面</li>
+<li>：[range]move{address}：把range中的行移动到address后面</li>
+<li>：[address]put[x]：把寄存器×的内容粘贴到address后面</li>
+</ul>
+<p>0作为虚拟行的address，可以用来将内容插入第一行</p>
+<h3 id="批量操作normal命令"><a class="markdownIt-Anchor" href="#批量操作normal命令"></a> 批量操作：normal命令</h3>
+<p>格式：：[range]normal{commands}<br />
+含义：对range中的所有行执行Normal模式下的命令commands</p>
+<ul>
+<li>将range设置为%，可以对整个文件的所有行执行</li>
+<li>：[range] normal. ：配合，命令，效果拔群<br />
+常用做法：先做一次修改操作，再用normal命令在指定的行上完成操作</li>
+<li>.命令只能记录一次修改，用宏可以实现记录多个操作:[range] noraml @{register}<br />
+常用做法：先把想要的操作录制成宏，再用normal命令在指定的行上重放宏</li>
+</ul>
+<h2 id="批量操作global命令"><a class="markdownIt-Anchor" href="#批量操作global命令"></a> 批量操作：global命令</h2>
+<ul>
+<li>格式：：[range]global/{pattern}/[cmd]</li>
+<li>含义：对range中包含pattern的所有行执行Command模式下的Ex命令</li>
+<li>[cmd]：Ex命令，不给的话默认是打印（print）注意，normal命令也是Ex命令！</li>
+<li>：[range]global/{pattern}/normal{commands}：对range中所有带pattern的<br />
+行，执行Normal模式下的命令commands</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>·：%global/TODo/delete：删除所有带TODO的行</li>
+</ul>
+<h2 id="替换命令"><a class="markdownIt-Anchor" href="#替换命令"></a> 替换命令</h2>
+<p><strong>：[range]s/{pattern}/{string}/[flags]</strong><br />
+将pattern替换为string<br />
+flags:</p>
+<ul>
+<li>g：替换每一行的所有匹配</li>
+<li>i：忽视大小写</li>
+<li>c：替换前进行确认</li>
+<li>n：计数而不是替换</li>
+</ul>
+<dl>
+<dt>：%s/Vim//gn：统计文件中所有Vim出现的次数（此时替换为什么无所谓，加了n就不会执行替换操作）</dt>
+<dd>%s /\&lt;vim\&gt;/str/g；精确匹配vim这个单词比如 abc_vim是无法匹配的。</dd>
+</dl>
 ]]></content>
+      <tags>
+        <tag>工具命令</tag>
+        <tag>Vim</tag>
+      </tags>
   </entry>
 </search>
