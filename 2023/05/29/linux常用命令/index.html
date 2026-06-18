@@ -28,7 +28,7 @@
 <meta property="og:description" content="前言：熟练掌握常用的Linux命令，可以提高生产力，研究问题的能力。常用命令包括：文件操作，系统查看，GCC命令，GDB调试等。这些都在系统开发中起到很重要的作用。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-29T01:56:33.000Z">
-<meta property="article:modified_time" content="2025-08-20T11:31:08.678Z">
+<meta property="article:modified_time" content="2026-03-15T08:04:03.560Z">
 <meta property="article:author" content="lsqyling">
 <meta property="article:tag" content="CS">
 <meta property="article:tag" content="Linux">
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-08-20 19:31:08" itemprop="dateModified" datetime="2025-08-20T19:31:08+08:00">2025-08-20</time>
+                <time title="Modified: 2026-03-15 16:04:03" itemprop="dateModified" datetime="2026-03-15T16:04:03+08:00">2026-03-15</time>
               </span>
 
           
@@ -244,7 +244,7 @@
 <ul>
 <li>查看</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 匹配查找文件</span></span><br><span class="line"><span class="built_in">ls</span> /etc/a*.conf</span><br><span class="line"><span class="comment"># 当前目录递归查找</span></span><br><span class="line">grep <span class="string">&quot;#define container_of&quot;</span> -R .</span><br><span class="line"><span class="comment"># 比较文件的差异</span></span><br><span class="line">diff /etc/service tmp</span><br><span class="line"><span class="comment"># 查看文件内容 | 统计file文件内容的行数</span></span><br><span class="line"><span class="built_in">cat</span> file</span><br><span class="line"><span class="built_in">cat</span> file | <span class="built_in">wc</span> -l</span><br><span class="line"><span class="comment"># 查看文件最后几行</span></span><br><span class="line"><span class="built_in">tail</span> -n 10 out.log (-f 动态模式)</span><br><span class="line"><span class="comment"># 动态查看文件最后几行内容</span></span><br><span class="line"><span class="built_in">tail</span> -n 10 out.log -f</span><br><span class="line"><span class="comment"># 较好的方式显示文件的大小</span></span><br><span class="line"><span class="built_in">ls</span> -lh </span><br><span class="line"><span class="comment"># 查看文件的类型</span></span><br><span class="line">file a.out </span><br><span class="line"><span class="comment"># 分析文件/目录占用磁盘空间大小 默认是以k字节为单位</span></span><br><span class="line"><span class="built_in">du</span> abc.c/directory </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 匹配查找文件</span></span><br><span class="line"><span class="built_in">ls</span> /etc/a*.conf</span><br><span class="line"><span class="comment"># 目录树 显示所以目录</span></span><br><span class="line">tree -d</span><br><span class="line"><span class="comment"># 当前目录递归查找</span></span><br><span class="line">grep <span class="string">&quot;#define container_of&quot;</span> -R .</span><br><span class="line"><span class="comment"># 比较文件的差异</span></span><br><span class="line">diff /etc/service tmp</span><br><span class="line"><span class="comment"># 查看文件内容 | 统计file文件内容的行数</span></span><br><span class="line"><span class="built_in">cat</span> file</span><br><span class="line"><span class="built_in">cat</span> file | <span class="built_in">wc</span> -l</span><br><span class="line"><span class="comment"># 查看文件最后几行</span></span><br><span class="line"><span class="built_in">tail</span> -n 10 out.log (-f 动态模式)</span><br><span class="line"><span class="comment"># 动态查看文件最后几行内容</span></span><br><span class="line"><span class="built_in">tail</span> -n 10 out.log -f</span><br><span class="line"><span class="comment"># 较好的方式显示文件的大小</span></span><br><span class="line"><span class="built_in">ls</span> -lh </span><br><span class="line"><span class="comment"># 查看文件的类型</span></span><br><span class="line">file a.out </span><br><span class="line"><span class="comment"># 分析文件/目录占用磁盘空间大小 默认是以k字节为单位</span></span><br><span class="line"><span class="built_in">du</span> abc.c/directory </span><br></pre></td></tr></table></figure>
 <ul>
 <li>修改</li>
 </ul>
@@ -437,7 +437,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

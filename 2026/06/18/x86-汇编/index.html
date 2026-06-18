@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言：x86 汇编语言是 x86 架构处理器（Intel&#x2F;AMD）的底层机器码的文本表示形式。它是操作系统内核、嵌入式系统、逆向工程和性能极致优化领域的核心工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="x86-汇编">
+<meta property="og:url" content="https://lsqyling.github.io/2026/06/18/x86-%E6%B1%87%E7%BC%96/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言：x86 汇编语言是 x86 架构处理器（Intel&#x2F;AMD）的底层机器码的文本表示形式。它是操作系统内核、嵌入式系统、逆向工程和性能极致优化领域的核心工具。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image1.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image2.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image3.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image4.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image5.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image6.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image7.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image8.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image9.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image10.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image11.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image12.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image13.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image14.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image15.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image16.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image17.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image18.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image19.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image20.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image21.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image22.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image23.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image24.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image25.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image26.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image27.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image28.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image29.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image21.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image30.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image31.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image32.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image33.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image34.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image35.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image36.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image37.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image38.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image39.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image40.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image41.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image42.jpeg">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image43.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image44.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image45.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image46.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image47.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image48.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image49.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image50.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image51.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image52.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image53.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image54.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image55.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image56.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image57.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image58.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image59.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image60.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image61.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image62.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image63.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image64.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image65.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image66.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image67.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image68.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image69.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image70.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image71.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image72.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image73.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image74.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image75.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image76.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image77.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image78.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image79.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image80.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image81.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image82.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image83.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image84.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image85.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image86.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image87.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image88.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image89.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image90.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image91.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image92.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image93.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image94.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image95.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image96.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image97.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image98.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image99.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image100.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image101.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image102.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image103.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image104.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image105.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image106.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image107.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image108.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image109.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image110.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image111.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image112.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image113.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image114.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image115.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image116.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image117.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image118.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image119.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image120.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image121.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image122.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image123.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image124.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image125.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image126.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image127.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image128.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image129.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image130.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image131.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image132.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image133.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image134.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image135.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image136.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image137.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image138.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image139.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image140.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image141.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image142.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image143.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image144.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image145.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image146.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image147.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image148.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image149.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image150.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image151.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image152.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image153.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image154.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image155.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image156.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image157.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image158.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image159.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image160.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image161.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image162.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image163.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image164.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image165.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image166.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image167.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image168.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image169.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image170.png">
+<meta property="og:image" content="https://lsqyling.github.io/images/media/media/image171.png">
+<meta property="article:published_time" content="2026-06-18T10:31:49.000Z">
+<meta property="article:modified_time" content="2026-06-18T11:27:12.248Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="汇编">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lsqyling.github.io/images/media/media/image1.png">
+
+<link rel="canonical" href="https://lsqyling.github.io/2026/06/18/x86-%E6%B1%87%E7%BC%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>x86-汇编 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2026/06/18/x86-%E6%B1%87%E7%BC%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          x86-汇编
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-06-18 18:31:49 / Modified: 19:27:12" itemprop="dateCreated datePublished" datetime="2026-06-18T18:31:49+08:00">2026-06-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前言：x86 汇编语言是 x86 架构处理器（Intel/AMD）的底层机器码的文本表示形式。它是操作系统内核、嵌入式系统、逆向工程和性能极致优化领域的核心工具。</p>
+<span id="more"></span>
+<h3 id="1-cpu模型"><a class="markdownIt-Anchor" href="#1-cpu模型"></a> 1 CPU模型</h3>
+<h4 id="cpu概述"><a class="markdownIt-Anchor" href="#cpu概述"></a> CPU概述</h4>
+<p>CPU也叫中央处理单元，是词组<strong>C</strong>entral <strong>P</strong>rocessing<br />
+<strong>U</strong>nit的缩写，是计算机系统的核心部件。</p>
+<p>计算机系统中绝大多数的设备，都需要CPU的协助才能发挥作用。</p>
+<p>是计算机系统的灵魂之所在，无法或缺，难以代替。</p>
+<p>早在十八世纪，查尔斯·巴贝奇就设计了CPU的原型------差分机和分析机。</p>
+<p><img src="/images/media/media/image1.png" alt="" /></p>
+<p>查尔斯·巴贝奇</p>
+<p><img src="/images/media/media/image2.png" alt="" /></p>
+<p><img src="/images/media/media/image3.png" alt="" /></p>
+<p><img src="/images/media/media/image4.png" alt="" /></p>
+<p><img src="/images/media/media/image5.png" alt="" /></p>
+<p>机械计算机</p>
+<p>这个机器有输入设备和输出设备，还可以编程。他的学生奥古斯塔·阿达·拜伦·金为这个机器设计了全世界第一个计算机算法程序------用来计算斐波那契数列。阿达（Ada）也是计算机世界中阿达语言（美国国防部研发的计算机语言，曾经风靡一时，制霸时代）的意思。阿达不仅仅只是写了一个算法，还提出了程序、循环、递归这些基本概念。此外，她在当时还预言计算机可以用符号来描述任何事物，并应用到绘图、音乐和其他科学领域；并且推动分析机从十进制改为二进制。可惜因为癌症，她英年早逝，仅仅活到了36岁，和她的父亲大诗人拜伦一样。</p>
+<p><img src="/images/media/media/image6.jpeg" alt="IMG_256" /></p>
+<p>现代意义上的CPU，则是一百多年后，Intel公司开发的4004</p>
+<p><img src="/images/media/media/image7.png" alt="" /></p>
+<p>虽然在这款产品之前也有一些CPU</p>
+<p>但是那个时候的其他计算机是将计算器和控制器分离的</p>
+<p>即使这个革命性的4004，它的寄存器（4003）也是一个独立的部件</p>
+<p>另外还要配合上4002（只读存储器ROM）和4001（动态内存DRAM）</p>
+<p>才能构成一个完整的计算机系统。</p>
+<p>但是从这之后，计算机系统就开始了按照摩尔定律高速发展的轨道，一发不可收拾。</p>
+<p>现在的CPU虽然和两百年前的分析机或者早期的CPU，形式上已经相去甚远，但是很多机制还是保留了下来。</p>
+<p>首先是大家都是采用了二进制；其次是其计算过程差距并不大。</p>
+<p>都是输入数据、计算、输出数据，</p>
+<p>区别在于，以前是用的机器和纸带完成这些步骤，而现代采取的是电磁来完成这些步骤。</p>
+<p>此外，寄存器、内存被分离开了，同时寄存器被集成进入了CPU之中，成为了CPU中一个重要的核心部件。</p>
+<h4 id="工作原理"><a class="markdownIt-Anchor" href="#工作原理"></a> 工作原理</h4>
+<p>CPU是如何工作的？</p>
+<p><img src="/images/media/media/image8.png" alt="" /></p>
+<p>这是一张8086CPU的解剖图</p>
+<p>比较复杂，那我们换一个简单点的</p>
+<p><img src="/images/media/media/image9.png" alt="" /></p>
+<p>这是一张嵌入式CPU的电路图。</p>
+<p>相较于PC机的CPU，嵌入式的CPU已经简单了几百倍，但是看上去仍然让人感觉头皮发麻。</p>
+<p>所以我们还必须继续简化</p>
+<p>下面是一张CPU内部的结构图</p>
+<p><img src="/images/media/media/image10.png" alt="" /></p>
+<p>其中PSW叫做程序状态字，所谓的内部总线，大家可以简单理解为一个数据传送带。</p>
+<p>关于总线，后面有章节会细说原理和作用。</p>
+<p>这个仍然比较复杂，我们再简化一下</p>
+<p><img src="/images/media/media/image11.png" alt="" /></p>
+<p>CPU内部，可以简单按照上面这个来理解</p>
+<p>CPU和内存一起工作的时候，可以简单表示为下图</p>
+<p><img src="/images/media/media/image12.png" alt="" /></p>
+<p>由于CPU硬件的这种情况</p>
+<p>所以一般CPU的指令都是这样的格式</p>
+<p><strong>操作码</strong> <strong>操作数或者操作数地址</strong></p>
+<p>这也是为什么寻址这个概念在汇编中那么重要</p>
+<p>因为运算所需要的数据都是从不同地址的内存或者存储单元里面来的</p>
+<p>没有寻址，就无法找到这些数据，也就无从谈计算了。</p>
+<h4 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h4>
+<p>这个部件以前并不属于CPU，是从8086开始，这个部件才融入CPU之中的。</p>
+<p>由于在64位的竞争之中，Intel输给了AMD，</p>
+<p>所以大家会发现64位CPU寄存器和32位CPU的寄存器差异巨大。</p>
+<p>有多大呢，有图有真相</p>
+<p>这个是16位CPU的寄存器</p>
+<p><img src="/images/media/media/image13.png" alt="" /></p>
+<p>这个是32位CPU的寄存器</p>
+<p><img src="/images/media/media/image14.png" alt="" /></p>
+<p>下面是64位CPU的寄存器</p>
+<p><img src="/images/media/media/image15.png" alt="" /></p>
+<p>我们可以很清晰的看到，从16位到32位，寄存器几乎只是单纯的把位宽升了一级</p>
+<p>但是从32位到64位，几乎就是换了一个系统一样</p>
+<p>不仅仅多了很多mmx和fpr寄存器，还有xmm寄存器</p>
+<p>同时通用寄存器数量也多了一倍</p>
+<p>从原来的八个，直接变成16个</p>
+<p>完全是换了一个CPU</p>
+<p>不仅如此，对应的编译器也需要更换。</p>
+<p>在计算机编译的时候，32位之前的，使用的是同一个编译器</p>
+<p>64位的，则是使用的另一个新的编译器</p>
+<p>为什么64位x86的CPU会多出来这么多寄存器</p>
+<p>这个就不得不提到CPU里面崛起的另一种CPU：ARM</p>
+<p><img src="/images/media/media/image16.png" alt="" /></p>
+<p>这是一个arm的寄存器示例图</p>
+<p>我们明显可以看出来，x64的寄存器和arm的寄存器非常的神似。</p>
+<p>在32位时代，通过测试表明，同样频率的芯片，arm架构的计算效率要远高于Intel的x86架构，同时ARM能耗还更低。</p>
+<p>为什么呢？这就要从程序执行的一个特点讲起了</p>
+<p>程序代码之中，存在大量的函数调用；而有函数调用，往往伴随着参数的传递。</p>
+<p>传统的x86传递参数，是通过栈来传递的。</p>
+<p>这个在当时没有什么问题。</p>
+<p>当时栈是在内存的，而数据从内存到CPU是需要消耗比较多的时间的</p>
+<p>虽然现在的CPU有了多级缓存，但是缓存大小还是非常小的</p>
+<p>函数调用比较多，且比较频繁的时候，这点就不可避免的影响到CPU的执行效率了</p>
+<p>而arm这种CPU，有16个寄存器，哪怕有一些是专用的，其寄存器数量也远超x86</p>
+<p>它可以让四个参数以下的函数，无需栈，直接使用寄存器就可以传递。</p>
+<p>而这种函数往往也是函数当中的大多数</p>
+<p>寄存器传递参数的好处就在于，CPU在计算的时候，没有必要等待内存</p>
+<p>直接就在寄存器里面整，而且从一定程度上减少了压栈的操作</p>
+<p>极大的提高了函数调用的效率</p>
+<p>寄存器的最主要作用就是给CPU的计算单元提供数据存储服务</p>
+<p>由于CPU的计算速度非常快，用高速内存和高速缓存都无法解决</p>
+<p>计算速度和存取速度的差距</p>
+<p>所以寄存器是非常重要的一个部件</p>
+<p>也许有的同学会有疑问</p>
+<p>那寄存器和内存之间的数据交换就不需要解决类似的问题了吗？</p>
+<p>其实寄存器从内存读写数据，也存在类似的问题</p>
+<p>这就涉及到现代计算机系统的另外一个创新：指令流水线</p>
+<h4 id="指令流水线"><a class="markdownIt-Anchor" href="#指令流水线"></a> 指令流水线</h4>
+<p>什么是指令流水线？</p>
+<p>简单的说，就是将指令的执行过程分割为多个步骤</p>
+<p>然后通过追加硬件的冗余，让指令仿佛流水线上的产品一样被执行</p>
+<p>下面有一个简单的示例：</p>
+<p><img src="/images/media/media/image17.png" alt="" /></p>
+<p>假如我们将一条指令分成三个步骤：取指令、翻译指令、执行指令</p>
+<p>那么一条指令我们可以按照上图那样执行</p>
+<p>第一条指令在执行的时候，第二条则开始译码，第三条则进行取指令</p>
+<p>这样，原本要三个周期的指令，在指令流水线上，平均只需要一个周期</p>
+<p>就可以执行完成了</p>
+<p>实际使用中的系统里，CPU的指令被分割为最多二十多个步骤</p>
+<p>早期的CPU指令也有七个步骤之多</p>
+<p>远比我们这里展示的过程要多几倍</p>
+<p>这里也可以回答我们上一节提出的问题：<em>寄存器和内存之间的读写速度差异是如何解决的</em></p>
+<p>假如寄存器需要的数据是在执行阶段需要使用的</p>
+<p>那么在取址的时候，CPU就可以通知寄存器开始加载数据了</p>
+<p>等到执行的时候，已经是第三个周期，中间已经间隔了一个周期</p>
+<p>只要寄存器加载的动作能在两个周期内完成，就不会影响最后的执行效率</p>
+<p>再配合上多级缓存，内存的读写速度和CPU寄存器的读写速度差距</p>
+<p>就可以弥合上了。</p>
+<p>但是这里也有一个新的问题出来了</p>
+<p><em><strong>内存是如何与CPU交互数据的</strong></em>？</p>
+<p>这就涉及到一个新的问题：内存的工作模型</p>
+<h3 id="2-内存工作模型"><a class="markdownIt-Anchor" href="#2-内存工作模型"></a> 2 内存工作模型</h3>
+<p>内存的工作模型是为了解决一个问题：</p>
+<p><strong>如何帮助软件开发人员理解内存的运行机制</strong></p>
+<p><strong>进而解决软件运行过程中遇到的各种实际问题</strong></p>
+<p>这是一块内存条</p>
+<p><img src="/images/media/media/image18.png" alt="" /></p>
+<p>计算机启动的时候，会把程序从硬盘或者其他存储设备加载到内存。</p>
+<p>理论上最好的内存就是CPU的缓存，读写速度快，是内存速率的几倍</p>
+<p><img src="/images/media/media/image19.png" alt="" /></p>
+<p>但是实际情况是，CPU的缓存结构复杂、成本高昂、容量也很小</p>
+<p>无法大规模应用</p>
+<p>所以就只能用一点点</p>
+<p>而且缓存还会分为多个级别</p>
+<p>每个级别之间的读写速度都有差距，容量也是递减的</p>
+<p>现在的多核CPU还会给每个核都配备一个缓存</p>
+<p><img src="/images/media/media/image20.png" alt="" /></p>
+<p>上面是一个i5CPU的参数</p>
+<p>CPU的频率是3.5G，一级缓存是128k</p>
+<p>同时分为指令缓存和数据缓存</p>
+<p>二级是1M，三级就变成6M了</p>
+<p>目前CPU的算法，可以让缓存的命中率达到90%</p>
+<p>这也意味着，CPU在运行的时候，九成的情况下，不需要去和内存条直接打交道</p>
+<p>而是读取缓存就可以了</p>
+<p>这让CPU的执行效率也提升不少</p>
+<h4 id="内存是如何工作的"><a class="markdownIt-Anchor" href="#内存是如何工作的"></a> 内存是如何工作的</h4>
+<p>内存的工作方式要分为两个方向来讲</p>
+<p>一个是内存是如何从外部加载数据的</p>
+<p>另一个是内存是如何将数据输出的</p>
+<p>但是不论是哪个，其原理如下：</p>
+<p><img src="/images/media/media/image21.png" alt="" /></p>
+<p>计算机里面有一个晶振部件，会产生周期性的方波</p>
+<p>通过修改这个电波，计算机可以在不同部件之间传输数据</p>
+<p>所以这个频率越高，意味着单位时间内，可以传输的数据也就越多</p>
+<p><img src="/images/media/media/image22.png" alt="" /></p>
+<p>但是实际工作的时候，内存的频率往往也会受到主板的限制</p>
+<p>并不是无限拔高的</p>
+<p>所以有这样的情况，一块高频率的内存条，因为主板配置低</p>
+<p>结果只能降频来适配主板，使得整体上性能没有任何提升</p>
+<h4 id="内存在系统中的角色和作用"><a class="markdownIt-Anchor" href="#内存在系统中的角色和作用"></a> 内存在系统中的角色和作用</h4>
+<p>内存是计算机启动时自检的关键部件之一，另外还有CPU</p>
+<p>起作用至关重要，绝大部分的计算机系统，如果发现内存错误</p>
+<p>是无法运行下去的</p>
+<p>其原因就在于，CPU对其他外设的控制，通通都是通过内存来实现的</p>
+<p><img src="/images/media/media/image23.png" alt="" /></p>
+<p>我们的键盘在内存中有映射</p>
+<p>显示器也有显存映射</p>
+<p>硬盘、声卡、网卡、风扇等等设备都在内存有映射</p>
+<p>所谓有映射，是指这些设备的数据，并不会直接给到CPU</p>
+<p>而是先给到内存的规定位置</p>
+<p>然后CPU才能去读取的</p>
+<p>如果CPU是大脑的话，内存就是神经</p>
+<p>离开了大脑，光有神经系统是没有任何用途的</p>
+<p>同样，光有大脑，而没有神经系统的话</p>
+<p>一样也没有办法动弹，只能是一个无用之物</p>
+<h4 id="内存地址的概念"><a class="markdownIt-Anchor" href="#内存地址的概念"></a> 内存地址的概念</h4>
+<p>目前我们所有的内存，都是采用的线性内存模型</p>
+<p>这意味着内存是一个以字节为单位的，连续紧密排布的存储空间</p>
+<p><img src="/images/media/media/image24.png" alt="026" /></p>
+<p>每一个字节都在内存当中，存在一个唯一的地址</p>
+<p>这也就是说，地址相同的情况下，我们会操作同一个内存单元</p>
+<p>内存单元的编号就是其地址值</p>
+<p><img src="/images/media/media/image25.png" alt="006" /></p>
+<p>为了表达地址，一般使用一个无符号整数来表达</p>
+<p>所以，在16位系统中，地址的范围是0~65535（64K）</p>
+<p>后面内存容量上去了，为了支持更大的内存容量，所以在x86系统中</p>
+<p>出现了一个段寄存器，使得内存访问地址可以达到4,294,967,295（4G）</p>
+<p>而这个内存访问量也是早期window的内存管理极限（xp之前的系统）</p>
+<p>等到32位系统出现了，地址的范围一开始就是0~4,294,967,295</p>
+<p>所以这个阶段，段寄存器就处于半瘫痪状态，几乎没有什么用途</p>
+<p>而现在64位几乎完全普及了，地址范围直接都到了0~18,446,744,073,709,551,615（16E）</p>
+<p>1E=1024P</p>
+<p>1P=1024T</p>
+<p>1T=1024G</p>
+<p>1G=1024M</p>
+<p>1M=1024K</p>
+<p>1K=1024bytes</p>
+<p>1bytes=8bit</p>
+<p>当然这个只是理论值</p>
+<p>实际情况是，企业版的64位window也只能管理192G的内存</p>
+<p>超过的内存，将无法使用，进而被闲置</p>
+<p>而Linux内核可以管理的内存可以达到64T</p>
+<p>这也是为什么很多大型服务器，超级计算机都是使用的Linux系统</p>
+<p>从来没有window超级计算机的原因之一</p>
+<p>此外，为了兼容旧版的程序，64bit的地址真正起作用的，只有48bit</p>
+<p>这样干是因为内存太大了，无法像以前16位那样精细化管理</p>
+<p>所以，只能拿12bit做页地址，36bit做段地址</p>
+<p><img src="/images/media/media/image26.png" alt="" /></p>
+<p>36bit每9bit一组，分成4组，仿佛一个4级目录一般，管理着内存</p>
+<h3 id="3-总线的作用"><a class="markdownIt-Anchor" href="#3-总线的作用"></a> 3 总线的作用</h3>
+<p>前面我们学习了什么是CPU，什么是内存，但是有一个问题一直没有讲清楚：</p>
+<p><em>CPU和内存之间的数据是怎么传递的？</em></p>
+<p>或者说</p>
+<p><strong>数据是如何在计算机的各个部件之间传输的？</strong></p>
+<p>这一节我们就来说明这个问题</p>
+<h4 id="总线概述"><a class="markdownIt-Anchor" href="#总线概述"></a> 总线概述</h4>
+<p>总线是计算机各个部件之间传送信息的公共通信干线</p>
+<p>总线不仅仅存在于主板上，还存在于各个部件内部</p>
+<p>比如CPU内部也有一条总线，用于寄存器、计算单元、控制单元和缓存之间的数据传递</p>
+<p><img src="/images/media/media/image27.png" alt="" /></p>
+<p>一般总线分为三类：数据总线DataBus、地址总线AddressBus、控制总线ControlBus</p>
+<p>对于一些低端的设备，比如输入、输出设备，往往都是等待总线的状态</p>
+<p>比如我们在键盘上面敲击一个按键</p>
+<p>这个按键输入不会立刻输入到计算机系统中去</p>
+<p>而是进入到键盘的缓存，然后等待系统的接入</p>
+<p>所以我们会发现，系统卡的时候，按键就没有反应了</p>
+<p>正常情况下，系统会在毫秒级的时间内给予响应</p>
+<p>所以我们会毫无卡顿感</p>
+<p>但是一旦有大量高端的处理正在忙的时候，我们就会感觉很卡</p>
+<p>有可能就是键盘的输入无法拿到总线访问权限</p>
+<p>总线的优点在于，<strong>可以在任意两个总线上的设备之间传递数据</strong></p>
+<p>缺点也比较明显，<strong>总线上一次只能有一对设备能进行数据传递</strong></p>
+<p>这个时候，其他设备只能等待</p>
+<h4 id="总线在系统中的作用"><a class="markdownIt-Anchor" href="#总线在系统中的作用"></a> 总线在系统中的作用</h4>
+<p>真实的系统之中，总线其实无处不在，而且往往会分级</p>
+<p>就如同下图：</p>
+<p><img src="/images/media/media/image28.png" alt="" /></p>
+<p>主板的CPU、内存条和显卡之间有一个局部总线，通常是<strong>北桥芯片</strong>负责</p>
+<p>而主板和其他设备之间也有另外一个总线，通常是南桥芯片负责</p>
+<p><img src="/images/media/media/image29.png" alt="" /></p>
+<p>北桥靠近CPU</p>
+<p>南桥靠近硬盘</p>
+<p>南桥的内部频率一般要低，北桥的内部频率要高很多</p>
+<p><img src="/images/media/media/image21.png" alt="" /></p>
+<p>前面讲内存的时候，我们说过，内存数据是如何传出和写入的</p>
+<p>而总线就是这个电波的载体</p>
+<p>总线本身有不同的频率，通过这些频率，会产生周期的方波</p>
+<p>然后通过修改这些方波的电平，我们就可以将数据传输到总线上的各个部件</p>
+<p>但是这里要注意</p>
+<p>一旦一个部件接入总线，哪怕你不是数据的发起者和接收者，你也会收到这些数据</p>
+<p>所以总线在发起和接收之前，需要给各个部件进行编号</p>
+<p>然后在发起传输的时候，指明接收的部件，再附带上数据内容</p>
+<p>否则所有部件都在总线上，不指明目标，大家都会乱套的</p>
+<h3 id="4-硬盘工作模型"><a class="markdownIt-Anchor" href="#4-硬盘工作模型"></a> 4 硬盘工作模型</h3>
+<h4 id="硬盘是如何工作的"><a class="markdownIt-Anchor" href="#硬盘是如何工作的"></a> 硬盘是如何工作的</h4>
+<p>这是一块机械硬盘</p>
+<p><img src="/images/media/media/image30.jpeg" alt="002" /></p>
+<p>打开盖子之后，里面是这样的</p>
+<p><img src="/images/media/media/image31.jpeg" alt="001" /></p>
+<p>里面各个部件的名称和作用如下图：</p>
+<p><img src="/images/media/media/image32.jpeg" alt="008" /></p>
+<p>一般我们会把这个设备内部结构描述为下面的模型</p>
+<p><img src="/images/media/media/image33.jpeg" alt="011" /></p>
+<p>每一个盘面描述为下面的模型：</p>
+<p><img src="/images/media/media/image34.jpeg" alt="012" /></p>
+<p>整体的模型如下：</p>
+<p><img src="/images/media/media/image35.jpeg" alt="013" /></p>
+<p>磁头是不动的，所以盘片转的越快，读写速度就会越高</p>
+<p>目前市面上多数为7200转的机械硬盘</p>
+<p>少数高端硬盘可以达到上万转</p>
+<p>盘片不断的转，磁头是可以伸缩的</p>
+<p>所以各个磁道都可以读到</p>
+<p>由于盘片很薄，转速很高，为了磁头能够很好的工作</p>
+<p>必须要把盘片的振动控制到一个很小的范围</p>
+<p>否则一旦真的碰触到磁头，对应的磁道就会损毁</p>
+<p>这也是为什么笔记本最好不要使用机械硬盘的原因</p>
+<p>机械硬盘发生撞击、掉落，容易损坏也是这个原因</p>
+<h4 id="内存读写速度和硬盘读写速度的对比"><a class="markdownIt-Anchor" href="#内存读写速度和硬盘读写速度的对比"></a> 内存读写速度和硬盘读写速度的对比</h4>
+<p>硬盘写入速度测试命令：</p>
+<p>dd if=/dev/zero of=file bs=1M count=1024</p>
+<p><img src="/images/media/media/image36.png" alt="" /></p>
+<p>硬盘读取速度测试命令：</p>
+<p>dd if=file of=/dev/null bs=1M count=1024</p>
+<p><img src="/images/media/media/image37.png" alt="" /></p>
+<p>内存读写速度测试命令：</p>
+<p>dd if=/dev/zero of=/dev/null bs=1M count=1024</p>
+<p><img src="/images/media/media/image38.png" alt="" /></p>
+<p>通过这个测试，我们可以看到，内存的写入速度是硬盘写入速度的60多倍</p>
+<p>这么巨大的读写速度差距，我们可以明显的感觉出差异来</p>
+<p>硬盘写入1个G的时候，要花费6、7秒</p>
+<p>而内存读写1个G只花费了0.1秒左右</p>
+<p>此外硬盘的读取速度明显要比写入速度快很多，可以达到3.7GB/s</p>
+<p>是写入速度的20多倍</p>
+<p>所以硬盘写入慢，读取快</p>
+<p>此外内存读写也有速度差异，<strong>连续读取和随机读取也有速度差异</strong></p>
+<p><img src="/images/media/media/image39.jpeg" alt="IMG_256" /></p>
+<p>上面这张是内存和各个缓存的测试结果图</p>
+<p>我们可以看到一级缓存L1 Cache速度最高，</p>
+<p>达到了恐怖的1.7T/s的读取速度和874G/s的写入速度</p>
+<p>后面的缓存逐级递减，同时容量逐级递增</p>
+<p>这个是频率为1333的内存条，明显比我的内存要差一截</p>
+<p><img src="/images/media/media/image40.png" alt="" /></p>
+<p>我的机器频率是2666的，是上面的一倍</p>
+<p>传输速度提高了66%</p>
+<p>所以内存频率越高，读写速度越快，对应的系统运行速率也越高。</p>
+<h3 id="5-显卡工作模型"><a class="markdownIt-Anchor" href="#5-显卡工作模型"></a> 5 显卡工作模型</h3>
+<p>前面我们讲过，在北桥芯片上，和CPU、内存条在一起的，还有一个显卡</p>
+<p><img src="/images/media/media/image41.jpeg" alt="IMG_256" /></p>
+<p>CPU、显卡、主板和内存条是个人计算机系统中的四大恶人</p>
+<p>各个都是吞金兽，烧钱怪。其中显卡在其中尤为突出</p>
+<p>很多追求显示性能的人，显卡的花费甚至比CPU还要高</p>
+<p>所以搞清楚显卡的工作原理，我们才能明白钱是怎么花出去的</p>
+<p>最后才能为自己的奢侈找到一个技术理由</p>
+<h4 id="显卡是如何工作的"><a class="markdownIt-Anchor" href="#显卡是如何工作的"></a> 显卡是如何工作的</h4>
+<p>早期的显卡主要协助CPU处理数字图像的</p>
+<p>比如一张1920*1080的图片</p>
+<p><img src="/images/media/media/image42.jpeg" alt="IMG_256" /></p>
+<p>当最终显示的时候，会占用1920*1080*4字节的显示空间</p>
+<p>一共有超过两百万个点，八百多万个字节</p>
+<p>但我们想对其进行一些处理，比如：淡入淡出、旋转、翻转等变化的时候</p>
+<p>这些点的处理就会比较棘手</p>
+<p>单单只是做两百万的空循环，对于CPU来说，都是一个不小的开销</p>
+<p>因为每次循环，CPU需要执行五条以上的指令</p>
+<p>两百万次循环，需要千万次的计算</p>
+<p>如果加上点的颜色处理计算，计算量轻轻松松过亿次</p>
+<p>如果一张图片的处理就要消耗大量的CPU计算时间</p>
+<p>那么对于需要处理大量图片的游戏来说</p>
+<p>CPU就可以原地爆炸了</p>
+<p><img src="/images/media/media/image43.png" alt="" /></p>
+<p>为什么，因为游戏每秒至少要处理24张以上的图片，才能让人感觉画面是连续的</p>
+<p>要60张以上，才能让人觉得画面非常流畅</p>
+<p>也就是说42ms处理一张图片，才能让人觉得你不是在放PPT</p>
+<p>速度达到16.7ms处理一张图片，才能让人觉得画面流畅</p>
+<p>而现在的游戏，动不动都是120帧，甚至240帧</p>
+<p>这意味着速度要达到8ms乃至4ms一帧，才能算是高水准的画面</p>
+<p>这需要每秒240亿次，甚至更高的运算力</p>
+<p>如果是3D游戏，画面运算的算力需求还要翻上十几倍</p>
+<p>所以为了降低游戏对算力的要求</p>
+<p><img src="/images/media/media/image44.png" alt="" /></p>
+<p>早期的3D游戏，模型都非常粗糙</p>
+<p>基本上都是几个平面模型的拼接加上一些纹理的渲染来搞定</p>
+<p>等到现在，由于显卡技术的不断提升</p>
+<p><img src="/images/media/media/image45.png" alt="" /></p>
+<p>尤其是光线追踪技术的应用</p>
+<p>3D模型的效果差距简直就是一个地一个天</p>
+<p>那么显卡为什么能够帮到CPU呢？</p>
+<p>回到图片处理的原始需求上来</p>
+<p>图片的处理，其实可以看成大量的整数运算</p>
+<p>因为点都是按照三原色值保存的，每个颜色的值从0到255</p>
+<p>一共可以表达一千六百多万种颜色，这就是所谓的真色彩</p>
+<p><img src="/images/media/media/image46.png" alt="" /></p>
+<p>这是一个显卡的参数列表</p>
+<p>显卡有自己的显存和计算单元</p>
+<p>和CPU少的可怜的计算核心不同</p>
+<p>显卡的计算核心，现在动不动都是好几千，甚至上万</p>
+<p>图片计算往往都是大量同性质运算</p>
+<p>所以可以控制大量的计算单元来协同计算</p>
+<p>实际工作的时候，CPU会先把素材从内存加载到显存</p>
+<p>然后通过显卡指令控制GPU开始预设好的计算</p>
+<p>最后将显存中的数据投放到显示器，以进行显示</p>
+<h4 id="显存是如何工作的"><a class="markdownIt-Anchor" href="#显存是如何工作的"></a> 显存是如何工作的</h4>
+<p>这是一块早期的英伟达显卡</p>
+<p><img src="/images/media/media/image47.png" alt="" /></p>
+<p>图中黄色方框内的器件，就是显存</p>
+<p>现在的显卡已经很少会这么将显存暴露在外部了</p>
+<p>一般都被散热板或者风扇给遮盖住了</p>
+<p>在图形图像处理的过程中，会涉及材质、纹理、光照和坐标等四个基本处理</p>
+<p>每一个处理过程都会产生一些结果</p>
+<p>其中很多结果都不是最终显示的结果</p>
+<p>但是作为中间过程，可以保留下来</p>
+<p>为后面的计算和处理作准备</p>
+<p>显存的数据是通过内存传递过来的</p>
+<p>但是显存数据最终不一定需要传回到内存去</p>
+<p>而是可以直接输出到显示器上</p>
+<p>显存有几个关键参数：<strong>容量、频率和位宽</strong></p>
+<p>容量决定了你可以存储多少素材、纹理</p>
+<p>大型游戏启动的时候，往往有一个漫长的加载过程</p>
+<p><img src="/images/media/media/image48.png" alt="" /></p>
+<p>这个时间往往就是游戏在加载素材、纹理、模型等等</p>
+<p>这些东西一般不是加载到内存，而是加载到显存之中</p>
+<p>如果显存容量越大，那么可以加载的东西就越多</p>
+<p>场景切换的时候，需要重新加载新素材的时间就越少</p>
+<p>进而游戏体验就会更流畅</p>
+<p>速度则主要是由频率来决定的</p>
+<p>注意显存和内存不是一个概念</p>
+<p>所以显存频率也无法与内存频率进行直接比较</p>
+<p>速度显然是越快越好</p>
+<p>越快写入和读取会越流畅</p>
+<p>最后是位宽，位宽是只一次能处理的bit位数量</p>
+<p>有时候频率高但是位宽低的显卡，其表现还不如频率低但是位宽高的显卡</p>
+<p>因为位宽决定了数据出入口的大小</p>
+<p><img src="/images/media/media/image49.png" alt="" /><img src="/images/media/media/image50.png" alt="" /></p>
+<p>如果位宽降低一半，对应的频率需要提高一倍，才能有齐平的表现</p>
+<h3 id="6-网卡工作模型"><a class="markdownIt-Anchor" href="#6-网卡工作模型"></a> 6 网卡工作模型</h3>
+<h4 id="网卡的介绍"><a class="markdownIt-Anchor" href="#网卡的介绍"></a> 网卡的介绍</h4>
+<p>网卡现在已经是几乎所有计算机的标配了</p>
+<p>就算没有有线网卡，也必然会配一个无线网卡</p>
+<p>下图是一个常见的PC端网卡</p>
+<p>BootROM是无盘启动ROM的接口，通常用于启动服务，构造无盘工作站的</p>
+<p>总线接口是指到南桥的接口</p>
+<p><img src="/images/media/media/image51.png" alt="" /></p>
+<p>数据泵则一方面是传输数据，二方面是隔离电平和防止雷击</p>
+<p>这里的RJ-45接口，就是我们常说的水晶头接口</p>
+<p><img src="/images/media/media/image52.png" alt="" /><img src="/images/media/media/image53.png" alt="" /></p>
+<p>下图是一个无线网卡</p>
+<p><img src="/images/media/media/image54.png" alt="" /></p>
+<p>但是现在大部分的无线网卡，做成了usb设备</p>
+<p><img src="/images/media/media/image55.png" alt="" /></p>
+<p>甚至可以配上电话流量卡，直接使用手机网络</p>
+<p><img src="/images/media/media/image56.png" alt="" /></p>
+<p>上面都是PC网卡，对于服务器，网卡也有一些变化</p>
+<p><img src="/images/media/media/image57.png" alt="" /></p>
+<p>首先是网口会更多</p>
+<p>这也意味着一台服务器可以拥有更多的地址</p>
+<p>实际运行的时候，对于多个网口，会保留一个做内网接口</p>
+<p>其他的依据情况，使用不同运营商的不同地址</p>
+<p>内网接口用于服务器内部组网，一般是局域网</p>
+<p>这种<strong>连通率高</strong>，<strong>连接稳定</strong>，<strong>延时低</strong>，<strong>设备可信度高</strong></p>
+<p>常常用来将对外的服务器和后台服务器（比如数据库服务器）组织在一起</p>
+<p>而其他的外网接口，用于对外提供网络服务</p>
+<p>这种接口<strong>连通率低</strong>，<strong>连接不稳定</strong>，<strong>延时高</strong>，<strong>设备完全不可信</strong>，<strong>需要进行认证</strong></p>
+<h4 id="光纤和同轴电缆的差异"><a class="markdownIt-Anchor" href="#光纤和同轴电缆的差异"></a> 光纤和同轴电缆的差异</h4>
+<p>网卡解决了数据传输的收发问题，但是数据如何在不同设备之间流转</p>
+<p>还需要用到网线</p>
+<p>网线分为同轴电缆线和光纤线</p>
+<p>下图是光纤线</p>
+<p><img src="/images/media/media/image58.png" alt="" /><img src="/images/media/media/image59.png" alt="" /></p>
+<p>由于光信号的特性，光纤通信的密度要远大于电缆线</p>
+<p>这是因为不同频率的光可以合并在同一根光纤上传输</p>
+<p>而相互之间不会影响</p>
+<p>这点电缆就无法做到</p>
+<p><img src="/images/media/media/image60.png" alt="" /></p>
+<p>所以光纤线的性能，一般都在千兆级别，而电缆线的传输极限也就是千兆</p>
+<p>目前单个频率光波的传输速度可以达到40Gb/s</p>
+<p>而且一根光纤可以跑80个频率</p>
+<p>使得速度达到3200Gb/s</p>
+<p>更厉害的是传输距离还远，可以达到几十公里</p>
+<p>但是电缆线，超五类的，最多也就是2Gb/s，距离只有可怜的几百米</p>
+<p>下图是一根电缆线的解剖图</p>
+<p><img src="/images/media/media/image61.png" alt="" /></p>
+<p>下图是一个七类的电缆线，一般用于高速内网的组建</p>
+<p><img src="/images/media/media/image62.png" alt="" /></p>
+<p>目前国内的网络情况，都是使用光纤组建主网络</p>
+<p>终端使用同轴电缆连接其他设备</p>
+<p>一方面是同轴电缆在短距离上（100米以内），性能还是可以的</p>
+<p>而且制作维护方便，长度可以随意剪裁。</p>
+<p>另一方面是光纤线长度难以随意剪裁</p>
+<p>而且一旦断了，接续过程非常麻烦，远没有电缆接续方便</p>
+<h4 id="网卡的工作原理"><a class="markdownIt-Anchor" href="#网卡的工作原理"></a> 网卡的工作原理</h4>
+<p>现在我们搞清楚了设备是怎么样的</p>
+<p>网线是怎么选型的</p>
+<p>那么网络数据是如何顺着网线，经过网卡进入内存的呢？</p>
+<p>这就要说是网卡的工作原理了</p>
+<p>下图清晰的解释了网络数据是如何被用户收到的</p>
+<p><img src="/images/media/media/image63.png" alt="" /></p>
+<p>真实数据从物理链路层来</p>
+<p>所谓的物理链路层就是网线、路由器、网关这些设备的总称。</p>
+<p>数据来了之后，就进入到了物理网卡</p>
+<p>物理网卡会通过总线，将数据传输给操作系统准备的内存缓冲区</p>
+<p>然后操作系统会处理套接字的状态</p>
+<p>发出信号，通知相关程序唤醒线程，或者激活事务</p>
+<p>在用户层的程序接到这些信号之后</p>
+<p>就会开始读写数据</p>
+<p>从而将网络上的数据导入到应用程序的内存中来</p>
+<p>可能有的同学看到驱动感觉有点懵</p>
+<p>其实驱动就是一套程序</p>
+<p>这个程序有标准的接口（或者说对外可以调用的函数）</p>
+<p>操作系统可以通过这些接口来访问和控制对应的设备</p>
+<p>比如网卡的驱动，</p>
+<p><img src="/images/media/media/image64.png" alt="" /></p>
+<p>这里面name就是驱动的名称</p>
+<p>id_table是一张表</p>
+<p>probe是初始化接口（也就是一个初始化函数）</p>
+<p>这些接口都是操作系统规定好的函数</p>
+<p>其参数和功能，基本都有规定</p>
+<p>按照这个实现这些功能后</p>
+<p>再配合上硬件</p>
+<p>操作系统就可以使用网卡来处理数据了</p>
+<h2 id="x86汇编指令"><a class="markdownIt-Anchor" href="#x86汇编指令"></a> x86汇编指令</h2>
+<h3 id="快速搭建一个汇编学习项目"><a class="markdownIt-Anchor" href="#快速搭建一个汇编学习项目"></a> 快速搭建一个汇编学习项目</h3>
+<h4 id="如何创建项目"><a class="markdownIt-Anchor" href="#如何创建项目"></a> 如何创建项目</h4>
+<p>在Windows下学习汇编是一个艰难且巨大的工程，</p>
+<p>对于初学者，尤其是还要自己写一堆意义不明的伪指令</p>
+<p>才能将一个程序运行起来，这就更是难上加难了</p>
+<p>所以为了降低难度，减少大家的工作量</p>
+<p>我们推荐使用按照下面的方法来搭建汇编的的学习和研究环境</p>
+<p>首先打开Visual Studio 2019（以下简称VS）</p>
+<p><img src="/images/media/media/image65.png" alt="" /></p>
+<p>启动后，选择 创建新项目</p>
+<p><img src="/images/media/media/image66.png" alt="" /></p>
+<p>在项目选择界面，选择 C++控制台项目</p>
+<p><img src="/images/media/media/image67.png" alt="" /></p>
+<p>在配置新项目界面，按照下面的内容填写好</p>
+<p><img src="/images/media/media/image68.png" alt="" /></p>
+<p>项目创建完成后，确认一下项目的CPU架构是x86</p>
+<p><img src="/images/media/media/image69.png" alt="" /></p>
+<p>到此，项目创建完毕</p>
+<h4 id="如何使用项目"><a class="markdownIt-Anchor" href="#如何使用项目"></a> 如何使用项目</h4>
+<p>项目创建之后，还是一个C++项目</p>
+<p>如何写汇编，并且观察效果呢？</p>
+<p>首先我们可以这样写代码：</p>
+<p>#include &lt;iostream&gt;</p>
+<p>int main()</p>
+<p>{</p>
+<p>int nEax = 0, nEbx = 0;</p>
+<p>std::cout &lt;&lt; &quot;Hello World!\n&quot;;</p>
+<p>__asm {</p>
+<p>MOV nEax, eax;</p>
+<p>MOV nEbx, ebx;</p>
+<p>}</p>
+<p>printf(&quot;eax = %08X ebx = %08X\r\n&quot;, nEax, nEbx);</p>
+<p>}</p>
+<p>然后设置断点</p>
+<p><img src="/images/media/media/image70.png" alt="" /></p>
+<p>然后按下F5键或者在调试菜单栏选择 开始调试</p>
+<p><img src="/images/media/media/image71.png" alt="" /></p>
+<p>这个时候会进入调试状态</p>
+<p><img src="/images/media/media/image72.png" alt="" /></p>
+<p>执行一行语句，按下F10</p>
+<p><img src="/images/media/media/image73.png" alt="" /></p>
+<p>这个时候可以用鼠标右键单击黄色箭头所指向的行</p>
+<p>选择转到反汇编</p>
+<p><img src="/images/media/media/image74.png" alt="" /></p>
+<p>这个时候我们可以看到原始的汇编指令</p>
+<p><img src="/images/media/media/image75.png" alt="" /></p>
+<p>然后点击下面的监视1</p>
+<p><img src="/images/media/media/image76.png" alt="" /></p>
+<p>或者在 调试→窗口→监视→监视1~4</p>
+<p><img src="/images/media/media/image77.png" alt="" /></p>
+<p>打开监视窗口</p>
+<p>输入要监视的内容</p>
+<p><img src="/images/media/media/image78.png" alt="" /></p>
+<p>可以是寄存器、变量、函数、对象、常量、地址等等</p>
+<p><img src="/images/media/media/image79.png" alt="" /></p>
+<p>右键单击这个监视栏，可以选择十六进制显示</p>
+<p>让其显示十六进制值而不是十进制值</p>
+<p><img src="/images/media/media/image80.png" alt="" /></p>
+<p>在反汇编页面，选择调试→窗口→寄存器</p>
+<p><img src="/images/media/media/image81.png" alt="" /></p>
+<p>我们可以打开CPU寄存器页面</p>
+<p>可以看到各种寄存器的实时值</p>
+<p><img src="/images/media/media/image82.png" alt="" /></p>
+<p>并且可以选择要查看寄存器的选项</p>
+<p>使用这种方式来学习汇编语句</p>
+<p>一方面是可以单条语句的学习</p>
+<p>另一方面是无需配置CPU、段、对齐等等参数</p>
+<p>直接使用C++与汇编混合编程</p>
+<p>更利于理解和快速上手</p>
+<h3 id="汇编中的寄存器"><a class="markdownIt-Anchor" href="#汇编中的寄存器"></a> 汇编中的寄存器</h3>
+<p>[8个通用寄存器：EAX、EBX、ECX、EDX、ESI、EDI、ESP、EBP]{.underline}</p>
+<p>[1个标志寄存器：EFLAGS]{.underline}</p>
+<p>[6个段寄存器：CS、DS、ES、FS、GS、SS]{.underline}</p>
+<p>4个控制寄存器：CR0、CR1、CR2、CR3</p>
+<p>8个调试寄存器：DR0、DR1、DR2、DR3、DR4、DR5、DR6、DR7</p>
+<p>4个系统地址寄存器：GDTR、IDTR、LDTR、TR</p>
+<p>其他寄存器：EIP、TSC</p>
+<h4 id="通用寄存器"><a class="markdownIt-Anchor" href="#通用寄存器"></a> 通用寄存器</h4>
+<hr />
+<p><strong>32位</strong>   <strong>16位</strong>   <strong>8位</strong></p>
+<p><strong>EAX</strong>    <strong>AX</strong>     <strong>AH、AL</strong></p>
+<p><strong>EBX</strong>    <strong>BX</strong>     <strong>BH、BL</strong></p>
+<p><strong>ECX</strong>    <strong>CX</strong>     <strong>CH、CL</strong></p>
+<p><strong>EDX</strong>    <strong>DX</strong>     <strong>DH、DL</strong></p>
+<p><strong>ESI</strong>    <strong>SI</strong>     ** **</p>
+<p><strong>EDI</strong>    <strong>DI</strong>     ** **</p>
+<p><strong>ESP</strong>    <strong>SP</strong>     ** **</p>
+<p><strong>EBP</strong>    <strong>BP</strong>     ** **</p>
+<hr />
+<p>EAX:<strong>累加器</strong>([Accumulator]{.underline}),<br />
+它的低16位即是AX，而AX又可分为高8位AH和低8位AL。EAX是很多加法乘法的缺省寄存器，存放函数的返回值，用累加器进行的操作可能需要更少时间，在80386及其以上的微处理器中可以用来存放存储单元的偏移地址。AX寄存器是算术运算的主要寄存器。</p>
+<p>EBX：<strong>基地址寄存器</strong>([Base Register]{.underline}),<br />
+它的低16位即是BX，而BX又可分为高8位BH和低8位BL。主要用于在内存寻址时存放基地址。</p>
+<p>ECX：<strong>计数寄存器</strong>（[Count<br />
+Register]{.underline}），它的低16位即是CX，而CX又可分为高8位CH和低8位CL。在循环和字符串操作时，要用它来控制循环次数；在位操作<br />
+中，当移多位时，要用CL来指明移位的位数；是重复(REP)前缀指令和LOOP指令的内定计数器。</p>
+<p>EDX：<strong>数据寄存器</strong>（[Data<br />
+Register]{.underline}），它的低16位即是DX，而DX又可分为高8位DH和低8位DL。在进行乘、除运算时，它可作为默认的操作数参与运算，也可用于存放I/O的端口地址；且总是被用来放整数除法产生的余数。</p>
+<p>ESI/EDI：分别叫做<strong>源/目标索引寄存器</strong>([Source/Destination Index<br />
+Register]{.underline})，它们的低16位分别是SI、DI。它们主要用于存放存储单元在段内的偏移量，用它们可实现多种存储器操作数的寻址方式，为以不同的地址形式访问存储单元提供方便。在很多字符串操作指令中,<br />
+DS:ESI指向源串,而ES:EDI指向目标串。此外，它们又作为通用寄存器可以进行任意的常规的操作，如加减移位或普通的内存间接寻址。</p>
+<p>EBP/ESP：分别是<strong>基址针寄存器</strong>（[Base Pointer<br />
+Register]{.underline}）/堆栈指针寄存器（Stack Pointer<br />
+Register），低16位是BP、SP，其内存分别放着一个指针，该指针永远指向系统栈最上面一个栈帧的栈顶/底部。主要用于存放堆栈内存储单元的偏移量，用它们可实现多种存储器操作数的寻址方式，为以不同的地址形式访问存储单元提供方便。指针寄存器不可分割成8位寄存器。作为通用寄存器，也可存储算术逻辑运算的操作数和运算结果。并且规定：BP为基指针(Base<br />
+Pointer)寄存器，用它可直接存取堆栈中的数据；SP为堆栈指针(Stack<br />
+Pointer)寄存器，用它只可访问栈顶。在32位平台上，ESP每次减少4字节。EBP最经常被用作高级语言函数调用的&quot;框架指针&quot;（frame<br />
+pointer）,EBP<br />
+构成了函数的一个框架，在C++反汇编中EBP通常是局部变量、传进来的参数。这里要注意在intel系统中栈是向下生长的(栈越扩大其值越小,堆恰好相反)。在通常情况下ESP是可变的,随着栈的生长而逐渐变小,而ESB寄存器是固定的,只有当函数的调用后,发生入栈操作而改变，在函数执行结束之后需要还原。</p>
+<h4 id="标志寄存器"><a class="markdownIt-Anchor" href="#标志寄存器"></a> 标志寄存器</h4>
+<p><img src="/images/media/media/image83.png" alt="" /></p>
+<p>EFLAGS属于状态寄存器，它们对程序地执行至关重要。</p>
+<p>EFLAGS：主要用于提供程序的状态及进行相应的控制。32位的EFLAGS寄存器包含一组状态标志、系统标志以及一个控制标志。在x86处理器初始化之后，EFLAGS寄存器的状态值为0000<br />
+0002H。第1、3、5、15以及22到31位均被保留，这个寄存器中的<strong>有些标志通过使用特殊的通用指令可以直接被修改</strong>，但并<strong>没有指令能够检查或者修改整个寄存器</strong>。通过使用[LAHF/SAHF/PUSHF/POPF/POPFD]{.underline}等指令，可以将EFLAGS寄存器的标志位成组移到程序栈或EAX寄存器，或者从这些设施中将操作后的结果保存到EFLAGS寄存器中。在EFLAGS寄存器的内容被传送到栈或是EAX寄存器后，可以通过位操作指令(BT,BTS,<br />
+BTR,<br />
+BTC)检查或修改这些标志位。当调用中断或异常处理程序时，处理器将在程序栈上自动保存EFLAGS的状态值。若在中断或异常处理时发生任务切换，那么EFLAGS寄存器的状态将被保存在TSS中，注意是将要被挂起的本次任务的状态。</p>
+<h5 id="1-状态标志status-flags"><a class="markdownIt-Anchor" href="#1-状态标志status-flags"></a> 1、状态标志(Status Flags)</h5>
+<p>EFLAGS寄存器的状态标志(0、2、4、6、7以及11位)是指示算术指令（如ADD, SUB,<br />
+MUL以及DIV指令）的结果，这些状态标志的作用如下：</p>
+<p>CF(bit 0) [Carry flag]<br />
+若算术操作产生的结果在<strong>最高有效位</strong>(most-significant<br />
+bit)发生进位或借位则将其置1，反之清零。这个标志指示无符号整型运算的溢出状态，这个标志同样在多倍精度运算(multiple-precision<br />
+arithmetic)中使用。</p>
+<p>PF(bit 2) [Parity flag] 如果<strong>结果的最低有效字节</strong>(least-significant<br />
+byte)包含偶数个1位则该位置1，否则清零。</p>
+<p>AF(bit 4) [Adjust flag]<br />
+如果算术操作在结果的第3位发生进位或借位则将该标志置1，否则清零。这个标志在BCD(binary-code<br />
+decimal)算术运算中被使用。</p>
+<p>ZF(bit 6) [Zero flag] 若结果为0则将其置1，反之清零。</p>
+<p>SF(bit 7) [Sign flag]<br />
+该标志被设置为有符号整型的最高有效位。(0指示结果为正，反之则为负)</p>
+<p>OF(bit 11) [Overflow flag]<br />
+如果整型结果是较大的正数或较小的负数，并且无法匹配目的操作数时将该位置1，反之清零。这个标志为带符号整型运算指示溢出状态。</p>
+<p>溢出OV（overflow，OF＝1）</p>
+<p>增量UP（direction up，DF＝0）</p>
+<p>允许中断EI（enable interrupt，IF＝1）</p>
+<p>正PL（plus，SF＝0）</p>
+<p>零ZR（zero，ZF＝1）</p>
+<p>辅助进位AC（auxiliary carry，AF＝1）</p>
+<p>偶校验PE（even parity，PF＝1）</p>
+<p>进位CY（carry，CF＝1）</p>
+<p>在这些状态标志中，只有CF标志能够通过使用STC,<br />
+CLC以及CMC指令被直接修改，或者通过位指令(BT, BTS,<br />
+BTR以及BTC)将指定的位拷贝至CF标志中。</p>
+<p>这些状态标志允许单个的算术操作产生三种不同数据类型的结果：无符号整型，有符号整型以及BCD整型。如果把该结果当做[无符号整型]{.underline}，那么CF标志指示越界(out-of-range)状态------即进位或借位，如果被当做[有符号整型]{.underline}，则OF标志指示进位或借位，若作为[BCD数]{.underline}，那么AF标志指示进位或借位。</p>
+<p>SF标志指示有符号整数的符号位，ZF指示结果为零。</p>
+<p>此外在执行多倍精度算术运算时，CF标志用来将一次运算过程中带进位的加法(ADC)或带借位的减法(SBB)产生的进位或借位传递到下一次运算过程中。</p>
+<h5 id="2-控制标志df-flag"><a class="markdownIt-Anchor" href="#2-控制标志df-flag"></a> 2、控制标志(DF flag)</h5>
+<p>DF(bit10)[Direction flag]控制串指令(MOVS, CMPS, SCAS,<br />
+LODS以及STOS)。设置DF标志使得串指令自动递减（从高地址向低地址方向处理字符串），清除该标志则使得串指令自动递增。STD以及CLD指令分别用于设置以及清除DF标志。</p>
+<p>置1是减，置0是加，ESI/EDI</p>
+<h5 id="3-系统标志以及iopl域system-flags-and-iopl-field"><a class="markdownIt-Anchor" href="#3-系统标志以及iopl域system-flags-and-iopl-field"></a> 3、系统标志以及IOPL域(System Flags and IOPL Field)</h5>
+<p>EFLAGS寄存器中的这部分标志用于控制操作系统或是执行操作，它们不允许被应用程序所修改。这些标志的作用如下：</p>
+<p>TF(bit 8) [Trap<br />
+flag]将该位设置为1以允许单步调试模式，清零则禁用该模式。</p>
+<p>IF(bit 9)[Interrupt enable<br />
+flag]该标志用于控制处理器对可屏蔽中断请求(maskable interrupt<br />
+requests)的响应。置1以响应可屏蔽中断，反之则禁止可屏蔽中断。</p>
+<p>IOPL(bits 12 and 13) [I/O privilege level<br />
+field]指示当前运行任务的I/O特权级(I/O privilege<br />
+level)，正在运行任务的当前特权级(CPL)必须小于或等于I/O特权级才能允许访问I/O地址空间。这个域只能在CPL为0时才能通过POPF以及IRET指令修改。</p>
+<p>NT(bit 14) [Nested task<br />
+flag]这个标志控制中断链和被调用任务。若当前任务与前一个执行任务相关则置1，反之则清零。</p>
+<p>RF(bit 16) [Resume flag]控制处理器对调试异常的响应。</p>
+<p>VM(bit 17) [Virtual-8086 mode<br />
+flag]置1以允许虚拟8086模式，清除则返回保护模式。</p>
+<p>AC(bit 18) [Alignment check<br />
+flag]该标志以及在CR0寄存器中的AM位置1时将允许内存引用的对齐检查，以上两个标志中至少有一个被清零则禁用对齐检查。</p>
+<p>VIF(bit 19) [Virtual interrupt flag]该标志是IF标志的虚拟镜像(Virtual<br />
+image)，与VIP标志结合起来使用。使用这个标志以及VIP标志，并设置CR4控制寄存器中的VME标志就可以允许虚拟模式扩展(virtual<br />
+mode extensions)</p>
+<p>VIP(bit 20) [Virtual interrupt pending<br />
+flag]该位置1以指示一个中断正在被挂起，当没有中断挂起时该位清零。与VIF标志结合使用。</p>
+<p>ID(bit 21) [Identification<br />
+flag]程序能够设置或清除这个标志指示了处理器对CPUID指令的支持。</p>
+<h4 id="段寄存器"><a class="markdownIt-Anchor" href="#段寄存器"></a> 段寄存器</h4>
+<p>段寄存器是根据内存分段的管理模式而设置的。内存单元的物理地址由段寄存器的值和一个偏移量组合而成的，这样可用两个较少位数的值组合成一个可访问较大物理空间的内存地址，x86的段寄存器有6个----CS/DS/ES/SS/FS/GS，均为16位。</p>
+<p><strong>CS</strong>：CS段寄存器包含代码段的段选择符，代码段保存正在执行的指令。处理器从代码段读取指令时，使用有CS寄存器中的段选择符与EIP寄存器联合构成的逻辑地址。EIP保存要执行的下一条指令在代码段中的偏移量。CS寄存器不能有应用程序显式地的加载。相反，可以通过某些指令或处理器内部操作隐式地加载。这些指令/内部操作，例如过程调用，中断处理，或者任务切换，用于改变程序的执行流，从而导致更新CS寄存器。</p>
+<p><strong>DS/ES/FS/GS</strong>：这四个寄存器指向四个数据段。多个数据段的存在允许高效地且安全地访问不同的数据结构类型。例如，可以创建如下的四个数据段：</p>
+<p>第一个数据段保存当前程序模块的数据结构，</p>
+<p>第二个数据段保存更高级别程序模块导出的数据，</p>
+<p>第三个数据段保存动态创建的数据结构，</p>
+<p>最后一个数据段保存另一个程序共享出来的数据。</p>
+<p>要想访问更多的数据段，应用程序必须按需将数据段对应的段选择符加载到DS/ES/FS/GS寄存器中的其中一个当中。</p>
+<p><strong>SS</strong>：SS寄存器包含栈段的段选择符，这里栈段用于存储程序/任务/当前正在执行的处理器程序的栈帧。所有的栈操作都使用SS栈段寄存器来定位栈段。与CS代码段寄存器不同，SS寄存器可以显式地加载，这样就允许应用程序建立多个栈段，并在这些段间切换。</p>
+<h4 id="控制寄存器"><a class="markdownIt-Anchor" href="#控制寄存器"></a> 控制寄存器</h4>
+<h5 id="控制寄存器概述"><a class="markdownIt-Anchor" href="#控制寄存器概述"></a> 控制寄存器概述：</h5>
+<p>这几个控制寄存器中保存全局性和任务无关的机器状态。控制寄存器（CR0～CR3）用于控制和确定处理器的操作模式以及当前执行任务的特性。CR0中含有控制处理器操作模式和状态的系统控制标志；CR1保留不用；CR2含有导致页错误的线性地址；CR3中含有页目录表物理内存基地址，因此该寄存器也被称为页目录基地址寄存器PDBR（Page-Directory<br />
+Base address Register）。</p>
+<p><img src="/images/media/media/image84.png" alt="" /></p>
+<p>CR0中包含了6个预定义标志:</p>
+<p><strong>0位</strong>是保护允许位PE(Protedted<br />
+Enable)，用于启动<strong>保护模式</strong>，如果PE位置1，则保护模式启动，如果PE=0，则在<strong>实模式</strong>下运行。</p>
+<p><strong>1位</strong>是监控协处理位MP(Moniter<br />
+coprocessor)，它与第4位一起决定：当TS=1时操作码WAIT是否产生一个&quot;协处理器不能使用&quot;的出错信号。</p>
+<p><strong>3位</strong>是任务转换位(Task<br />
+Switch)，当一个任务转换完成之后，自动将它置1。随着TS=1，就不能使用协处理器。</p>
+<p><strong>2位</strong>是模拟协处理器位 EM (Emulate<br />
+coprocessor)，如果EM=1，则不能使用协处理器，如果EM=0，则允许使用协处理器。</p>
+<p><strong>4位</strong>是微处理器的扩展类型位ET(Processor Extension<br />
+Type)，其内保存着处理器扩展类型的信息，如果ET=0，则标识系统使用的是287协处理器，如果<br />
+ET=1，则表示系统使用的是387浮点协处理器。</p>
+<p><strong>31位</strong>是分页允许位(Paging<br />
+Enable)，它表示芯片上的分页部件是否允许工作。</p>
+<p>CR1是未定义的控制寄存器，供将来的处理器使用。</p>
+<p>CR2是页故障线性地址寄存器，保存最后一次出现页故障的全32位线性地址。</p>
+<p><img src="/images/media/media/image85.png" alt="" /></p>
+<p>CR3是页目录基址寄存器，保存页目录表的物理地址，页目录表总是放在以4K字节为单位的存储器边界上，因此，它的地址的低12位总为0，不起作用，即使写上内容，也不会被理会。</p>
+<p><img src="/images/media/media/image86.png" alt="" /></p>
+<p>这几个寄存器是与分页机制密切相关的，因此，在进程管理及虚拟内存管理中会涉及到这几个寄存器，读者要记住CR0、CR2及CR3这三个寄存器的内容</p>
+<h5 id="控制寄存器详解"><a class="markdownIt-Anchor" href="#控制寄存器详解"></a> 控制寄存器详解：</h5>
+<h6 id="cr0中协处理器控制位"><a class="markdownIt-Anchor" href="#cr0中协处理器控制位"></a> CR0中协处理器控制位</h6>
+<p>CR0中有用的4个位：<strong>扩展类型位ET</strong>、<strong>任务切换位TS</strong>、<strong>仿真位EM</strong>和<strong>数学存在位MP</strong>用于控制80x86浮点（数学）协处理器的操作。CR0的ET位（标志）用于选择与协处理器进行通信所使用的协议，即指明系统中使用的是80387还是80287协处理器。TS、MP和EM位用于确定浮点指令或WAIT指令是否应该产生一个设备未找到（Device<br />
+Not<br />
+Available，DNA）异常。这个异常可用来仅为使用浮点运算的任务保存和恢复浮点寄存器。对于没有使用浮点运算的任务，这样做可以加快它们之间的切换操作。<br />
+（1）ET：CR0的位4是扩展类型（Extension<br />
+Type）标志。当该标志为1时，表示指明系统中有80387协处理器，并使用32位协处理器协议。ET=0指明使用80287协处理器。如果仿真位EM=1，则该位将被忽略。在处理器复位操作时，ET位会被初始化指明系统中使用的协处理器类型。如果系统中有80387，则ET被设置成1，否则若有一个80287或者没有协处理器，则ET被设置成0。<br />
+（2）TS：CR0的位3是任务已切换（Task<br />
+Switched）标志。该标志用于推迟保存任务切换时的协处理器内容，直到新任务开始实际执行协处理器指令。处理器在每次任务切换时都会设置该标志，并且在执行协处理器指令时测试该标志。<br />
+如果设置了TS标志并且CR0的EM标志为0，那么在执行任何协处理器指令之前会产生一个设备不存在异常。如果设置了TS标志但没有设置CR0的MP和EM标志，那么在执行协处理器指令WAIT/FWAIT之前不会产生设备不存在异常。如果设置了EM标志，那么TS标志对协处理器指令的执行无影响，见表4-1。<br />
+下表显示了CR0中标志EM、MP和TS的不同组合对协处理器指令动作的影响</p>
+<p>+:------+:------+:------+:----------------------------+:---------------------------------------+<br />
+| CR0中的标志           | 指令类型                                                             |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| EM    | MP    | TS    | 浮点                        | WAIT/FWAIT                             |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 0     | 0     | 0     | 执行                        | 执行                                   |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 0     | 0     | 1     | 设备不存在（DNA）异常       | 执行                                   |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 0     | 1     | 0     | 执行                        | 执行                                   |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 0     | 1     | 1     | DNA异常                     | DNA异常                                |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 1     | 0     | 0     | DNA异常                     | 执行                                   |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 1     | 0     | 1     | DNA异常                     | 执行                                   |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 1     | 1     | 0     | DNA异常                     | 执行                                   |<br />
+±------±------±------±----------------------------±---------------------------------------+<br />
+| 1     | 1     | 1     | DNA异常                     | DNA异常                                |<br />
+±------±------±------±----------------------------±---------------------------------------+</p>
+<p>在任务切换时，处理器并不自动保存协处理器的上下文，而是会设置TS标志。这个标志会使得处理器在执行新任务指令流的任何时候遇到一条协处理器指令时产生设备不存在异常。设备不存在异常的处理程序可使用CLTS指令清除TS标志，并且保存协处理器的上下文。如果任务从没有使用过协处理器，那么相应协处理器上下文就不用保存。<br />
+（3）EM：CR0的位2是仿真（EMulation）标志。当该位设置1时，表示处理器没有内部或外部协处理器，执行协处理器指令时会引起设备不存在异常；当清除时，表示系统有协处理器。设置这个标志可以迫使所有浮点指令使用软件来模拟。<br />
+（4）MP：CR0的位1是监控协处理器（Monitor coProcessor或Math<br />
+Present）标志。用于控制WAIT/FWAIT指令与TS标志的交互作用。如果MP=1、TS=1，那么执行WAIT指令将产生一个设备不存在异常；如果MP=0，则TS标志不会影响WAIT的执行。</p>
+<h6 id="cr0中保护控制位"><a class="markdownIt-Anchor" href="#cr0中保护控制位"></a> CR0中保护控制位</h6>
+<p>（1）PE：CR0的位0是启用保护（Protection<br />
+Enable）标志。当设置该位时即开启了保护模式；当复位时即进入实地址模式。这个标志仅开启段级保护，而并没有启用分页机制。若要启用分页机制，那么PE和PG标志都要置位。<br />
+（2）PG：CR0的位31是分页（Paging）标志。当设置该位时即开启了分页机制；当复位时则禁止分页机制，此时所有线性地址等同于物理地址。在开启这个标志之前必须已经或者同时开启PE标志。即若要启用分页机制，那么PE和PG标志都要置位。<br />
+（3）WP：对于Intel 80486或以上的CPU，CR0的位16是写保护（Write<br />
+Proctect）标志。当设置该标志时，处理器会禁止超级用户程序（例如特权级0的程序）向用户级只读页面执行写操作；当该位复位时则反之。该标志有利于UNIX类操作系统在创建进程时实现写时复制（Copy<br />
+on Write）技术。<br />
+（4）NE：对于Intel 80486或以上的CPU，CR0的位5是协处理器错误（Numeric<br />
+Error）标志。当设置该标志时，就启用了x87协处理器错误的内部报告机制；若复位该标志，那么就使用PC形式的x87协处理器错误报告机制。当NE为复位状态并且CPU的IGNNE输入引脚有信号时，那么数学协处理器x87错误将被忽略。当NE为复位状态并且CPU的IGNNE输入引脚无信号时，那么非屏蔽的数学协处理器x87错误将导致处理器通过FERR引脚在外部产生一个中断，并且在执行下一个等待形式浮点指令或WAIT/FWAIT指令之前立刻停止指令执行。CPU的FERR引脚用于仿真外部协处理器80387的ERROR引脚，因此通常连接到中断控制器输入请求引脚上。NE标志、IGNNE引脚和FERR引脚用于利用外部逻辑来实现PC形式的外部错误报告机制。<br />
+启用保护模式PE（Protected<br />
+Enable）位（位0）和开启分页PG（Paging）位（位31）分别用于控制分段和分页机制。PE用于控制分段机制。如果PE=1，处理器就工作在开启分段机制环境下，即运行在保护模式下。如果PE=0，则处理器关闭了分段机制，并如同8086工作于实地址模式下。PG用于控制分页机制。如果PG=1，则开启了分页机制。如果PG=0，分页机制被禁止，此时线性地址被直接作为物理地址使用。<br />
+如果PE=0、PG=0，处理器工作在实地址模式下；如果PG=0、PE=1，处理器工作在没有开启分页机制的保护模式下；如果PG=1、PE=0，此时由于不在保护模式下不能启用分页机制，因此处理器会产生一个一般保护异常，即这种标志组合无效；如果PG=1、PE=1，则处理器工作在开启了分页机制的保护模式下。<br />
+当改变PE和PG位时，必须小心。只有当执行程序至少有部分代码和数据在线性地址空间和物理地址空间中具有相同地址时，我们才能改变PG位的设置。此时这部分具有相同地址的代码在分页和未分页世界之间起着桥梁的作用。无论是否开启分页机制，这部分代码都具有相同的地址。另外，在开启分页（PG=1）之前必须先刷新页高速缓冲TLB。<br />
+在修改该了PE位之后程序必须立刻使用一条跳转指令，以刷新处理器执行管道中已经获取的不同模式下的任何指令。在设置PE位之前，程序必须初始化几个系统段和控制寄存器。在系统刚上电时，处理器被复位成PE=0和PG=0（即实模式状态），以允许引导代码在启用分段和分页机制之前能够初始化这些寄存器和数据结构。</p>
+<h6 id="cr2和cr3"><a class="markdownIt-Anchor" href="#cr2和cr3"></a> CR2和CR3</h6>
+<p>CR2和CR3用于分页机制。</p>
+<p>CR3含有存放页目录表页面的物理地址，因此CR3也被称为PDBR。</p>
+<p>因为页目录表页面是页对齐的，所以该寄存器只有高20位是有效的。</p>
+<p>而低12位保留供更高级处理器使用，因此在往CR3中加载一个新值时低12位必须设置为0。<br />
+使用MOV指令加载CR3时具有让页高速缓冲无效的副作用。</p>
+<p>为了减少地址转换所要求的总线周期数量，最近访问的页目录和页表会被存放在处理器的页高速缓冲器件中，该缓冲器件被称为转换查找缓冲区（Translation<br />
+Lookaside<br />
+Buffer，TLB）。只有当TLB中不包含要求的页表项时才会使用额外的总线周期从内存中读取页表项。<br />
+即使CR0中的PG位处于复位状态（PG=0），我们也能先加载CR3。</p>
+<p>以允许对分页机制进行初始化。</p>
+<p>当切换任务时，CR3的内容也会随之改变。</p>
+<p>但是如果新任务的CR3值与原任务的一样，处理器就无需刷新页高速缓冲。这样共享页表的任务可以执行得更快。<br />
+CR2用于出现页异常时报告出错信息。</p>
+<p>在报告页异常时，处理器会把引起异常的线性地址存放在CR2中。因此操作系统中的页异常处理程序可以通过检查CR2的内容来确定线性地址空间中哪一个页面引发了异常。</p>
+<h6 id="cr4"><a class="markdownIt-Anchor" href="#cr4"></a> CR4</h6>
+<p>80486开始加入CPU</p>
+<p><img src="/images/media/media/image87.png" alt="" /></p>
+<p>VME: 为1，允许虚拟8086模式扩展；为0，禁止虚拟8086模式扩展</p>
+<p>PVI：为1，允许保护方式虚拟中断；为0，禁止保护方式虚拟中断</p>
+<p>TSD：为1且当前特权级不为0是，执行RDTSC/RDTSCP（读时间标志计数器）指令，会产生错误；为0，RDTSC/RDTSCP可以在所有特权级上执行</p>
+<p>DE：为1，允许调试扩充；为0，禁止调试扩充。所谓扩充就是是否支持I/O断点</p>
+<p>PSE：为1，允许页面大小扩充，这个是大尺寸页面的开关；为0，禁止页面大小扩充</p>
+<p>PAE：为1，允许物理地址扩充，支持2M大小的页；为0，禁止物理地址扩充</p>
+<p>MCE：为1，允许机器检查异常；为0，禁止机器机器检查异常</p>
+<p>PGE：为1，允许全局页访问；为0，禁止全局页访问</p>
+<p>PCE：为1，允许用RDPMC指令访问一些关键寄存器；为0，禁止非最高权限使用RDPMC</p>
+<p>实模式：内存访问空间1M，直接访问物理地址</p>
+<p>保护模式：内存访问空间4G，有保护模式机制，地址是映射的，不能直接访问物理地址</p>
+<p>虚拟8086模式：在保护模式下运行实模式程序，伪物理地址访问（保护模式机制仍然存在）</p>
+<h4 id="调试寄存器"><a class="markdownIt-Anchor" href="#调试寄存器"></a> 调试寄存器</h4>
+<p><img src="/images/media/media/image88.png" alt="" /></p>
+<p><strong>DR0-DR3</strong>:保留32位断点的线性地址。这四个寄存器是用来设置 断点地址的。断点的比对在物理地址转换前（异常产生时，还没有将线性地址转换成物理地址）。由于只有0-3四个保存地址的寄存器，所以，硬件断点，在物理上最多只能有4个。</p>
+<p><strong>DR4-DR5</strong>：保留、未定义。</p>
+<p><strong>DR7</strong>:用于控制调试过程的</p>
+<ol>
+<li>L0-L3（由第0，2，4，6位控制）:对应DR0-DR3，设置断点作用范围，如果被置位，那么将只对当前任务有效。每次异常后，Lx都被清零。<br />
+2.  G0-G3（由第1，3，5，7位控制）：对应DR0-DR3,如果置位，那么所有的任务都有效。每次异常后不会被清零。以确保对所有任务有效。但是，不知道为什么，我在测试时：<br />
+设置Gn后，不能返回调试异常给调试器（如果你知道为什么，记得告诉我）<br />
+3.  LE,GE（由第8，9位控制）:这个在P6以下系列CPU上不被支持，在升级版的系列里面：如果被置位，那么cpu将会追踪精确的数据断点。LE是局部的，GE是全局的。（到底什么算精确的，我也不清楚，但是，我知道如果设置了这两个，cpu的速度会降低。我在测试中，都没有置位。）<br />
+4.  GD(由第13位控制):如果置位，追踪下一条指令是否会访问调试寄存器。如果是，产生异常。在下面的DR6里面，你会知道他还和另外一个标志位有点关系。<br />
+5.  R/W0-R/W3：（由第16，17，20，21，24，25，28，29位控制）：这个东西的处理有两种情况。<br />
+如果CR4的DE被置位，那么，他们按照下面的规则处理问题：<br />
+00：执行断点<br />
+01：数据写入断点<br />
+10：I/0读写断点<br />
+11：读写断点，读取指令不算<br />
+如果DE置0，那么问题会这样处理：<br />
+00：执行断点<br />
+01：数据写入断点<br />
+10：未定义<br />
+11：数据读写断点，读取指令不算<br />
+6.  LEN0-LEN3：（由第18.19.22.23.26.27.30位控制）：指定内存操作的大小。<br />
+00：1字节（执行断点只能是1字节长）<br />
+01：2字节<br />
+10：未定义或者是8字节（和cpu的系列有关系）<br />
+11：4字节</li>
+</ol>
+<p><strong>DR6</strong>：</p>
+<p>这个寄存器主要是在调试异常产生后，报告产生调试异常的相关信息<br />
+1.  B0-B3（DR0-DR3）：DRx指定的断点在满足DR7指定的条件下，产生异常。那么Bx就置位。但是，有时，即使Ln和Gn置0，也可能产生Bx被置位。</p>
+<p>这种现象可能这样出现（提示：在p6系列处理器，REP MOVS在不断循环中产生的调试异常需要执行完了才能准确返回给调试进程）：DR0的L0,G0都置0（DR0就是一个不能产生异常的断点了），然后在DR0指定的地址是一个REP指令的循环，这样，DR0就可能在这个循环之后的REP指令产生的调试异常中将B0置位<br />
+2.  BD：BD需要<strong>DR7的GD</strong>置位，才有效。BD是在下一条指令要访问到某一个调试寄存器的时候，被置位的。<br />
+3.  BS：单步执行模式时，被置位。单步执行是最高权限的调试异常。<br />
+4.  BT:在任务切换的时候，被置位。但是必须在被切换去的任务的TSS段里面的T标记被置位的情况下才有效。在控制权被切换过去后，在执行指令前，返回调试异常。但是，需要注意，如果调试程序是一个任务，那么T标记的设置肯定就冲突了。然后，导致了死循环（BT的这些信息都是按照官方资料翻译而来，由于没有实际的操作，肯定会有理解上的出入。如果要深入的话，建议看官方资料）<br />
+  <br />
+有些调试异常会将B0-B3清零。但是其他的DR6的位是不能被产生异常的进程清零的。每次调试异常返回后，调试进程都会先将DR6清零，再按照情况设置。以免产生不必要的错误。</p>
+<p>在window中，可以通过GetThreadContext函数来获取，通过SetThreadContext函数来设置</p>
+<p>使用参数ContextFlags：CONTEXT_DEBUG_REGISTERS来控制两个函数进行处理</p>
+<h4 id="系统地址寄存器"><a class="markdownIt-Anchor" href="#系统地址寄存器"></a> 系统地址寄存器</h4>
+<p>全局描述符表GDT、局部描述符表LDT和中断描述符表IDT等都是保护方式下非常重要的特殊段，它们包含有为段机制所用的重要表格。为了方便快速地定位这些段，处理器采用一些特殊的寄存器保存这些段的基地址和段界限。我们把这些特殊的寄存器称为系统地址寄存器。</p>
+<p><img src="/images/media/media/image89.png" alt="" /></p>
+<p><img src="/images/media/media/image90.png" alt="" /></p>
+<p><img src="/images/media/media/image91.png" alt="" /></p>
+<p><strong>1.全局描述符表寄存器GDTR</strong>：GDTR长48位，其中高32位为基地址，低16位为界限。由于GDT<br />
+不能有GDT本身之内的描述符进行描述定义，所以处理器采用GDTR为GDT这一特殊的系统段提供一个伪描述符。GDTR给定了GDT。GDTR中的段界限以字节为单位。由于段选择子中只有13位作为描述符索引，而每个描述符长8个字节，所以用16位的界限足够。通常，对于含有N个描述符的描述符表的段界限设为8*N-1。</p>
+<p><img src="/images/media/media/image92.png" alt="" /></p>
+<p><strong>2.局部描述符表寄存器LDTR</strong>：局部描述符表寄存器LDTR规定当前任务使用的局部描述符表LDT。LDTR类似于段寄存器，由程序员可见的16位的寄存器和程序员不可见的高速缓冲寄存器组成。实际上，每个任务的局部描述符表LDT作为系统的一个特殊段，由一个描述符描述。而用于描述符LDT的描述符存放在GDT中。在初始化或任务切换过程中，把描述符对应任务LDT的描述符的选择子装入LDTR，处理器根据装入LDTR可见部分的选择子，从GDT中取出对应的描述符，并把LDT的基地址、界限和属性等信息保存到LDTR的不可见的高速缓冲寄存器中。随后对LDT的访问，就可根据保存在高速缓冲寄存器中的有关信息进行合法性检查。LDTR寄存器包含当前任务的LDT的选择子。所以，装入到LDTR的选择子必须确定一个位于GDT中的类型为LDT的系统段描述符，也即选择子中的TI位必须是0，而且描述符中的类型字段所表示的类型必须为LDT。可以用一个空选择子装入LDTR，这表示当前任务没有LDT。在这种情况下，所有装入到段寄存器的选择子都必须指示GDT中的描述符，也即当前任务涉及的段均由GDT中的描述符来描述。如果再把一个TI位为1的选择子装入到段寄存器，将引起异常。</p>
+<p><strong>3.中断描述符表寄存器IDTR</strong>：中断描述符表寄存器IDTR指向中断描述符表IDT。IDTR长48<br />
+位，其中32位的基地址规定IDT的基地址，16位的界限规定IDT的段界限。由于80386只支持256个中断异常，所以IDT表最大长度是2K，以字节位单位的段界限为7FFH。IDTR<br />
+指示IDT的方式与GDTR指示GDT的方式相同。</p>
+<ol start="3">
+<li><strong>任务状态段寄存器TR</strong>：任务状态段寄存器TR包含指示描述当前任务的任务状态段的描述符选择子，从而规定了当前任务的状态段。任务状态段的格式在后面的文章中介绍。TR也有程序员可见和不可见两部分。当把任务状态段的选择子装入到TR可见部分时，处理器自动把选择子所索引的描述符中的段基地址等信息保存到不可见的高速缓冲寄存器中。在此之后，对当前任务状态段的访问可快速方便地进行。装入到TR的选择子不能为空，必须索引位于GDT中的描述符，且描述符的类型必须是TSS。</li>
+</ol>
+<h4 id="其他寄存器"><a class="markdownIt-Anchor" href="#其他寄存器"></a> 其他寄存器</h4>
+<h5 id="eip"><a class="markdownIt-Anchor" href="#eip"></a> EIP</h5>
+<p>主要用于存放当前代码段即将被执行的下一条指令的偏移，但其本质上并不能直接被指令直接访问。这个寄存器指令由控制转移指令、中断及异常所控制。读操作通过执行call指令并取得栈中所存放的地址来实现，而写操作则通过修改程序栈中的返回指令指针并执行RET/IRET指令来完成，因此尽管这个寄存器相当重要，但其实并不是操作系统在实现过程中所需关注的焦点。</p>
+<h5 id="tsc"><a class="markdownIt-Anchor" href="#tsc"></a> TSC</h5>
+<p>时间戳寄存器 Time Stamp<br />
+Counter每个时钟周期时其值加1，重启时清零。通过RDTSC指令读取TSC寄存器，只有当CR4寄存器的TSD位为0时，才可以在任何优先级下执行该指令，否则只能在特权级下执行该指令。</p>
+<h5 id="浮点寄存器"><a class="markdownIt-Anchor" href="#浮点寄存器"></a> 浮点寄存器</h5>
+<p>由于在80486微处理器内部设有浮点运算器，因此在其内部有相应的寄存器，其中包括8个80位通用数据寄存器、1个48位指令指针寄存器、1个48位数据指针寄存器、1个16位控制字寄存器、1个16位状态字寄存器和1个16位标记字寄存器。</p>
+<h3 id="寻址方式"><a class="markdownIt-Anchor" href="#寻址方式"></a> 寻址方式</h3>
+<h4 id="立即寻址"><a class="markdownIt-Anchor" href="#立即寻址"></a> 立即寻址</h4>
+<p>指令所需要的操作数直接在指令码中，也就是立即数</p>
+<p>一般用imm8/16/32/64 表示8位/16位/32位/64位立即数</p>
+<h4 id="直接寻址"><a class="markdownIt-Anchor" href="#直接寻址"></a> 直接寻址</h4>
+<p>操作数是一个地址值</p>
+<p>一般用[地址值]来表示</p>
+<p>例子：MOV AX,[2000H]</p>
+<h4 id="寄存器寻址"><a class="markdownIt-Anchor" href="#寄存器寻址"></a> 寄存器寻址</h4>
+<p>操作数是一个寄存器</p>
+<p>比如：MOV AX,BX</p>
+<p>这里的AX和BX都是寄存器寻址</p>
+<h4 id="寄存器间接寻址"><a class="markdownIt-Anchor" href="#寄存器间接寻址"></a> 寄存器间接寻址</h4>
+<p>寄存器里面的值是地址值</p>
+<p>比如：[BP/BX][SI/DI]</p>
+<p>一般BX/SI/DI都是DS段的偏移地址，BP是SS段的偏移地址</p>
+<h4 id="寄存器相对寻址"><a class="markdownIt-Anchor" href="#寄存器相对寻址"></a> 寄存器相对寻址</h4>
+<p>操作数地址是间址寄存器+偏移量（可为负数）</p>
+<p>比如：MOV AX,[SI+10H] 或者 MOV AX,10H[SI]</p>
+<h4 id="基址变址寻址"><a class="markdownIt-Anchor" href="#基址变址寻址"></a> 基址变址寻址</h4>
+<p>操作数地址是基址寄存器+变址寄存器</p>
+<p>比如：MOV AX,[BX+SI]</p>
+<h3 id="常用传送指令和取有效地址指令"><a class="markdownIt-Anchor" href="#常用传送指令和取有效地址指令"></a> 常用传送指令和取有效地址指令</h3>
+<h4 id="mov指令"><a class="markdownIt-Anchor" href="#mov指令"></a> MOV指令</h4>
+<p>格式：MOV <strong>目标</strong> ,<strong>源</strong></p>
+<p><em><strong>目标</strong></em><br />
+是指要存储的位置，可以是[内存地址]{.underline}或者[寄存器]{.underline}</p>
+<p><em><strong>源</strong></em><br />
+是指读取的源头位置，可以是[立即数]{.underline}、[内存地址]{.underline}或者[寄存器]{.underline}</p>
+<p>这里的寄存器包括通用寄存器、段寄存器、<s>控制寄存器</s>、<s>调试寄存器</s>等</p>
+<p>对标志位的影响：无</p>
+<p>效果：将源中的数据或者源指向的数据，传送到目标之中或者目标指向的数据之中</p>
+<p>所有的MOV指令都支持64位扩展，<s>但是不是所有的指令都能在传统CPU上运行</s></p>
+<p>下面这几张图，列举了MOV指令的实际情况（数据来源于Intel官方指令集文档）</p>
+<p><img src="/images/media/media/image93.png" alt="" /></p>
+<p><img src="/images/media/media/image94.png" alt="" /><img src="/images/media/media/image95.png" alt="" /></p>
+<p><img src="/images/media/media/image96.png" alt="" /></p>
+<h4 id="lea指令"><a class="markdownIt-Anchor" href="#lea指令"></a> LEA指令</h4>
+<p>LEA = Load Effective Address</p>
+<p>格式：LEA <strong>寄存器</strong>,<strong>内存目标</strong></p>
+<p>对标志位的影响：无</p>
+<p>效果：加载有效地址到寄存器</p>
+<p>64位支持：支持</p>
+<p>内存目标可以是如下形式：</p>
+<p>Imm[DI/SI]</p>
+<p>标号，例如：TABLE</p>
+<p>[通用寄存器][SI/DI] 基址加变址寻址</p>
+<p><img src="/images/media/media/image97.png" alt="" /></p>
+<p>备注：</p>
+<p>1 如果操作数不是一个内存地址，或者地址被LOCK了，那么行为不可知</p>
+<p>2<br />
+寄存器可以是16位、32位或者64位，如果地址值大于寄存器的有效位，低位会被加载</p>
+<p>如果地址值低于寄存器的有效位，高位会被用零填满</p>
+<h3 id="加减指令集"><a class="markdownIt-Anchor" href="#加减指令集"></a> 加减指令集</h3>
+<h4 id="add指令"><a class="markdownIt-Anchor" href="#add指令"></a> ADD指令</h4>
+<p>格式：ADD 被加数,加数</p>
+<p>标志位的影响：OF, SF, ZF, AF, CF, PF</p>
+<p>效果：将被加数和加数相加，结果保存到被加数</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image98.png" alt="" /></p>
+<h4 id="sub指令"><a class="markdownIt-Anchor" href="#sub指令"></a> SUB指令</h4>
+<p>格式：SUB 被减数,减数</p>
+<p>标志位的影响：OF, SF, ZF, AF, CF, PF</p>
+<p>效果：将被减数和减数相减，结果保存到被减数</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image99.png" alt="" /></p>
+<h4 id="inc指令"><a class="markdownIt-Anchor" href="#inc指令"></a> INC指令</h4>
+<p>格式：INC 操作数</p>
+<p>标志位的影响：OF, SF, ZF, AF, PF</p>
+<p>效果：操作数加1存入操作数</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image100.png" alt="" /></p>
+<p>备注：<strong>不影响CF</strong></p>
+<h4 id="dec指令"><a class="markdownIt-Anchor" href="#dec指令"></a> DEC指令</h4>
+<p>格式：DEC 操作数</p>
+<p>标志位的影响：OF, SF, ZF, AF, PF</p>
+<p>效果：操作数减1存入操作数</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image101.png" alt="" /></p>
+<h4 id="neg指令"><a class="markdownIt-Anchor" href="#neg指令"></a> NEG指令</h4>
+<p>格式：NEG 操作数</p>
+<p>标志位的影响：<strong>[CF]{.underline}</strong>, <strong>[OF]{.underline}</strong>, SF, ZF,<br />
+<strong>[AF]{.underline}</strong>, PF</p>
+<p>效果：操作数=-操作数</p>
+<p>64位支持：64位下不支持AH，BH，CH，DH</p>
+<p><img src="/images/media/media/image102.png" alt="" /></p>
+<p>备注：</p>
+<p>当操作数位0时，CF被置0；当操作数不为0时，CF被置1</p>
+<p>当低4位非0的情况下，AF就会为1；否则AF为0</p>
+<p>当发生OF的时候，操作数，不会发生改变</p>
+<h3 id="标志寄存器及其使用"><a class="markdownIt-Anchor" href="#标志寄存器及其使用"></a> 标志寄存器及其使用</h3>
+<h4 id="pushfpushfdpushfq指令"><a class="markdownIt-Anchor" href="#pushfpushfdpushfq指令"></a> PUSHF/PUSHFD/PUSHFQ指令</h4>
+<p>格式：PUSHF/PUSHFD/PUSHFQ</p>
+<p>标志位的影响：无</p>
+<p>效果：将标志位入栈（读入到内存）</p>
+<p>64位支持：不同的模式使用不同的指令</p>
+<p><img src="/images/media/media/image103.png" alt="" /></p>
+<p>备注：只有标志位是可信的，其他的位会受到控制寄存器的影响</p>
+<p>入栈的时候，先保存的高8位，然后保存的低8位，一共保存16位</p>
+<h4 id="popfpopfdpopfq指令"><a class="markdownIt-Anchor" href="#popfpopfdpopfq指令"></a> POPF/POPFD/POPFQ指令</h4>
+<p>格式：POPF/POPFD/POPFQ</p>
+<p>标志位的影响：全部标志位</p>
+<p>效果：从栈中读取标志位数据，并恢复到标志位寄存器</p>
+<p>64位支持：对于64位环境，会把高位按0扩展后写入</p>
+<p><img src="/images/media/media/image104.png" alt="" /></p>
+<p>备注：POPF和POPFD对标志寄存器的影响效果见下表</p>
+<p><img src="/images/media/media/image105.png" alt="" /></p>
+<p>不同模式下有不同的效果</p>
+<p>S表示从栈更新</p>
+<p>SV表示从栈更新IF标志</p>
+<p>N表示值不会变化</p>
+<p>X表示EFLAGS不会更新对应位</p>
+<p>0表示该位被置0</p>
+<h3 id="比较和跳转指令集"><a class="markdownIt-Anchor" href="#比较和跳转指令集"></a> 比较和跳转指令集</h3>
+<h4 id="cmp指令"><a class="markdownIt-Anchor" href="#cmp指令"></a> CMP指令</h4>
+<p>格式：CMP 操作数1, 操作数2</p>
+<p>标志位的影响：OF, SF, ZF, AF, CF, PF</p>
+<p>效果：操作数1-符号扩展（操作数2），并影响标志位</p>
+<p>64位支持：64位下不支持AH，BH，CH，DH</p>
+<p><img src="/images/media/media/image106.png" alt="" /></p>
+<h4 id="test指令"><a class="markdownIt-Anchor" href="#test指令"></a> TEST指令</h4>
+<p>格式：TEST 操作数1, 操作数2</p>
+<p>标志位的影响：OF、CF变为0；SF，ZF，PF依赖结果；AF结果未定义</p>
+<p>效果：计算 操作数1 <strong>AND</strong> 操作数2，结果不保留</p>
+<p>64位支持：64位下不支持AH，BH，CH，DH</p>
+<p><img src="/images/media/media/image107.png" alt="" /></p>
+<p>备注：</p>
+<p>二进制下：</p>
+<p>任何数与上自己，结果等于自己</p>
+<p>任何数与上1，结果等于自己</p>
+<h4 id="jmp系列指令"><a class="markdownIt-Anchor" href="#jmp系列指令"></a> JMP系列指令</h4>
+<p>格式：Jcc 地址</p>
+<p>标志位的影响：无</p>
+<p>效果：跳转到指定地址，然后执行代码</p>
+<p>64位支持：部分情况不支持</p>
+<p><img src="/images/media/media/image108.png" alt="" /></p>
+<p><img src="/images/media/media/image109.png" alt="" /></p>
+<p><img src="/images/media/media/image110.png" alt="" /></p>
+<p><img src="/images/media/media/image111.png" alt="" /></p>
+<p><img src="/images/media/media/image112.png" alt="" /></p>
+<p><strong>当cc为条件时，地址只能是立即数（rel8 rel16 rel32）</strong></p>
+<p><strong>[rel地址是一个相对地址，可能是正数，也可能是负数或者零]{.underline}</strong></p>
+<p>备注：</p>
+<p>cc的值和其含义</p>
+<p><strong>MP 无条件</strong></p>
+<p>A=above 高于 ZF=0或者CF=0</p>
+<p>B=blow 低于 CF=1</p>
+<p>E=equal 等于 ZF=1</p>
+<p>N=not 不</p>
+<p>C=carry 进位 CF=1</p>
+<p>G=great 大于 SF=OF且ZF=0</p>
+<p>L=less 小于 SF!=OF</p>
+<p>O=overflow 溢出 OF=1</p>
+<p>P=parity even奇偶校验为偶 PF=1</p>
+<p>S=sign 为负 SF=1</p>
+<p>Z=zero 为0 ZF=1</p>
+<p>A/NBE ZF=0或者CF=0 等价于i&gt;j</p>
+<p>AE/NB/NC CF=0 等价于i&gt;=j</p>
+<p>B/C/NAE CF=1 等价于i&lt;j</p>
+<p>BE/NA ZF=1或者CF=1 等价于i&lt;=j</p>
+<p>[CXZ/ECXZ/RCXZ CX/ECX/RCX=0 等价于CX/ECX/RCX为0<br />
+只能是8位立即数]{.underline}</p>
+<p>E/Z ZF=1 等价于i<mark>j或者i</mark>0</p>
+<p>NE/NZ ZF=0 等价于i!=0或者i!=j</p>
+<p>G/NLE SF=OF且ZF=0 等价于si&gt;sj <strong>s表示带符号比较</strong></p>
+<p>GE/NL SF=OF 等价于si&gt;=sj</p>
+<p>L/NGE SF!=OF 等价于si&lt;sj</p>
+<p>LE/NG SF!=OF或ZF=1 等价于si&lt;=sj</p>
+<p>NO OF=0 没有溢出</p>
+<p>O OF=1 溢出了</p>
+<p>NP/PO PF=0 低八位包含奇数个1</p>
+<p>P/PE PF=1 低八位包含偶数个1</p>
+<p>NS SF=0 等价于i&gt;=0</p>
+<p>S SF=1 等价于i&lt;0</p>
+<h3 id="堆栈操作指令集"><a class="markdownIt-Anchor" href="#堆栈操作指令集"></a> 堆栈操作指令集</h3>
+<h4 id="push指令"><a class="markdownIt-Anchor" href="#push指令"></a> PUSH指令</h4>
+<p>格式：PUSH 操作数</p>
+<p>标志位的影响：无</p>
+<p>效果：操作数入栈，ESP减去对应的长度</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image113.png" alt="" /></p>
+<p>备注：使用PUSH，千万要保持栈的平衡：要么对应的使用POP，要么恢复ESP</p>
+<p>入栈的顺序，是从高到低，按字节入栈</p>
+<h4 id="pop指令"><a class="markdownIt-Anchor" href="#pop指令"></a> POP指令</h4>
+<p>格式：POP 操作数</p>
+<p>标志位的影响：无</p>
+<p>效果：操作数出栈</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image114.png" alt="" /></p>
+<p>备注：<strong>POP可以修改段寄存器</strong></p>
+<p><strong>会影响ESP寄存器</strong></p>
+<h4 id="pushapushad指令"><a class="markdownIt-Anchor" href="#pushapushad指令"></a> PUSHA/PUSHAD指令</h4>
+<p>格式：PUSHA/PUSHAD</p>
+<p>标志位的影响：无</p>
+<p>效果：</p>
+<p>PUSHA将AX、CX、DX、BX、SP、BP、SI、DI按顺序入栈</p>
+<p>PUSHAD将EAX、ECX、EDX、EBX、ESP、EBP、ESI、EDI按顺序入栈</p>
+<p>64位支持：不支持</p>
+<p><img src="/images/media/media/image115.png" alt="" /></p>
+<h4 id="popapopad指令"><a class="markdownIt-Anchor" href="#popapopad指令"></a> POPA/POPAD指令</h4>
+<p>格式：POPA/POPAD</p>
+<p>标志位的影响：无</p>
+<p>效果：</p>
+<p>POPA将DI、SI、BP、SP、BX、DX、CX、AX按顺序出栈</p>
+<p>POPAD将EDI、ESI、EBP、ESP、EBX、EDX、ECX、EAX按顺序出栈</p>
+<p>64位支持：不支持</p>
+<p><img src="/images/media/media/image116.png" alt="" /></p>
+<h3 id="函数调用指令"><a class="markdownIt-Anchor" href="#函数调用指令"></a> 函数调用指令</h3>
+<h4 id="call指令"><a class="markdownIt-Anchor" href="#call指令"></a> CALL指令</h4>
+<p>格式：CALL 地址</p>
+<p>标志位的影响：</p>
+<p>如果发生了任务切换，则所有标志位可能都会受到影响</p>
+<p>如果没有任务切换，则所有标志位都不会受到影响</p>
+<p>效果：下一条指令地址入栈，跳到目标进行指令执行</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image117.png" alt="" /></p>
+<h4 id="ret指令"><a class="markdownIt-Anchor" href="#ret指令"></a> RET指令</h4>
+<p>格式：RET [imm16]</p>
+<p>标志位的影响：无</p>
+<p>效果：</p>
+<p>从子程序返回（从栈中恢复地址）</p>
+<p>如果带参数，则从栈中弹出imm16个字节</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image118.png" alt="" /></p>
+<h3 id="常用的乘除法指令"><a class="markdownIt-Anchor" href="#常用的乘除法指令"></a> 常用的乘除法指令</h3>
+<h4 id="mul指令"><a class="markdownIt-Anchor" href="#mul指令"></a> MUL指令</h4>
+<p>格式：MUL 乘数</p>
+<p>标志位的影响：如果结果高半截为0，OF、CF置零，否则置1；SF、ZF、AF、PF未定义</p>
+<p>效果：AL/AX/EAX/RAX里面的数乘以乘数，结果存回到AX/DX:AX/EDX:EAX/RDX:RAX</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image119.png" alt="" /></p>
+<h4 id="imul指令"><a class="markdownIt-Anchor" href="#imul指令"></a> IMUL指令</h4>
+<p>格式：</p>
+<p>1 IMUL 乘数</p>
+<ol start="2">
+<li>
+<p>IMUL 被乘数, 乘数</p>
+</li>
+<li>
+<p>IMUL 结果, 被乘数, 乘数**（立即数）**</p>
+</li>
+</ol>
+<p>标志位的影响：</p>
+<p>如果结果的高半部分不是低半部分的符号扩展，则CF和OF置1；SF、ZF、AF、PF未定义</p>
+<p>效果：</p>
+<p>对于1，参考MUL</p>
+<p>对于2，被乘数×乘数→被乘数</p>
+<p>对于3，结果=被乘数×乘数</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image120.png" alt="" /></p>
+<h4 id="div指令"><a class="markdownIt-Anchor" href="#div指令"></a> DIV指令</h4>
+<p>格式：DIV 除数</p>
+<p>标志位的影响：所有标志位影响未定义</p>
+<p>效果：</p>
+<p>用AX除8位除数，结果存放AL，余数存放AH</p>
+<p>用DX:AX除16位除数，结果存放AX，余数存放DX</p>
+<p>用EDX:EAX除32位除数，结果存放EAX，余数存放EDX</p>
+<p>用RDX:RAX除64位除数，结果存放RAX，余数存放RDX</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image121.png" alt="" /></p>
+<p>备注：结果一定要能够存入结果寄存器中，否则可能导致<strong>整数溢出</strong>异常</p>
+<h4 id="idiv指令"><a class="markdownIt-Anchor" href="#idiv指令"></a> IDIV指令</h4>
+<p>格式：IDIV 除数</p>
+<p>标志位的影响：所有标志位影响未定义</p>
+<p>效果：</p>
+<p>用AX除8位除数，结果存放AL，余数存放AH</p>
+<p>用DX:AX除16位除数，结果存放AX，余数存放DX</p>
+<p>用EDX:EAX除32位除数，结果存放EAX，余数存放EDX</p>
+<p>用RDX:RAX除64位除数，结果存放RAX，余数存放RDX</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image122.png" alt="" /></p>
+<p>备注：</p>
+<p>被除数和除数，是有一个范围的</p>
+<p>结果（不是余数）应该要能够存入结果寄存器</p>
+<p>如果被除数是64位，那么除数就不应该小于32位，否则就会产生异常</p>
+<p>这就是整数除法的局限性</p>
+<h3 id="整数拓展指令"><a class="markdownIt-Anchor" href="#整数拓展指令"></a> 整数拓展指令</h3>
+<h4 id="cbwcwdecdqe指令"><a class="markdownIt-Anchor" href="#cbwcwdecdqe指令"></a> CBW/CWDE/CDQE指令</h4>
+<p>格式：CBW/CWDE/CDQE</p>
+<p>标志位的影响：无</p>
+<p>效果：</p>
+<p>AL符号扩展为AX</p>
+<p>AX符号扩展为EAX</p>
+<p>EAX符号扩展为RAX</p>
+<p>64位支持：</p>
+<p><img src="/images/media/media/image123.png" alt="" /></p>
+<h4 id="cwdcdqcqo指令"><a class="markdownIt-Anchor" href="#cwdcdqcqo指令"></a> CWD/CDQ/CQO指令</h4>
+<p>格式：CWD/CDQ/CQO</p>
+<p>标志位的影响：无</p>
+<p>效果：</p>
+<p>AX符号扩展为DX:AX</p>
+<p>EAX符号扩展为EDX:EAX</p>
+<p>RAX符号扩展为RDX:RAX</p>
+<p>64位支持：</p>
+<p><img src="/images/media/media/image124.png" alt="" /></p>
+<p>备注：</p>
+<p>如果AX/EAX/RAX为整数（符号位/最高位为0），那么执行之后DX/EDX/RDX结果为0；</p>
+<p>否则，结果为1</p>
+<h3 id="拓展传送指令"><a class="markdownIt-Anchor" href="#拓展传送指令"></a> 拓展传送指令</h3>
+<h4 id="movsxmovsxd指令"><a class="markdownIt-Anchor" href="#movsxmovsxd指令"></a> MOVSX/MOVSXD指令</h4>
+<p>格式：MOVSX/MOVSXD 目标, 源</p>
+<p>标志位的影响：无</p>
+<p>效果：符号扩展传送</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image125.png" alt="" /></p>
+<h4 id="movzx指令"><a class="markdownIt-Anchor" href="#movzx指令"></a> MOVZX指令</h4>
+<p>格式：MOVZX 目标寄存器, 源</p>
+<p>标志位的影响：无</p>
+<p>效果：0扩展传送</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image126.png" alt="" /></p>
+<p>备注：</p>
+<p>error A2218: AH, BH, CH, or DH may not be used with R8-R15, BPL, DIL,<br />
+SIL, or SPL</p>
+<p><img src="/images/media/media/image127.png" alt="" /></p>
+<h4 id="movss指令"><a class="markdownIt-Anchor" href="#movss指令"></a> MOVSS指令</h4>
+<p>格式：MOVSS 目标浮点寄存器, 源</p>
+<p>标志位的影响：无</p>
+<p>效果：单精度数赋值到浮点寄存器</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image128.png" alt="" /><img src="/images/media/media/image129.png" alt="" /></p>
+<h4 id="movsd指令"><a class="markdownIt-Anchor" href="#movsd指令"></a> MOVSD指令</h4>
+<p>格式：MOVSD 目标浮点寄存器, 源</p>
+<p>标志位的影响：无</p>
+<p>效果：双精度赋值到寄存器</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image130.png" alt="" /></p>
+<h4 id="movsmovsbmovswmovsdmovsq指令"><a class="markdownIt-Anchor" href="#movsmovsbmovswmovsdmovsq指令"></a> MOVS/MOVSB/MOVSW/MOVSD/MOVSQ指令</h4>
+<p>格式：</p>
+<p>MOVS 目标内存, 源内存</p>
+<p>MOVSB/MOVSW/MOVSD/MOVSQ</p>
+<p>标志位的影响：无</p>
+<p>效果：内存传送;如果没有指明目标和源，则默认是DS:(R/E)SI到ES:(R/E)DI</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image131.png" alt="" /></p>
+<p>备注：</p>
+<p>在32位CPU中MOVSQ和MOVS m64,m64不支持</p>
+<p>这两条指令，在64位CPU环境下，才可以支持和运行</p>
+<h3 id="逻辑运算指令"><a class="markdownIt-Anchor" href="#逻辑运算指令"></a> 逻辑运算指令</h3>
+<h4 id="and指令"><a class="markdownIt-Anchor" href="#and指令"></a> AND指令</h4>
+<p>格式：AND 操作数1, 操作数2</p>
+<p>标志位的影响：OF、CF置零；SF、ZF、PF依赖结果；AF行为未定义</p>
+<p>效果：将操作数1和操作数2进行按位与运算，结果保存到操作数1</p>
+<p>64位支持：64位下，不支持AH、BH、CH、DH寄存器</p>
+<p><img src="/images/media/media/image132.png" alt="" /></p>
+<h4 id="not指令"><a class="markdownIt-Anchor" href="#not指令"></a> NOT指令</h4>
+<p>格式：NOT 操作数</p>
+<p>标志位的影响：<strong>无</strong></p>
+<p>效果：进行位取反操作，每个位的1改为0，0则改为1，结果存入操作数</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image133.png" alt="" /></p>
+<h4 id="or指令"><a class="markdownIt-Anchor" href="#or指令"></a> OR指令</h4>
+<p>格式：OR 目标, 源</p>
+<p>标志位的影响：OF、CF清零；SF、ZF、PF影响；AF未定义</p>
+<p>效果：将目标和源按位或操作，结果存入目标中</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image134.png" alt="" /></p>
+<p>备注：</p>
+<p>8位寄存器：</p>
+<p>BPL = RBP的低八位</p>
+<p>DIL = RDI的低八位</p>
+<p>SIL = RSI的低八位</p>
+<p>SPL = RSP的低八位</p>
+<h4 id="xor指令"><a class="markdownIt-Anchor" href="#xor指令"></a> XOR指令</h4>
+<p>格式：XOR 目标，源</p>
+<p>标志位的影响：OF、CF清零；SF、ZF、PF影响；AF未定义</p>
+<p>效果：将目标和源按位进行异或运算，结果存入目标中</p>
+<p>64位支持：部分情况不支持（64位下不支持AH，BH，CH，DH）</p>
+<p><img src="/images/media/media/image135.png" alt="" /></p>
+<h3 id="位移指令"><a class="markdownIt-Anchor" href="#位移指令"></a> 位移指令</h3>
+<h4 id="salshl指令"><a class="markdownIt-Anchor" href="#salshl指令"></a> SAL/SHL指令</h4>
+<p>格式：SAL/SHL 目标, 次数</p>
+<p>标志位的影响：CF</p>
+<p>效果：按照指定次数左移若干位，最高位移入CF，CF原来的值丢弃，低位填0</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image136.png" alt="" /></p>
+<p>备注：SAL算术左移 SHL逻辑左移</p>
+<p>两个指令是等效的！！</p>
+<h4 id="sar指令"><a class="markdownIt-Anchor" href="#sar指令"></a> SAR指令</h4>
+<p>格式：SAR 操作数, 次数</p>
+<p>标志位的影响：CF</p>
+<p>效果：按照指定次数向右移若干位，最低位进入CF，符号位扩展，CF原来值丢弃</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image137.png" alt="" /></p>
+<p>备注：算术右移</p>
+<h4 id="shr指令"><a class="markdownIt-Anchor" href="#shr指令"></a> SHR指令</h4>
+<p>格式：SHR 操作数，次数</p>
+<p>标志位的影响：CF</p>
+<p>效果：按照指定次数右移若干位，最低位进入CF，最高位填0，CF原来值丢弃</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image138.png" alt="" /></p>
+<p>备注：逻辑右移</p>
+<h3 id="循环指令"><a class="markdownIt-Anchor" href="#循环指令"></a> 循环指令</h3>
+<h4 id="rclrol指令"><a class="markdownIt-Anchor" href="#rclrol指令"></a> RCL/ROL指令</h4>
+<p>格式：RCL/ROL 操作数，次数</p>
+<p>标志位的影响：CF</p>
+<p>效果：</p>
+<p>RCL将操作数按照指定次数，循环左移若干位；最高位移入CF，CF移入最低位</p>
+<p>ROL将操作数按照指定次数，循环左移若干位；最高位移入CF和最低位，CF原值丢弃</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image139.png" alt="" /></p>
+<p><img src="/images/media/media/image140.png" alt="" /></p>
+<p><img src="/images/media/media/image141.png" alt="" /></p>
+<h4 id="rcrror指令"><a class="markdownIt-Anchor" href="#rcrror指令"></a> RCR/ROR指令</h4>
+<p>格式：RCR/ROR 操作数，次数</p>
+<p>标志位的影响：CF</p>
+<p>效果：</p>
+<p>RCR 按照指定次数循环右移若干位，CF填入最高位，最低位填入CF</p>
+<p>ROR按照指定次数循环右移若干位，最低位填入最高位和CF</p>
+<p>64位支持：支持</p>
+<p><img src="/images/media/media/image142.png" alt="" /></p>
+<p><img src="/images/media/media/image143.png" alt="" /></p>
+<h2 id="系统调用"><a class="markdownIt-Anchor" href="#系统调用"></a> 系统调用</h2>
+<h3 id="1-开发环境搭建"><a class="markdownIt-Anchor" href="#1-开发环境搭建"></a> 1 开发环境搭建</h3>
+<h4 id="dosbox安装"><a class="markdownIt-Anchor" href="#dosbox安装"></a> Dosbox安装</h4>
+<p>可以从官网<a target="_blank" rel="noopener" href="https://www.dosbox.com/download.php?main=1">https://www.dosbox.com/download.php?main=1</a></p>
+<p><img src="/images/media/media/image144.png" alt="" /></p>
+<p>下载下面的安装程序</p>
+<p><img src="/images/media/media/image145.png" alt="" /></p>
+<p>下载之后，运行安装程序（需要管理员权限）</p>
+<p><img src="/images/media/media/image146.png" alt="" /></p>
+<p><img src="/images/media/media/image147.png" alt="" /></p>
+<p><img src="/images/media/media/image148.png" alt="" /></p>
+<p><img src="/images/media/media/image149.png" alt="" /></p>
+<h4 id="配置dosbox"><a class="markdownIt-Anchor" href="#配置dosbox"></a> 配置dosbox</h4>
+<p>在安装目录早点这个批处理命令，双击运行</p>
+<p><img src="/images/media/media/image150.png" alt="" /></p>
+<p><img src="/images/media/media/image151.png" alt="" /></p>
+<p>或者搜索文件dosbox-0.74-3.conf</p>
+<p>找到文件最后的地方</p>
+<p><img src="/images/media/media/image152.png" alt="" /></p>
+<p>[autoexec]</p>
+<p># Lines in this section will be run at startup.</p>
+<p># You can put your MOUNT lines here.</p>
+<p>MOUNT C E:\Project\DosProj</p>
+<p>C:</p>
+<p>SET PATH=Z:\;C:\tools;C:\MASM611\BIN;C:\MASM611\BINR</p>
+<p>将上面红色的内容添加到文件，保存并推出</p>
+<p>注意，路径里面不能有英文、空格、特殊符号等等</p>
+<h4 id="快捷键"><a class="markdownIt-Anchor" href="#快捷键"></a> 快捷键</h4>
+<p>Alt+Enter //切换全屏</p>
+<p>Alt+Pause //暂停模拟</p>
+<p>Ctrl+F1 //改变键盘映射</p>
+<p>Ctrl+Alt+F5 //开始/停止录制视频</p>
+<p>Ctrl+F4 //交换挂载的磁盘映像，也就是更新磁盘文件</p>
+<p>Ctrl+F5 //截图</p>
+<p>Ctrl+F6 //开始/停止录制声音</p>
+<p>Ctrl+F7 //减少跳帧</p>
+<p>Ctrl+F8 //增加跳帧</p>
+<p>Ctrl+F9 //关闭DOSBOX</p>
+<p>Ctrl+F10 //捕捉/释放鼠标</p>
+<p>Ctrl+F11 //模拟减速</p>
+<p>Ctrl+F12 //加速模拟</p>
+<p>Alt+F12 //不锁定速度</p>
+<h4 id="masm的安装"><a class="markdownIt-Anchor" href="#masm的安装"></a> MASM的安装</h4>
+<p>复制安装文件夹到DosProj</p>
+<p><img src="/images/media/media/image153.png" alt="" /></p>
+<p>然后启动dosbox</p>
+<p><img src="/images/media/media/image154.png" alt="" /></p>
+<p>输入命令，如上图</p>
+<p><img src="/images/media/media/image155.png" alt="" /></p>
+<p>按下回车继续</p>
+<p>选择第二个</p>
+<p><img src="/images/media/media/image156.png" alt="" /></p>
+<p><img src="/images/media/media/image157.png" alt="" /></p>
+<p><img src="/images/media/media/image158.png" alt="" /></p>
+<p>如果需要修改某项，可以选择进行修改</p>
+<p>没有修改的需求的话，就选择NO CHANGES</p>
+<p>然后开启安装程序</p>
+<p><img src="/images/media/media/image159.png" alt="" /></p>
+<p>成功安装后，如下图</p>
+<p><img src="/images/media/media/image160.png" alt="" /></p>
+<p>查看环境设置</p>
+<p><img src="/images/media/media/image161.png" alt="" /></p>
+<p>查看系统设置</p>
+<p><img src="/images/media/media/image162.png" alt="" /></p>
+<p><img src="/images/media/media/image163.png" alt="" /></p>
+<p><img src="/images/media/media/image164.png" alt="" /></p>
+<p>最后选择Exit SETUP结束安装程序</p>
+<p><img src="/images/media/media/image165.png" alt="" /></p>
+<p><img src="/images/media/media/image166.png" alt="" /></p>
+<h4 id="编译汇编"><a class="markdownIt-Anchor" href="#编译汇编"></a> 编译汇编</h4>
+<p>首先准备一个汇编文件</p>
+<p><img src="/images/media/media/image167.png" alt="" /></p>
+<p>.DOSSEG</p>
+<p>.MODEL small, os_dos, pascal</p>
+<p>.STACK 100h</p>
+<p>.DATA</p>
+<p>PUBLIC message, lmessage</p>
+<p>message BYTE &quot;Hello World!!!$&quot;</p>
+<p>lmessage EQU $-message</p>
+<p>.CODE</p>
+<p>.STARTUP</p>
+<p>mov ax, 0900h</p>
+<p>lea dx, message</p>
+<p>int 21h</p>
+<p>mov ax, 4C00h</p>
+<p>int 21h</p>
+<p>.EXIT</p>
+<p>END</p>
+<p>然后执行编译命令</p>
+<p><img src="/images/media/media/image168.png" alt="" /></p>
+<p>这样就可以生成hellow~1.exe程序</p>
+<p><img src="/images/media/media/image169.png" alt="" /></p>
+<p>执行exe即可看到hello world</p>
+<p>也可以执行debug HELLOW~1.exe进行调试</p>
+<p><img src="/images/media/media/image170.png" alt="" /></p>
+<h3 id="2-中断简述"><a class="markdownIt-Anchor" href="#2-中断简述"></a> 2 中断简述</h3>
+<p>中断是指计算机运行过程中，出现某些意外情况需主机干预时，机器能自动停止<strong>正在运行的程序</strong>并转入<strong>处理新情况的程序</strong>，处理完毕后又返回原被暂停的程序继续运行。</p>
+<p><img src="/images/media/media/image171.png" alt="" /></p>
+<p>按照事件发生的顺序，中断过程包括 ：</p>
+<p>[①中断源发出中断请求;]{.underline}</p>
+<p>[②判断当前处理机是否允许中断和该中断源是否被屏蔽;]{.underline}</p>
+<p>[③优先权排队;]{.underline}</p>
+<p>[④处理机执行完当前指令或当前指令无法执行完，则立即停止当前程序，<strong>保护断点地址和处理机当前状态</strong>，转入相应的中断服务程序;]{.underline}</p>
+<p>⑤执行中断服务程序;</p>
+<p>⑥恢复被保护的状态，执行&quot;中断返回&quot;指令回到被中断的程序或转入其他程序。</p>
+<p>上述过程中前四项操作是由<em>硬件</em>完成的，后两项是由<em>软件</em>完成的。</p>
+<h3 id="3-硬中断和软中断"><a class="markdownIt-Anchor" href="#3-硬中断和软中断"></a> 3 硬中断和软中断</h3>
+<h4 id="硬件中断hardware-interrupt"><a class="markdownIt-Anchor" href="#硬件中断hardware-interrupt"></a> 硬件中断（Hardware Interrupt）</h4>
+<p><strong>可屏蔽中断（maskable<br />
+interrupt）</strong>。硬件中断的一类，可通过在中断屏蔽寄存器中设定位掩码来关闭。</p>
+<p><strong>非可屏蔽中断（non-maskable<br />
+interrupt，NMI）</strong>。硬件中断的一类，无法通过在中断屏蔽寄存器中设定位掩码来关闭。典型例子是时钟中断（一个硬件时钟以恒定频率—如50Hz—发出的中断）。</p>
+<p><strong>处理器间中断（interprocessor<br />
+interrupt）</strong>。一种特殊的硬件中断。由处理器发出，被其它处理器接收。仅见于多处理器系统，以便于处理器间通信或同步。</p>
+<p><strong>伪中断（spurious<br />
+interrupt）</strong>。一类不希望被产生的硬件中断。发生的原因有很多种，如中断线路上电气信号异常，或是中断请求设备本身有问题。</p>
+<h4 id="软件中断software-interrupt"><a class="markdownIt-Anchor" href="#软件中断software-interrupt"></a> 软件中断（Software Interrupt）</h4>
+<p><strong>软件中断</strong><br />
+是一条CPU指令，用以自陷一个中断。由于软中断指令通常要运行一个切换CPU至内核态（Kernel<br />
+Mode/Ring 0）的子例程，它常被用作实现系统调用（System call）。</p>
+<h3 id="4-dos中断介绍"><a class="markdownIt-Anchor" href="#4-dos中断介绍"></a> 4 DOS中断介绍</h3>
+<p>PC系统异常复杂，而且功能繁多</p>
+<p>但是其中很多功能都是由驱动或者系统控制的</p>
+<p>而这些代码都运行在系统内核层</p>
+<p>普通用户根本无法直接调用</p>
+<p>所以必须要有一种方式，能够让用户程序也能调用这些功能</p>
+<p>否则就算系统能够支持这些设备的运行</p>
+<p>用户也无法自由的使用这些设备</p>
+<p>于是中断调用这种方式就产生了</p>
+<p>下面所有的中断调用都是基于int 21h</p>
+<p>通过AH传递需要调用的功能号</p>
+<p>通过其他寄存器传递参数</p>
+<p>最终实现各种功能的调用</p>
+<hr />
+<p>AH   功能                       调用参数                                                                  返回参数</p>
+<p>00   程序终止(同INT 20H)        CS=程序段前缀</p>
+<p>01   键盘输入并回显             　                                                                        AL=输入字符</p>
+<p>02   显示输出                   DL=输出字符</p>
+<p>03   异步通迅输入               　                                                                        AL=输入数据</p>
+<p>04   异步通迅输出               DL=输出数据</p>
+<p>05   打印机输出                 DL=输出字符</p>
+<p>06   直接控制台I/O              DL=FF(输入)\                                                              AL=输入字符<br />
+DL=字符(输出)</p>
+<p>07   键盘输入(无回显)           　                                                                        AL=输入字符</p>
+<p>08   键盘输入(无回显)\          　                                                                        AL=输入字符<br />
+检测Ctrl-Break</p>
+<p>09   显示字符串                 DS:DX=串地址\                                                             　<br />
+'$'结束字符串</p>
+<p>0A   键盘输入到缓冲区           DS:DX=缓冲区首地址\                                                       (DS:DX+1)=实际输入的字符数<br />
+(DS:DX)=缓冲区最大字符数</p>
+<p>0B   检验键盘状态               　                                                                        AL=00 有输入<br />
+AL=FF 无输入</p>
+<p>0C   清除输入缓冲区并\          AL=输入功能号\                                                            　<br />
+请求指定的输入功能         (1,6,7,8,A)</p>
+<p>0D   磁盘复位                   　                                                                        清除文件缓冲区</p>
+<p>0E   指定当前缺省的磁盘驱动器   DL=驱动器号 0=A,1=B,.…                                                  AL=驱动器数</p>
+<p>0F   打开文件                   DS:DX=FCB(File Operation Function)首地址                                  AL=00 文件找到<br />
+AL=FF 文件未找到</p>
+<p>10   关闭文件                   DS:DX=FCB首地址                                                           AL=00 目录修改成功<br />
+AL=FF 目录中未找到文件</p>
+<p>11   查找第一个目录项           DS:DX=FCB首地址                                                           AL=00 找到<br />
+AL=FF 未找到</p>
+<p>12   查找下一个目录项           DS:DX=FCB首地址\                                                          AL=00 找到<br />
+(文件中带有*或?)                                                         AL=FF 未找到</p>
+<p>13   删除文件                   DS:DX=FCB首地址                                                           AL=00 删除成功<br />
+AL=FF 未找到</p>
+<p>14   顺序读                     DS:DX=FCB首地址                                                           AL=00 读成功<br />
+  =01 文件结束,记录中无数据<br />
+  =02 DTA空间不够<br />
+  =03 文件结束,记录不完整</p>
+<p>15   顺序写                     DS:DX=FCB首地址                                                           AL=00 写成功<br />
+  =01 盘满<br />
+  =02 DTA空间不够</p>
+<p>16   建文件                     DS:DX=FCB首地址                                                           AL=00 建立成功<br />
+  =FF 无磁盘空间</p>
+<p>17   文件改名                   DS:DX=FCB首地址\                                                          AL=00 成功<br />
+(DS:DX+1)=旧文件名\                                                       AL=FF 未成功<br />
+(DS:DX+17)=新文件名</p>
+<p>19   取当前缺省磁盘驱动器       　                                                                        AL=缺省的驱动器号<br />
+ 0=A,1=B,2=C,.…</p>
+<p>1A   置DTA地址                  DS:DX=DTA(Disk Transfer Area)地址</p>
+<p>1B   取缺省驱动器FAT信息        　                                                                        AL=每簇的扇区数111<br />
+DS:BX=FAT标识字节<br />
+CX=物理扇区大小<br />
+DX=缺省驱动器的簇数</p>
+<p>1C   取任一驱动器FAT信息        DL=驱动器号                                                               同上</p>
+<p>21   随机读                     DS:DX=FCB首地址                                                           AL=00 读成功<br />
+  =01 文件结束<br />
+  =02 缓冲区溢出<br />
+  =03 缓冲区不满</p>
+<p>22   随机写                     DS:DX=FCB首地址                                                           AL=00 写成功<br />
+  =01 盘满<br />
+  =02 缓冲区溢出</p>
+<p>23   测定文件大小               DS:DX=FCB首地址                                                           AL=00 成功(文件长度填入FCB)<br />
+AL=FF 未找到</p>
+<p>24   设置随机记录号             DS:DX=FCB首地址</p>
+<p>25   设置中断向量               DS:DX=中断向量\                                                           　<br />
+AL=中断类型号</p>
+<p>26   建立程序段前缀             DX=新的程序段前缀</p>
+<p>27   随机分块读                 DS:DX=FCB首地址\                                                          AL=00 读成功<br />
+CX=记录数                                                                   =01 文件结束<br />
+  =02 缓冲区太小,传输结束<br />
+  =03 缓冲区不满</p>
+<p>28   随机分块写                 DS:DX=FCB首地址\                                                          AL=00 写成功<br />
+CX=记录数                                                                   =01 盘满<br />
+  =02 缓冲区溢出</p>
+<p>29   分析文件名                 ES:DI=FCB首地址\                                                          AL=00 标准文件<br />
+DS:SI=ASCIIZ串\                                                             =01 多义文件<br />
+AL=控制分析标志                                                             =02 非法盘符</p>
+<p>2A   取日期                     　                                                                        CX=年<br />
+DH:DL=月:日(二进制)</p>
+<p>2B   设置日期                   CX:DH:DL=年:月:日                                                         AL=00 成功<br />
+  =FF 无效</p>
+<p>2C   取时间                     　                                                                        CH:CL=时:分<br />
+DH:DL=秒:1/100秒</p>
+<p>2D   设置时间                   CH:CL=时:分\                                                              AL=00 成功<br />
+DH:DL=秒:1/100秒                                                            =FF 无效</p>
+<p>2E   置磁盘自动读写标志         AL=00 关闭标志\                                                           　<br />
+AL=01 打开标志</p>
+<p>2F   取磁盘缓冲区的首址         　                                                                        ES:BX=缓冲区首址</p>
+<p>30   取DOS版本号                　                                                                        AH=发行号,AL=版本</p>
+<p>31   结束并驻留                 AL=返回码\                                                                　<br />
+DX=驻留区大小</p>
+<p>33   Ctrl-Break检测             AL=00 取状态\                                                             DL=00 关闭Ctrl-Break检测<br />
+  =01 置状态(DL)\                                                           =01 打开Ctrl-Break检测<br />
+DL=00 关闭检测\ <br />
+  =01 打开检测</p>
+<p>35   取中断向量                 AL=中断类型                                                               ES:BX=中断向量</p>
+<p>36   取空闲磁盘空间             DL=驱动器号 \                                                             成功:AX=每簇扇区数<br />
+0=缺省,1=A,2=B,.…                                                            BX=有效簇数<br />
+     CX=每扇区字节数<br />
+     DX=总簇数<br />
+失败:AX=FFFF</p>
+<p>38   置/取国家信息              DS:DX=信息区首地址                                                        BX=国家码(国际电话前缀码)<br />
+AX=错误码</p>
+<p>39   建立子目录(MKDIR)          DS:DX=ASCIIZ串地址                                                        AX=错误码</p>
+<p>3A   删除子目录（RMDIR）        DS:DX=ASCIIZ串地址                                                        AX=错误码</p>
+<p>3B   改变当前目录(CHDIR)        DS:DX=ASCIIZ串地址                                                        AX=错误码</p>
+<p>3C   建立文件                   DS:DX=ASCIIZ串地址\                                                       成功:AX=文件代号<br />
+CX=文件属性                                                               错误:AX=错误码</p>
+<p>3D   打开文件                   DS:DX=ASCIIZ串地址\                                                       成功:AX=文件代号<br />
+AL=0 读\                                                                  错误:AX=错误码<br />
+  =1 写\ <br />
+  =3 读/写</p>
+<p>3E   关闭文件                   BX=文件代号                                                               失败:AX=错误码</p>
+<p>3F   读文件或设备               DS:DX=数据缓冲区地址\                                                     读成功:<br />
+BX=文件代号\                                                                AX=实际读入的字节数<br />
+CX=读取的字节数                                                             AX=0 已到文件尾<br />
+读出错:AX=错误码</p>
+<p>40   写文件或设备               DS:DX=数据缓冲区地址\                                                     写成功:<br />
+BX=文件代号\                                                                AX=实际写入的字节数<br />
+CX=写入的字节数                                                           写出错:AX=错误码</p>
+<p>41   删除文件                   DS:DX=ASCIIZ串地址                                                        成功:AX=00<br />
+出错:AX=错误码(2,5)</p>
+<p>42   移动文件指针               BX=文件代号\                                                              成功:DX:AX=新文件指针位置<br />
+CX:DX=位移量\                                                             出错:AX=错误码<br />
+AL=移动方式(0:从文件头绝对位移,1:从当前位置相对移动,2:从文件尾绝对位移)</p>
+<p>43   置/取文件属性              DS:DX=ASCIIZ串地址\                                                       成功:CX=文件属性<br />
+AL=0 取文件属性\                                                          失败:CX=错误码<br />
+AL=1 置文件属性\ <br />
+CX=文件属性</p>
+<p>44   设备文件I/O控制            BX=文件代号\                                                              DX=设备信息<br />
+AL=0 取状态\ <br />
+  =1 置状态DX\ <br />
+  =2 读数据\ <br />
+  =3 写数据\ <br />
+  =6 取输入状态\ <br />
+  =7 取输出状态</p>
+<p>45   复制文件代号               BX=文件代号1                                                              成功:AX=文件代号2<br />
+失败:AX=错误码</p>
+<p>46   人工复制文件代号           BX=文件代号1\                                                             失败:AX=错误码<br />
+CX=文件代号2</p>
+<p>47   取当前目录路径名           DL=驱动器号\                                                              (DS:SI)=ASCIIZ串<br />
+DS:SI=ASCIIZ串地址                                                        失败:AX=出错码</p>
+<p>48   分配内存空间               BX=申请内存容量                                                           成功:AX=分配内存首地<br />
+失败:BX=最大可用内存</p>
+<p>49   释放内容空间               ES=内存起始段地址                                                         失败:AX=错误码</p>
+<p>4A   调整已分配的存储块         ES=原内存起始地址\                                                        失败:BX=最大可用空间<br />
+BX=再申请的容量                                                                AX=错误码</p>
+<p>4B   装配/执行程序              DS:DX=ASCIIZ串地址\                                                       失败:AX=错误码<br />
+ES:BX=参数区首地址\ <br />
+AL=0 装入执行\ <br />
+AL=3 装入不执行</p>
+<p>4C   带返回码结束               AL=返回码</p>
+<p>4D   取返回代码                 　                                                                        AX=返回代码</p>
+<p>4E   查找第一个匹配文件         DS:DX=ASCIIZ串地址\                                                       AX=出错代码(02,18)<br />
+CX=属性</p>
+<p>4F   查找下一个匹配文件         DS:DX=ASCIIZ串地址\                                                       AX=出错代码(18)<br />
+(文件名中带有?或*)</p>
+<p>54   取盘自动读写标志           　                                                                        AL=当前标志值</p>
+<p>56   文件改名                   DS:DX=ASCIIZ串(旧)\                                                       AX=出错码(03,05,17)<br />
+ES:DI=ASCIIZ串(新)</p>
+<p>57   置/取文件日期和时间        BX=文件代号\                                                              DX:CX=日期和时间<br />
+AL=0 读取\                                                                失败:AX=错误码<br />
+AL=1 设置(DX:CX)</p>
+<p>58   取/置分配策略码            AL=0 取码\                                                                成功:AX=策略码<br />
+AL=1 置码(BX)                                                             失败:AX=错误码</p>
+<p>59   取扩充错误码               　                                                                        AX=扩充错误码<br />
+BH=错误类型<br />
+BL=建议的操作<br />
+CH=错误场所</p>
+<p>5A   建立临时文件               CX=文件属性\                                                              成功:AX=文件代号<br />
+DS:DX=ASCIIZ串地址                                                        失败:AX=错误码</p>
+<p>5B   建立新文件                 CX=文件属性\                                                              成功:AX=文件代号<br />
+DS:DX=ASCIIZ串地址                                                        失败:AX=错误码</p>
+<p>5C   控制文件存取               AL=00封锁\                                                                失败:AX=错误码<br />
+  =01开启\ <br />
+BX=文件代号\ <br />
+CX:DX=文件位移\ <br />
+SI:DI=文件长度</p>
+<p>62   取程序段前缀               　                                                                        BX=PSP地址</p>
+<hr />
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B1%87%E7%BC%96/" rel="tag"><i class="fa fa-tag"></i> 汇编</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/03/08/CoroNet/" rel="prev" title="CoroNet高性能协成网络库">
+      <i class="fa fa-chevron-left"></i> CoroNet高性能协成网络库
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-cpu%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text"> 1 CPU模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text"> CPU概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text"> 工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.3.</span> <span class="nav-text"> 寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">1.4.</span> <span class="nav-text"> 指令流水线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%85%E5%AD%98%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text"> 2 内存工作模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">2.1.</span> <span class="nav-text"> 内存是如何工作的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%9C%A8%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text"> 内存在系统中的角色和作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.3.</span> <span class="nav-text"> 内存地址的概念</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%80%BB%E7%BA%BF%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text"> 3 总线的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E6%A6%82%E8%BF%B0"><span class="nav-number">3.1.</span> <span class="nav-text"> 总线概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E5%9C%A8%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.2.</span> <span class="nav-text"> 总线在系统中的作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%A1%AC%E7%9B%98%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text"> 4 硬盘工作模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">4.1.</span> <span class="nav-text"> 硬盘是如何工作的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E8%AF%BB%E5%86%99%E9%80%9F%E5%BA%A6%E5%92%8C%E7%A1%AC%E7%9B%98%E8%AF%BB%E5%86%99%E9%80%9F%E5%BA%A6%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">4.2.</span> <span class="nav-text"> 内存读写速度和硬盘读写速度的对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%98%BE%E5%8D%A1%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text"> 5 显卡工作模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E5%8D%A1%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">5.1.</span> <span class="nav-text"> 显卡是如何工作的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E5%AD%98%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">5.2.</span> <span class="nav-text"> 显存是如何工作的</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%BD%91%E5%8D%A1%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text"> 6 网卡工作模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="nav-number">6.1.</span> <span class="nav-text"> 网卡的介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%89%E7%BA%A4%E5%92%8C%E5%90%8C%E8%BD%B4%E7%94%B5%E7%BC%86%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">6.2.</span> <span class="nav-text"> 光纤和同轴电缆的差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">6.3.</span> <span class="nav-text"> 网卡的工作原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x86%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4"><span class="nav-number"></span> <span class="nav-text"> x86汇编指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text"> 快速搭建一个汇编学习项目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.1.</span> <span class="nav-text"> 如何创建项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.2.</span> <span class="nav-text"> 如何使用项目</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%87%E7%BC%96%E4%B8%AD%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text"> 汇编中的寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text"> 通用寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.2.</span> <span class="nav-text"> 标志寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E7%8A%B6%E6%80%81%E6%A0%87%E5%BF%97status-flags"><span class="nav-number">2.2.1.</span> <span class="nav-text"> 1、状态标志(Status Flags)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E6%8E%A7%E5%88%B6%E6%A0%87%E5%BF%97df-flag"><span class="nav-number">2.2.2.</span> <span class="nav-text"> 2、控制标志(DF flag)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E7%B3%BB%E7%BB%9F%E6%A0%87%E5%BF%97%E4%BB%A5%E5%8F%8Aiopl%E5%9F%9Fsystem-flags-and-iopl-field"><span class="nav-number">2.2.3.</span> <span class="nav-text"> 3、系统标志以及IOPL域(System Flags and IOPL Field)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.3.</span> <span class="nav-text"> 段寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.4.</span> <span class="nav-text"> 控制寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8%E6%A6%82%E8%BF%B0"><span class="nav-number">2.4.1.</span> <span class="nav-text"> 控制寄存器概述：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.4.2.</span> <span class="nav-text"> 控制寄存器详解：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#cr0%E4%B8%AD%E5%8D%8F%E5%A4%84%E7%90%86%E5%99%A8%E6%8E%A7%E5%88%B6%E4%BD%8D"><span class="nav-number">2.4.2.1.</span> <span class="nav-text"> CR0中协处理器控制位</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#cr0%E4%B8%AD%E4%BF%9D%E6%8A%A4%E6%8E%A7%E5%88%B6%E4%BD%8D"><span class="nav-number">2.4.2.2.</span> <span class="nav-text"> CR0中保护控制位</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#cr2%E5%92%8Ccr3"><span class="nav-number">2.4.2.3.</span> <span class="nav-text"> CR2和CR3</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#cr4"><span class="nav-number">2.4.2.4.</span> <span class="nav-text"> CR4</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.5.</span> <span class="nav-text"> 调试寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%9C%B0%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.6.</span> <span class="nav-text"> 系统地址寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.7.</span> <span class="nav-text"> 其他寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#eip"><span class="nav-number">2.7.1.</span> <span class="nav-text"> EIP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#tsc"><span class="nav-number">2.7.2.</span> <span class="nav-text"> TSC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.7.3.</span> <span class="nav-text"> 浮点寄存器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text"> 寻址方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AB%8B%E5%8D%B3%E5%AF%BB%E5%9D%80"><span class="nav-number">3.1.</span> <span class="nav-text"> 立即寻址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E5%AF%BB%E5%9D%80"><span class="nav-number">3.2.</span> <span class="nav-text"> 直接寻址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E5%AF%BB%E5%9D%80"><span class="nav-number">3.3.</span> <span class="nav-text"> 寄存器寻址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E9%97%B4%E6%8E%A5%E5%AF%BB%E5%9D%80"><span class="nav-number">3.4.</span> <span class="nav-text"> 寄存器间接寻址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E7%9B%B8%E5%AF%B9%E5%AF%BB%E5%9D%80"><span class="nav-number">3.5.</span> <span class="nav-text"> 寄存器相对寻址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E5%9D%80%E5%8F%98%E5%9D%80%E5%AF%BB%E5%9D%80"><span class="nav-number">3.6.</span> <span class="nav-text"> 基址变址寻址</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E4%BC%A0%E9%80%81%E6%8C%87%E4%BB%A4%E5%92%8C%E5%8F%96%E6%9C%89%E6%95%88%E5%9C%B0%E5%9D%80%E6%8C%87%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text"> 常用传送指令和取有效地址指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mov%E6%8C%87%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text"> MOV指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lea%E6%8C%87%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text"> LEA指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%87%8F%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="nav-number">5.</span> <span class="nav-text"> 加减指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#add%E6%8C%87%E4%BB%A4"><span class="nav-number">5.1.</span> <span class="nav-text"> ADD指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sub%E6%8C%87%E4%BB%A4"><span class="nav-number">5.2.</span> <span class="nav-text"> SUB指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#inc%E6%8C%87%E4%BB%A4"><span class="nav-number">5.3.</span> <span class="nav-text"> INC指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dec%E6%8C%87%E4%BB%A4"><span class="nav-number">5.4.</span> <span class="nav-text"> DEC指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#neg%E6%8C%87%E4%BB%A4"><span class="nav-number">5.5.</span> <span class="nav-text"> NEG指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8%E5%8F%8A%E5%85%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text"> 标志寄存器及其使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pushfpushfdpushfq%E6%8C%87%E4%BB%A4"><span class="nav-number">6.1.</span> <span class="nav-text"> PUSHF&#x2F;PUSHFD&#x2F;PUSHFQ指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#popfpopfdpopfq%E6%8C%87%E4%BB%A4"><span class="nav-number">6.2.</span> <span class="nav-text"> POPF&#x2F;POPFD&#x2F;POPFQ指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E5%92%8C%E8%B7%B3%E8%BD%AC%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="nav-number">7.</span> <span class="nav-text"> 比较和跳转指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cmp%E6%8C%87%E4%BB%A4"><span class="nav-number">7.1.</span> <span class="nav-text"> CMP指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#test%E6%8C%87%E4%BB%A4"><span class="nav-number">7.2.</span> <span class="nav-text"> TEST指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jmp%E7%B3%BB%E5%88%97%E6%8C%87%E4%BB%A4"><span class="nav-number">7.3.</span> <span class="nav-text"> JMP系列指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E6%A0%88%E6%93%8D%E4%BD%9C%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="nav-number">8.</span> <span class="nav-text"> 堆栈操作指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#push%E6%8C%87%E4%BB%A4"><span class="nav-number">8.1.</span> <span class="nav-text"> PUSH指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pop%E6%8C%87%E4%BB%A4"><span class="nav-number">8.2.</span> <span class="nav-text"> POP指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pushapushad%E6%8C%87%E4%BB%A4"><span class="nav-number">8.3.</span> <span class="nav-text"> PUSHA&#x2F;PUSHAD指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#popapopad%E6%8C%87%E4%BB%A4"><span class="nav-number">8.4.</span> <span class="nav-text"> POPA&#x2F;POPAD指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">9.</span> <span class="nav-text"> 函数调用指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#call%E6%8C%87%E4%BB%A4"><span class="nav-number">9.1.</span> <span class="nav-text"> CALL指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ret%E6%8C%87%E4%BB%A4"><span class="nav-number">9.2.</span> <span class="nav-text"> RET指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B9%98%E9%99%A4%E6%B3%95%E6%8C%87%E4%BB%A4"><span class="nav-number">10.</span> <span class="nav-text"> 常用的乘除法指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mul%E6%8C%87%E4%BB%A4"><span class="nav-number">10.1.</span> <span class="nav-text"> MUL指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#imul%E6%8C%87%E4%BB%A4"><span class="nav-number">10.2.</span> <span class="nav-text"> IMUL指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#div%E6%8C%87%E4%BB%A4"><span class="nav-number">10.3.</span> <span class="nav-text"> DIV指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idiv%E6%8C%87%E4%BB%A4"><span class="nav-number">10.4.</span> <span class="nav-text"> IDIV指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E6%8B%93%E5%B1%95%E6%8C%87%E4%BB%A4"><span class="nav-number">11.</span> <span class="nav-text"> 整数拓展指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cbwcwdecdqe%E6%8C%87%E4%BB%A4"><span class="nav-number">11.1.</span> <span class="nav-text"> CBW&#x2F;CWDE&#x2F;CDQE指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cwdcdqcqo%E6%8C%87%E4%BB%A4"><span class="nav-number">11.2.</span> <span class="nav-text"> CWD&#x2F;CDQ&#x2F;CQO指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E4%BC%A0%E9%80%81%E6%8C%87%E4%BB%A4"><span class="nav-number">12.</span> <span class="nav-text"> 拓展传送指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#movsxmovsxd%E6%8C%87%E4%BB%A4"><span class="nav-number">12.1.</span> <span class="nav-text"> MOVSX&#x2F;MOVSXD指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#movzx%E6%8C%87%E4%BB%A4"><span class="nav-number">12.2.</span> <span class="nav-text"> MOVZX指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#movss%E6%8C%87%E4%BB%A4"><span class="nav-number">12.3.</span> <span class="nav-text"> MOVSS指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#movsd%E6%8C%87%E4%BB%A4"><span class="nav-number">12.4.</span> <span class="nav-text"> MOVSD指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#movsmovsbmovswmovsdmovsq%E6%8C%87%E4%BB%A4"><span class="nav-number">12.5.</span> <span class="nav-text"> MOVS&#x2F;MOVSB&#x2F;MOVSW&#x2F;MOVSD&#x2F;MOVSQ指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E6%8C%87%E4%BB%A4"><span class="nav-number">13.</span> <span class="nav-text"> 逻辑运算指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#and%E6%8C%87%E4%BB%A4"><span class="nav-number">13.1.</span> <span class="nav-text"> AND指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#not%E6%8C%87%E4%BB%A4"><span class="nav-number">13.2.</span> <span class="nav-text"> NOT指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#or%E6%8C%87%E4%BB%A4"><span class="nav-number">13.3.</span> <span class="nav-text"> OR指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xor%E6%8C%87%E4%BB%A4"><span class="nav-number">13.4.</span> <span class="nav-text"> XOR指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E7%A7%BB%E6%8C%87%E4%BB%A4"><span class="nav-number">14.</span> <span class="nav-text"> 位移指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#salshl%E6%8C%87%E4%BB%A4"><span class="nav-number">14.1.</span> <span class="nav-text"> SAL&#x2F;SHL指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sar%E6%8C%87%E4%BB%A4"><span class="nav-number">14.2.</span> <span class="nav-text"> SAR指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shr%E6%8C%87%E4%BB%A4"><span class="nav-number">14.3.</span> <span class="nav-text"> SHR指令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E6%8C%87%E4%BB%A4"><span class="nav-number">15.</span> <span class="nav-text"> 循环指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#rclrol%E6%8C%87%E4%BB%A4"><span class="nav-number">15.1.</span> <span class="nav-text"> RCL&#x2F;ROL指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rcrror%E6%8C%87%E4%BB%A4"><span class="nav-number">15.2.</span> <span class="nav-text"> RCR&#x2F;ROR指令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number"></span> <span class="nav-text"> 系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text"> 1 开发环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dosbox%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text"> Dosbox安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEdosbox"><span class="nav-number">1.2.</span> <span class="nav-text"> 配置dosbox</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">1.3.</span> <span class="nav-text"> 快捷键</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#masm%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.</span> <span class="nav-text"> MASM的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E6%B1%87%E7%BC%96"><span class="nav-number">1.5.</span> <span class="nav-text"> 编译汇编</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%AD%E6%96%AD%E7%AE%80%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text"> 2 中断简述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%A1%AC%E4%B8%AD%E6%96%AD%E5%92%8C%E8%BD%AF%E4%B8%AD%E6%96%AD"><span class="nav-number">3.</span> <span class="nav-text"> 3 硬中断和软中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E4%B8%AD%E6%96%ADhardware-interrupt"><span class="nav-number">3.1.</span> <span class="nav-text"> 硬件中断（Hardware Interrupt）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E4%B8%AD%E6%96%ADsoftware-interrupt"><span class="nav-number">3.2.</span> <span class="nav-text"> 软件中断（Software Interrupt）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-dos%E4%B8%AD%E6%96%AD%E4%BB%8B%E7%BB%8D"><span class="nav-number">4.</span> <span class="nav-text"> 4 DOS中断介绍</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

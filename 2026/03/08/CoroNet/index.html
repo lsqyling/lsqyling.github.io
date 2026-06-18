@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言： 这是一个极具前瞻性和工程价值的目标！结合 C++20 协程、Linux 的 io_uring 与 Windows 的 IOCP，打造一个真正高性能、跨平台、同步风格编写、异步底层执行的网络库，正是现代系统编程的“圣杯”之一。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CoroNet高性能协成网络库">
+<meta property="og:url" content="https://lsqyling.github.io/2026/03/08/CoroNet/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言： 这是一个极具前瞻性和工程价值的目标！结合 C++20 协程、Linux 的 io_uring 与 Windows 的 IOCP，打造一个真正高性能、跨平台、同步风格编写、异步底层执行的网络库，正是现代系统编程的“圣杯”之一。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lsqyling.github.io/images/io_context_architecture.png">
+<meta property="article:published_time" content="2026-03-08T13:14:02.000Z">
+<meta property="article:modified_time" content="2026-03-17T03:09:06.797Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="协程">
+<meta property="article:tag" content="网络编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lsqyling.github.io/images/io_context_architecture.png">
+
+<link rel="canonical" href="https://lsqyling.github.io/2026/03/08/CoroNet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CoroNet高性能协成网络库 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2026/03/08/CoroNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CoroNet高性能协成网络库
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-03-08 21:14:02" itemprop="dateCreated datePublished" datetime="2026-03-08T21:14:02+08:00">2026-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-03-17 11:09:06" itemprop="dateModified" datetime="2026-03-17T11:09:06+08:00">2026-03-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前言： 这是一个极具前瞻性和工程价值的目标！结合 <strong>C++20 协程</strong>、<strong>Linux 的 io_uring</strong> 与 <strong>Windows 的 IOCP</strong>，打造一个<strong>真正高性能、跨平台、同步风格编写、异步底层执行</strong>的网络库，正是现代系统编程的“圣杯”之一。</p>
+<span id="more"></span>
+<hr />
+<h2 id="一-项目名称建议简洁-有技术感-易记"><a class="markdownIt-Anchor" href="#一-项目名称建议简洁-有技术感-易记"></a> 一、项目名称建议（简洁、有技术感、易记）</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">含义/联想</th>
+<th style="text-align:center">推荐度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>CoroNet</strong></td>
+<td style="text-align:center">Coroutine + Network，简洁直白</td>
+<td style="text-align:center">⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>UringIO</strong></td>
+<td style="text-align:center">突出 io_uring，但弱化 Windows</td>
+<td style="text-align:center">⭐⭐</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Asyncore</strong></td>
+<td style="text-align:center">Async + Core，类似 Python asyncio</td>
+<td style="text-align:center">⭐⭐⭐</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>NetFiber</strong></td>
+<td style="text-align:center">Fiber 风格协程 + Net</td>
+<td style="text-align:center">⭐⭐⭐</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>CoSocket</strong></td>
+<td style="text-align:center">协程 Socket，直观</td>
+<td style="text-align:center">⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Aether</strong></td>
+<td style="text-align:center">“以太”，古希腊中传递信息的媒介，寓意轻盈、高速、无形</td>
+<td style="text-align:center">⭐⭐⭐⭐⭐（文艺+技术感）</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Strand</strong></td>
+<td style="text-align:center">意为“线束”，隐喻协程流 + I/O 流</td>
+<td style="text-align:center">⭐⭐⭐⭐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最终推荐"><a class="markdownIt-Anchor" href="#最终推荐"></a> ✅ 最终推荐：</h3>
+<blockquote>
+<p><strong><code>CoroNet</code></strong> —— 简洁、明确、易拼写、域名可用（coronet.dev / .io），开发者一眼看懂用途。</p>
+</blockquote>
+<hr />
+<h2 id="二-架构设计思想核心原则"><a class="markdownIt-Anchor" href="#二-架构设计思想核心原则"></a> 二、架构设计思想（核心原则）</h2>
+<h3 id="总目标"><a class="markdownIt-Anchor" href="#总目标"></a> 🎯 总目标：</h3>
+<blockquote>
+<p><strong>“Write like sync, run like async — on any platform.”</strong><br />
+（像写同步代码一样简单，像异步引擎一样高效——跨平台。）</p>
+</blockquote>
+<hr />
+<h3 id="1-分层架构layered-design"><a class="markdownIt-Anchor" href="#1-分层架构layered-design"></a> 1. 分层架构（Layered Design）</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────────┐</span><br><span class="line">│      User Application        │ ← C++20 协程：co_await socket.recv()</span><br><span class="line">├──────────────────────────────┤</span><br><span class="line">│   CoroNet Runtime (Core)     │ ← 协程调度器 + 跨平台抽象层</span><br><span class="line">├──────────────────────────────┤</span><br><span class="line">│   Platform Backend           │</span><br><span class="line">│   ┌─────────────┬──────────┐ │</span><br><span class="line">│   │  Linux      │ Windows  │ │</span><br><span class="line">│   │  io_uring   │  IOCP    │ │</span><br><span class="line">│   └─────────────┴──────────┘ │</span><br><span class="line">└──────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<h4 id="各层职责"><a class="markdownIt-Anchor" href="#各层职责"></a> 各层职责：</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">层级</th>
+<th style="text-align:center">职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>用户层</strong></td>
+<td style="text-align:center">编写 <code>co_await connect()</code>, <code>co_await send()</code>, <code>co_await recv()</code>，无回调、无状态机</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Runtime Core</strong></td>
+<td style="text-align:center">- 协程调度器（支持 work-stealing） - 统一 <code>Awaitable</code> 接口 - 超时、取消、错误传播机制</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Platform Backend</strong></td>
+<td style="text-align:center">- Linux: 封装 <code>io_uring</code> 提交/完成 - Windows: 封装 <code>WSARecv</code>/<code>WSASend</code> + IOCP 完成队列 - 自动选择最优后端</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="2-关键设计原则"><a class="markdownIt-Anchor" href="#2-关键设计原则"></a> 2. 关键设计原则</h3>
+<h4 id="原则-1零抽象惩罚zero-overhead-abstraction"><a class="markdownIt-Anchor" href="#原则-1零抽象惩罚zero-overhead-abstraction"></a> ✅ 原则 1：<strong>零抽象惩罚（Zero-overhead Abstraction）</strong></h4>
+<ul>
+<li>在各自平台使用<strong>原生最优 I/O 机制</strong>（io_uring / IOCP），不降级到 epoll 或 select。</li>
+<li>编译期多态（via <code>#ifdef _WIN32</code> 或 traits），避免运行时虚函数开销。</li>
+</ul>
+<h4 id="原则-2统一-awaitable-接口"><a class="markdownIt-Anchor" href="#原则-2统一-awaitable-接口"></a> ✅ 原则 2：<strong>统一 Awaitable 接口</strong></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用户看到的接口完全一致</span></span><br><span class="line"><span class="keyword">auto</span> data = <span class="keyword">co_await</span> socket.<span class="built_in">recv</span>(<span class="number">1024</span>);</span><br><span class="line"><span class="keyword">co_await</span> socket.<span class="built_in">send</span>(buffer);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>底层 <code>recv()</code> 返回一个 <code>Awaitable&lt;T&gt;</code> 对象，在 <code>co_await</code> 时挂起协程，并注册到平台后端。</li>
+<li>完成时由后端唤醒协程并返回结果。</li>
+</ul>
+<h4 id="原则-3协程调度与-io-解耦"><a class="markdownIt-Anchor" href="#原则-3协程调度与-io-解耦"></a> ✅ 原则 3：<strong>协程调度与 I/O 解耦</strong></h4>
+<ul>
+<li>调度器（Scheduler）管理所有协程生命周期。</li>
+<li>I/O 后端只负责“通知完成”，不直接操作协程栈。</li>
+<li>支持：- 单线程调度（客户端场景）
+<ul>
+<li>多线程 work-stealing（服务器场景）</li>
+</ul>
+</li>
+</ul>
+<h4 id="原则-4资源安全与-raii"><a class="markdownIt-Anchor" href="#原则-4资源安全与-raii"></a> ✅ 原则 4：<strong>资源安全与 RAII</strong></h4>
+<ul>
+<li><code>socket</code>、<code>buffer</code>、<code>timer</code> 等均支持 RAII。</li>
+<li>协程取消时自动清理 pending I/O（io_uring 可 cancel，IOCP 可关闭 socket 触发 ERROR_OPERATION_ABORTED）。</li>
+</ul>
+<h4 id="原则-5可观察性与调试友好"><a class="markdownIt-Anchor" href="#原则-5可观察性与调试友好"></a> ✅ 原则 5：<strong>可观察性与调试友好</strong></h4>
+<ul>
+<li>内置 trace ID、协程上下文日志。</li>
+<li>支持 hook 到 Prometheus / OpenTelemetry（可选）。</li>
+</ul>
+<hr />
+<h3 id="3-核心组件设计"><a class="markdownIt-Anchor" href="#3-核心组件设计"></a> 3. 核心组件设计</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">组件</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>coronet::TcpSocket</code></td>
+<td style="text-align:center">封装平台 socket，提供 <code>connect</code>, <code>send</code>, <code>recv</code> 等 awaitable 方法</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>coronet::IoContext</code></td>
+<td style="text-align:center">I/O 上下文，管理 io_uring ring 或 IOCP completion port</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>coronet::Scheduler</code></td>
+<td style="text-align:center">协程调度器，支持 <code>spawn()</code> 启动新协程</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>coronet::Timer</code></td>
+<td style="text-align:center">高精度定时器（io_uring timeout / Windows waitable timer）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>coronet::BufferPool</code></td>
+<td style="text-align:center">零拷贝缓冲池，避免频繁内存分配</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="4-跨平台实现策略"><a class="markdownIt-Anchor" href="#4-跨平台实现策略"></a> 4. 跨平台实现策略</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">Linux实现</th>
+<th style="text-align:center">Windows实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">异步 recv</td>
+<td style="text-align:center"><code>io_uring_prep_recv</code></td>
+<td style="text-align:center"><code>WSARecv</code> + OVERLAPPED</td>
+</tr>
+<tr>
+<td style="text-align:center">异步 send</td>
+<td style="text-align:center"><code>io_uring_prep_send</code></td>
+<td style="text-align:center"><code>WSASend</code> + OVERLAPPED</td>
+</tr>
+<tr>
+<td style="text-align:center">事件循环</td>
+<td style="text-align:center"><code>io_uring_wait_cqe</code></td>
+<td style="text-align:center"><code>GetQueuedCompletionStatusEx</code></td>
+</tr>
+<tr>
+<td style="text-align:center">定时器</td>
+<td style="text-align:center"><code>io_uring_prep_timeout</code></td>
+<td style="text-align:center"><code>CreateThreadpoolTimer</code> 或 <code>SetWaitableTimer</code></td>
+</tr>
+<tr>
+<td style="text-align:center">错误码</td>
+<td style="text-align:center"><code>errno</code> / <code>-ret</code></td>
+<td style="text-align:center"><code>WSAGetLastError()</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🔧 使用 CMake + feature test 自动启用 io_uring（需 liburing &gt;= 2.0）或 fallback 到 epoll（兼容旧内核）。</p>
+</blockquote>
+<hr />
+<h2 id="三-示例代码愿景"><a class="markdownIt-Anchor" href="#三-示例代码愿景"></a> 三、示例代码（愿景）</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coronet/coronet.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">coronet::Task&lt;<span class="type">void</span>&gt; <span class="title">echo_client</span><span class="params">(std::string host, <span class="type">uint16_t</span> port)</span> </span>&#123;</span><br><span class="line">    coronet::TcpSocket sock;</span><br><span class="line">    <span class="keyword">co_await</span> sock.<span class="built_in">connect</span>(host, port);</span><br><span class="line">    </span><br><span class="line">    std::string msg = <span class="string">&quot;Hello, CoroNet!&quot;</span>;</span><br><span class="line">    <span class="keyword">co_await</span> sock.<span class="built_in">send</span>(msg);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">auto</span> reply = <span class="keyword">co_await</span> sock.<span class="built_in">recv</span>(<span class="number">1024</span>);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Reply: &quot;</span> &lt;&lt; reply &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    coronet::IoContext ctx;</span><br><span class="line">    ctx.<span class="built_in">spawn</span>(<span class="built_in">echo_client</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">8888</span>));</span><br><span class="line">    ctx.<span class="built_in">run</span>(); <span class="comment">// 自动选择 io_uring 或 IOCP</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="四-项目定位与差异化"><a class="markdownIt-Anchor" href="#四-项目定位与差异化"></a> 四、项目定位与差异化</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">对比项</th>
+<th style="text-align:center">Boost.Asio</th>
+<th style="text-align:center">Seastar</th>
+<th style="text-align:center">CoroNet（你的项目）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">协程支持</td>
+<td style="text-align:center">C++20（实验性）</td>
+<td style="text-align:center">自研 fiber</td>
+<td style="text-align:center"><strong>原生 C++20 协程优先</strong></td>
+</tr>
+<tr>
+<td style="text-align:center">Linux 后端</td>
+<td style="text-align:center">epoll</td>
+<td style="text-align:center">aio + dpdk</td>
+<td style="text-align:center"><strong>io_uring（最新）</strong></td>
+</tr>
+<tr>
+<td style="text-align:center">Windows 后端</td>
+<td style="text-align:center">IOCP</td>
+<td style="text-align:center">❌ 不支持</td>
+<td style="text-align:center"><strong>IOCP（深度优化）</strong></td>
+</tr>
+<tr>
+<td style="text-align:center">跨平台</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌（Linux only）</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">学习曲线</td>
+<td style="text-align:center">中高</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center"><strong>低（同步风格）</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>CoroNet 的核心价值</strong>：<br />
+<strong>在 Windows 和 Linux 上，都提供接近硬件极限的性能，同时让用户写出最简单的代码。</strong></p>
+</blockquote>
+<hr />
+<h2 id="五-下一步建议"><a class="markdownIt-Anchor" href="#五-下一步建议"></a> 五、下一步建议</h2>
+<ol>
+<li><strong>命名确认</strong>：注册 <code>coronet</code> GitHub 仓库（如 <code>github.com/yourname/coronet</code>）</li>
+<li><strong>MVP 路线图</strong>：- 实现 Linux io_uring TCP recv/send
+<ul>
+<li>实现 Windows IOCP TCP recv/send</li>
+<li>封装统一 <code>Awaitable</code> 接口</li>
+<li>添加协程调度器</li>
+<li>跨平台 CMake 构建</li>
+</ul>
+</li>
+<li><strong>参考项目</strong>：- <a target="_blank" rel="noopener" href="https://github.com/facebook/folly">folly::AsyncSocket</a>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/tokio-rs/tokio-uring">tokio-uring</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/chriskohlhoff/asio">asio</a></li>
+</ul>
+</li>
+</ol>
+<hr />
+<p>如果你决定启动这个项目，<strong><code>CoroNet</code> 将填补 C++ 生态中“现代化、跨平台、协程优先、极致性能”网络库的空白</strong>。这不仅是技术挑战，更是对 C++ 系统编程未来的一次推动。</p>
+<h2 id="coronet-协成完整的状态机转换"><a class="markdownIt-Anchor" href="#coronet-协成完整的状态机转换"></a> CoroNet 协成完整的状态机转换</h2>
+<p>让我详细展示从创建到销毁的完整生命周期</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 示例代码</span></span><br><span class="line"><span class="function">task&lt;<span class="type">int</span>&gt; <span class="title">make_task</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">co_return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task&lt;<span class="type">void</span>&gt; <span class="title">caller</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = <span class="built_in">make_task</span>();</span><br><span class="line">    <span class="type">int</span> result = <span class="keyword">co_await</span> t;  <span class="comment">// ← 这里发生了什么？</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>阶段 1：Task 创建（未开始）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">make_task() 被调用</span><br><span class="line">    ↓</span><br><span class="line">创建 task_promise&lt;int&gt;</span><br><span class="line">    ↓</span><br><span class="line">调用 initial_suspend() → suspend_always</span><br><span class="line">    ↓</span><br><span class="line">返回 task&lt;int&gt; 对象（包含 coroutine_handle）</span><br><span class="line">    ↓</span><br><span class="line">此时协程处于：&quot;初始挂起&quot;状态</span><br><span class="line">    ┌──────────────────────┐</span><br><span class="line">    │ task_promise         │</span><br><span class="line">    │ ├─ state: mono       │</span><br><span class="line">    │ ├─ value: 未初始化   │</span><br><span class="line">    │ └─ parent_coro:      │</span><br><span class="line">    │    noop_coroutine()  │</span><br><span class="line">    └──────────────────────┘</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>阶段 2：第一次 co_await t</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">执行 co_await t (t 是左值)</span><br><span class="line">    ↓</span><br><span class="line">调用 t.operator co_await() const &amp;</span><br><span class="line">    ↓</span><br><span class="line">创建 awaiter 对象</span><br><span class="line">    ┌──────────────────────┐</span><br><span class="line">    │ awaiter              │</span><br><span class="line">    │ ├─ awaiter_base      │</span><br><span class="line">    │ │   └─ handle ───────┼──→ task_promise</span><br><span class="line">    │ └─ (无额外成员)      │</span><br><span class="line">    └──────────────────────┘</span><br><span class="line">    ↓</span><br><span class="line">编译器执行 await_ready()</span><br><span class="line">    ↓</span><br><span class="line">检查：!handle || handle.done()</span><br><span class="line">    ↓</span><br><span class="line">返回 false (协程未完成)</span><br><span class="line">    ↓</span><br><span class="line">【需要挂起 caller 协程】</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>阶段 3：await_suspend 建立父子关系</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">await_suspend</span>(caller_handle) &#123;</span><br><span class="line">    <span class="comment">// 1. 设置父协程（谁在等我）</span></span><br><span class="line">    handle.<span class="built_in">promise</span>().<span class="built_in">set_parent</span>(caller_handle);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 内存布局变化：</span></span><br><span class="line">    <span class="comment">// task_promise.parent_coro = caller_handle</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 返回子协程句柄（立即执行）</span></span><br><span class="line">    <span class="keyword">return</span> handle;  <span class="comment">// ← 切换到 task 协程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>此时的栈帧关系：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────┐</span><br><span class="line">│ caller 协程     │ ← 被挂起</span><br><span class="line">│ ├─ state:       │</span><br><span class="line">│ │   waiting     │</span><br><span class="line">│ └─ resume_point:│</span><br><span class="line">│   after co_await│</span><br><span class="line">└─────────────────┘</span><br><span class="line">       ↑</span><br><span class="line">       │ parent_coro</span><br><span class="line">       │</span><br><span class="line">┌─────────────────┐</span><br><span class="line">│ task 协程       │ ← 正在执行</span><br><span class="line">│ ├─ state:       │</span><br><span class="line">│ │   running     │</span><br><span class="line">│ └─ promise:     │</span><br><span class="line">│   parent_coro = │</span><br><span class="line">│   caller_handle │</span><br><span class="line">└─────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>阶段 4：Task 执行完毕</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">task 协程执行：</span><br><span class="line">    co_return 42;</span><br><span class="line">    ↓</span><br><span class="line">调用 promise.return_value(42)</span><br><span class="line">    ↓</span><br><span class="line">std::construct_at(&amp;value, 42);</span><br><span class="line">state = value_state::value;</span><br><span class="line">    ↓</span><br><span class="line">┌──────────────────────┐</span><br><span class="line">│ task_promise         │</span><br><span class="line">│ ├─ state: value ✅   │</span><br><span class="line">│ ├─ value: 42         │</span><br><span class="line">│ └─ parent_coro ──────┼──→ caller_handle</span><br><span class="line">└──────────────────────┘</span><br><span class="line">    ↓</span><br><span class="line">调用 final_suspend()</span><br><span class="line">    ↓</span><br><span class="line">返回 task_final_awaiter</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>阶段 5：final_suspend 返回父协程</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">task_final_awaiter</span> &#123;</span><br><span class="line">    std::coroutine_handle&lt;&gt;</span><br><span class="line">    <span class="built_in">await_suspend</span>(std::coroutine_handle&lt;Promise&gt; current) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> current.<span class="built_in">promise</span>().parent_coro;  <span class="comment">// ← 返回 caller_handle</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>控制权转移：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">task_final_awaiter.await_suspend()</span><br><span class="line">    ↓</span><br><span class="line">读取 parent_coro (caller_handle)</span><br><span class="line">    ↓</span><br><span class="line">返回 caller_handle</span><br><span class="line">    ↓</span><br><span class="line">调度器恢复到 caller 协程</span><br><span class="line">    ↓</span><br><span class="line">caller 从 co_await 处恢复执行</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>阶段 6：await_resume 获取结果</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 回到 awaiter::await_resume()</span></span><br><span class="line"><span class="function"><span class="keyword">decltype</span>(<span class="keyword">auto</span>) <span class="title">await_resume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">assert</span>(<span class="keyword">this</span>-&gt;handle &amp;&amp; <span class="string">&quot;broken_promise&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>-&gt;handle.<span class="built_in">promise</span>().<span class="built_in">result</span>();</span><br><span class="line">    <span class="comment">//                      ↓</span></span><br><span class="line">    <span class="comment">//              promise.result() 被调用</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// task_promise::result() &amp;</span></span><br><span class="line"><span class="function">T &amp;<span class="title">result</span><span class="params">()</span> &amp; </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (state == value_state::exception) [[unlikely]] &#123;</span><br><span class="line">        std::<span class="built_in">rethrow_exception</span>(exception_ptr);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">assert</span>(state == value_state::value);  <span class="comment">// ✅</span></span><br><span class="line">    <span class="keyword">return</span> value;  <span class="comment">// ← 返回 int&amp; (引用到 42)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>最终结果：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> result = <span class="keyword">co_await</span> t;</span><br><span class="line"><span class="comment">// result 绑定到 promise.value 的引用</span></span><br><span class="line"><span class="comment">// result == 42</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="coronet-协成异常机制"><a class="markdownIt-Anchor" href="#coronet-协成异常机制"></a> CoroNet 协成异常机制</h2>
+<ol>
+<li>异常产生流程：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task&lt;<span class="type">int</span>&gt; <span class="title">may_throw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">    <span class="keyword">co_return</span> <span class="number">0</span>;  <span class="comment">// 不会执行</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>步骤分解：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">1. 协程执行到 throw</span><br><span class="line">   ↓</span><br><span class="line">2. 运行时捕获未处理异常</span><br><span class="line">   ↓</span><br><span class="line">3. 调用 promise.unhandled_exception()</span><br><span class="line">   ↓</span><br><span class="line">void unhandled_exception() noexcept &#123;</span><br><span class="line">    exception_ptr = std::current_exception();</span><br><span class="line">    state = value_state::exception;</span><br><span class="line">&#125;</span><br><span class="line">   ↓</span><br><span class="line">4. 继续执行 final_suspend</span><br><span class="line">   ↓</span><br><span class="line">5. 返回父协程</span><br><span class="line">   ↓</span><br><span class="line">6. await_resume() 被调用</span><br><span class="line">   ↓</span><br><span class="line">7. result() 检查 state</span><br><span class="line">   ↓</span><br><span class="line">8. std::rethrow_exception(exception_ptr)</span><br><span class="line">   ↓</span><br><span class="line">9. 异常传播到 caller</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>io_context 架构图：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    A[io_context] --&gt; B[worker_meta]</span><br><span class="line">    B --&gt; C[io_uring Ring]</span><br><span class="line">    B --&gt; D[reap_swap 任务交换区]</span><br><span class="line">    B --&gt; E[SPSC Cursor]</span><br><span class="line">    </span><br><span class="line">    F[host_thread] --&gt; A</span><br><span class="line">    </span><br><span class="line">    G[task&lt;void&gt; 协程] --&gt; H[co_spawn]</span><br><span class="line">    H --&gt; I[worker_meta::co_spawn_auto]</span><br><span class="line">    I --&gt; J&#123;是否跨线程？&#125;</span><br><span class="line">    J --&gt;|否 | K[co_spawn_unsafe 本地提交]</span><br><span class="line">    J --&gt;|是 | L[msg_ring/eventfd 远程提交]</span><br><span class="line">    </span><br><span class="line">    K --&gt; D</span><br><span class="line">    L --&gt; D</span><br><span class="line">    </span><br><span class="line">    M[调度循环] --&gt; N[do_worker_part 执行协程]</span><br><span class="line">    M --&gt; O[do_submission_part 提交 IO]</span><br><span class="line">    M --&gt; P[do_completion_part 处理完成]</span><br><span class="line">    </span><br><span class="line">    N --&gt; Q[从 reap_swap 取出协程]</span><br><span class="line">    Q --&gt; R[resume 协程]</span><br><span class="line">    R --&gt; S[协程发起 IO 请求]</span><br><span class="line">    S --&gt; T[SQE 提交到 io_uring]</span><br><span class="line">    </span><br><span class="line">    P --&gt; U[CQE 从 io_uring 完成]</span><br><span class="line">    U --&gt; V[恢复对应协程]</span><br><span class="line">    V --&gt; D</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="/images/io_context_architecture.png" alt="io_context架构图" /></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 协程</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 网络编程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/03/07/cpp%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="prev" title="CPP网络编程">
+      <i class="fa fa-chevron-left"></i> CPP网络编程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/06/18/x86-%E6%B1%87%E7%BC%96/" rel="next" title="x86-汇编">
+      x86-汇编 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E9%A1%B9%E7%9B%AE%E5%90%8D%E7%A7%B0%E5%BB%BA%E8%AE%AE%E7%AE%80%E6%B4%81-%E6%9C%89%E6%8A%80%E6%9C%AF%E6%84%9F-%E6%98%93%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text"> 一、项目名称建议（简洁、有技术感、易记）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E6%8E%A8%E8%8D%90"><span class="nav-number">1.1.</span> <span class="nav-text"> ✅ 最终推荐：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99"><span class="nav-number">2.</span> <span class="nav-text"> 二、架构设计思想（核心原则）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%9B%AE%E6%A0%87"><span class="nav-number">2.1.</span> <span class="nav-text"> 🎯 总目标：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84layered-design"><span class="nav-number">2.2.</span> <span class="nav-text"> 1. 分层架构（Layered Design）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%84%E5%B1%82%E8%81%8C%E8%B4%A3"><span class="nav-number">2.2.1.</span> <span class="nav-text"> 各层职责：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">2.3.</span> <span class="nav-text"> 2. 关键设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%88%99-1%E9%9B%B6%E6%8A%BD%E8%B1%A1%E6%83%A9%E7%BD%9Azero-overhead-abstraction"><span class="nav-number">2.3.1.</span> <span class="nav-text"> ✅ 原则 1：零抽象惩罚（Zero-overhead Abstraction）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%88%99-2%E7%BB%9F%E4%B8%80-awaitable-%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.2.</span> <span class="nav-text"> ✅ 原则 2：统一 Awaitable 接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%88%99-3%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E4%B8%8E-io-%E8%A7%A3%E8%80%A6"><span class="nav-number">2.3.3.</span> <span class="nav-text"> ✅ 原则 3：协程调度与 I&#x2F;O 解耦</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%88%99-4%E8%B5%84%E6%BA%90%E5%AE%89%E5%85%A8%E4%B8%8E-raii"><span class="nav-number">2.3.4.</span> <span class="nav-text"> ✅ 原则 4：资源安全与 RAII</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%88%99-5%E5%8F%AF%E8%A7%82%E5%AF%9F%E6%80%A7%E4%B8%8E%E8%B0%83%E8%AF%95%E5%8F%8B%E5%A5%BD"><span class="nav-number">2.3.5.</span> <span class="nav-text"> ✅ 原则 5：可观察性与调试友好</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.4.</span> <span class="nav-text"> 3. 核心组件设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%AE%9E%E7%8E%B0%E7%AD%96%E7%95%A5"><span class="nav-number">2.5.</span> <span class="nav-text"> 4. 跨平台实现策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%E6%84%BF%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text"> 三、示例代码（愿景）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B-%E9%A1%B9%E7%9B%AE%E5%AE%9A%E4%BD%8D%E4%B8%8E%E5%B7%AE%E5%BC%82%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text"> 四、项目定位与差异化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%BB%BA%E8%AE%AE"><span class="nav-number">5.</span> <span class="nav-text"> 五、下一步建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coronet-%E5%8D%8F%E6%88%90%E5%AE%8C%E6%95%B4%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA%E8%BD%AC%E6%8D%A2"><span class="nav-number">6.</span> <span class="nav-text"> CoroNet 协成完整的状态机转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coronet-%E5%8D%8F%E6%88%90%E5%BC%82%E5%B8%B8%E6%9C%BA%E5%88%B6"><span class="nav-number">7.</span> <span class="nav-text"> CoroNet 协成异常机制</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>
