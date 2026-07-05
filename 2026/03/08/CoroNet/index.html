@@ -27,13 +27,19 @@
 <meta property="og:site_name" content="积累沉淀">
 <meta property="og:description" content="前言： 这是一个极具前瞻性和工程价值的目标！结合 C++20 协程、Linux 的 io_uring 与 Windows 的 IOCP，打造一个真正高性能、跨平台、同步风格编写、异步底层执行的网络库，正是现代系统编程的“圣杯”之一。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img.shields.io/badge/C++-20-blue">
+<meta property="og:image" content="https://img.shields.io/badge/Linux-GCC%2013%20%7C%20Clang%2018-brightgreen">
+<meta property="og:image" content="https://img.shields.io/badge/Windows-MSVC%2019.41-blue">
+<meta property="og:image" content="https://img.shields.io/badge/I/O-epoll%20%7C%20io__uring%20%7C%20IOCP-orange">
+<meta property="og:image" content="https://img.shields.io/badge/test-22%2F22%20passed-success">
 <meta property="article:published_time" content="2026-03-08T13:14:02.000Z">
-<meta property="article:modified_time" content="2026-06-28T08:16:35.730Z">
+<meta property="article:modified_time" content="2026-07-04T10:40:06.455Z">
 <meta property="article:author" content="lsqyling">
-<meta property="article:tag" content="C++">
 <meta property="article:tag" content="协程">
+<meta property="article:tag" content="C++">
 <meta property="article:tag" content="网络编程">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.shields.io/badge/C++-20-blue">
 
 <link rel="canonical" href="https://lsqyling.github.io/2026/03/08/CoroNet/">
 
@@ -88,6 +94,27 @@
       startOnLoad: true,
     );
     </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -227,7 +254,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-06-28 16:16:35" itemprop="dateModified" datetime="2026-06-28T16:16:35+08:00">2026-06-28</time>
+                <time title="Modified: 2026-07-04 18:40:06" itemprop="dateModified" datetime="2026-07-04T18:40:06+08:00">2026-07-04</time>
               </span>
 
           
@@ -245,65 +272,132 @@
 <span id="more"></span>
 <hr />
 <h1 id="coronet"><a class="markdownIt-Anchor" href="#coronet"></a> coronet</h1>
-<p><strong>跨平台高性能异步 I/O 库 · C++20 协程架构</strong></p>
-<p>coronet 是一个基于 C++20 标准协程的异步 I/O 库，目标是在 <strong>Linux</strong>（io_uring）和 <strong>Windows</strong>（IOCP）上提供统一的协程化编程接口，让异步网络编程如同同步代码一样简单直观。</p>
-<blockquote>
-<p>本项目仓库 [<a target="_blank" rel="noopener" href="https://github.com/lsqyling/coronet"><strong>coronet</strong></a> | <a target="_blank" rel="noopener" href="https://gitee.com/lsqyling/coronet"><strong>国内仓</strong></a>]代码实现及各种测试完备，完成度极高的项目。<br />
-本项目参考 <a target="_blank" rel="noopener" href="https://github.com/Code-Deng/co_context"><em>co_context</em></a> 的架构设计，在其基础上重构为跨平台实现。</p>
-</blockquote>
+<p><strong>C++20 协程 · 跨平台 · 高性能异步 I/O 库</strong> <a target="_blank" rel="noopener" href="https://github.com/lsqyling/coronet">Github</a>||<a target="_blank" rel="noopener" href="https://gitee.com/lsqyling/coronet">Gitee</a></p>
+<p align="center">
+  <img src="https://img.shields.io/badge/C++-20-blue" alt="C++20">
+  <img src="https://img.shields.io/badge/Linux-GCC%2013%20%7C%20Clang%2018-brightgreen" alt="Linux">
+  <img src="https://img.shields.io/badge/Windows-MSVC%2019.41-blue" alt="Windows">
+  <img src="https://img.shields.io/badge/I/O-epoll%20%7C%20io__uring%20%7C%20IOCP-orange" alt="IO">
+  <img src="https://img.shields.io/badge/test-22%2F22%20passed-success" alt="Tests">
+</p>
 <hr />
-<h2 id="目录"><a class="markdownIt-Anchor" href="#目录"></a> 目录</h2>
-<ul>
-<li><a href="#%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6">设计哲学</a></li>
-<li><a href="#%E6%9E%B6%E6%9E%84%E6%80%BB%E8%A7%88">架构总览</a></li>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E8%A6%81%E7%82%B9">核心技术要点</a></li>
-<li><a href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">快速开始</a></li>
-<li><a href="#%E5%8D%8F%E7%A8%8B%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B">协程应用示例</a></li>
-<li><a href="#api-%E5%8F%82%E8%80%83">API 参考</a></li>
-<li><a href="#%E5%8F%8C%E5%B9%B3%E5%8F%B0%E6%94%AF%E6%8C%81">双平台支持</a></li>
-<li><a href="#%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97">构建指南</a></li>
-<li><a href="#%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%9F%BA%E5%87%86">测试与基准</a></li>
-<li><a href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">项目结构</a></li>
-</ul>
-<hr />
-<h2 id="设计哲学"><a class="markdownIt-Anchor" href="#设计哲学"></a> 设计哲学</h2>
-<h3 id="为什么是-proactor"><a class="markdownIt-Anchor" href="#为什么是-proactor"></a> 为什么是 Proactor？</h3>
-<p>I/O 模型分为两大类：</p>
+<h2 id="核心亮点"><a class="markdownIt-Anchor" href="#核心亮点"></a> ✨ 核心亮点</h2>
 <table>
 <thead>
 <tr>
-<th>模型</th>
-<th>代表</th>
-<th>工作方式</th>
-<th>协程友好度</th>
+<th style="text-align:center">🎯</th>
+<th>特性</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Reactor</strong></td>
-<td>epoll, kqueue</td>
-<td>通知&quot;可读/可写&quot;，用户负责读写</td>
-<td>❌ 需手动管理缓冲区</td>
+<td style="text-align:center">🔌</td>
+<td><strong>三后端热插拔</strong></td>
+<td>epoll（默认）⇄ io_uring（<code>-DCORONET_IOURING=ON</code>）⇄ IOCP（Windows 自动）</td>
 </tr>
 <tr>
-<td><strong>Proactor</strong></td>
-<td>IOCP, io_uring</td>
-<td>内核完成读写后通知结果</td>
-<td>✅ <code>co_await</code> 直接获得结果</td>
+<td style="text-align:center">🖥️</td>
+<td><strong>全编译器跨平台</strong></td>
+<td>Linux GCC 13 / Clang 18 + Windows MSVC 19.41，一套代码</td>
+</tr>
+<tr>
+<td style="text-align:center">⚡</td>
+<td><strong>编译期零开销多态</strong></td>
+<td>CRTP + <code>#ifdef</code> 平台选择，无虚表、无堆分配 Proactor</td>
+</tr>
+<tr>
+<td style="text-align:center">🔗</td>
+<td><strong>链式 co_await</strong></td>
+<td><code>co_await (recv &amp;&amp; send)</code> 单次挂起完成两个 I/O 操作</td>
+</tr>
+<tr>
+<td style="text-align:center">🧵</td>
+<td><strong>协程同步原语</strong></td>
+<td>mutex / condition_variable / semaphore / channel / when_all·any·some</td>
+</tr>
+<tr>
+<td style="text-align:center">📊</td>
+<td><strong>统一压测驱动</strong></td>
+<td><code>stress_driver --server name:binary:port</code> 自动采集 RPS + CPU + 内存</td>
 </tr>
 </tbody>
 </table>
-<p>Linux <strong>io_uring</strong> 和 Windows <strong>IOCP</strong> 都是 Proactor 模式——操作系统内核异步完成 I/O 操作后通知用户程序。coronet 在此基础上抽象出一层统一的 Proactor 接口，向上层提供一致的协程体验。</p>
-<h3 id="两级调度"><a class="markdownIt-Anchor" href="#两级调度"></a> 两级调度</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">协程链（内联执行）          I/O 完成（调度器介入）</span><br><span class="line">┌─────────────┐           ┌──────────────────┐</span><br><span class="line">│ task A      │           │ io_uring / IOCP  │</span><br><span class="line">│   co_await B│──内联──▶   │   完成事件到达    │</span><br><span class="line">│   co_await C│──内联──▶   │   → 推入 reap    │</span><br><span class="line">│   ...       │           │   → resume 协程   │</span><br><span class="line">└─────────────┘           └──────────────────┘</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>内联路径</strong>：<code>task&lt;&gt;</code> 链通过 <code>parent_coro</code> 直连，零调度开销</li>
-<li><strong>调度路径</strong>：I/O 完成事件通过无锁 SPSC 环形队列（reap_swap）传递</li>
-</ul>
+<h2 id="性能速览"><a class="markdownIt-Anchor" href="#性能速览"></a> 🚀 性能速览</h2>
+<p><strong>Redis PING 服务, 100K 请求 × 50 并发, WSL2 epoll</strong></p>
+<table>
+<thead>
+<tr>
+<th>服务端</th>
+<th style="text-align:right">RPS</th>
+<th style="text-align:center">CPU%</th>
+<th style="text-align:right">内存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>coronet ST (协程)</td>
+<td style="text-align:right">19,952</td>
+<td style="text-align:center">83.6%</td>
+<td style="text-align:right">3.9 MB</td>
+</tr>
+<tr>
+<td>coronet chain (链式)</td>
+<td style="text-align:right">14,051</td>
+<td style="text-align:center">87.1%</td>
+<td style="text-align:right">3.9 MB</td>
+</tr>
+<tr>
+<td>ASIO ST (回调)</td>
+<td style="text-align:right">19,175</td>
+<td style="text-align:center">73.2%</td>
+<td style="text-align:right">3.7 MB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三平台峰值 RPS（单线程）</strong></p>
+<table>
+<thead>
+<tr>
+<th>编译器</th>
+<th style="text-align:right">coronet</th>
+<th>后端</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MSVC 19.41 (Windows)</td>
+<td style="text-align:right"><strong>58,384</strong> 🏆</td>
+<td>IOCP</td>
+</tr>
+<tr>
+<td>GCC 13.3 (Linux)</td>
+<td style="text-align:right">48,662</td>
+<td>io_uring</td>
+</tr>
+<tr>
+<td>Clang 18.1 (Linux)</td>
+<td style="text-align:right">47,304</td>
+<td>io_uring</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>完整报告 → <a href="doc/aio_PR.md">doc/aio_PR.md</a> | 测试报告 → <a href="doc/test_Report.md">doc/test_Report.md</a></p>
+</blockquote>
 <hr />
-<h2 id="架构总览"><a class="markdownIt-Anchor" href="#架构总览"></a> 架构总览</h2>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    用户代码 (User Code)                   │</span><br><span class="line">│  task&lt;&gt; / shared_task&lt;&gt; / generator&lt;&gt;                   │</span><br><span class="line">│  async::recv / async::send / ...                        │</span><br><span class="line">│  mutex / condition_variable / semaphore / channel       │</span><br><span class="line">│  socket / acceptor / inet_address                       │</span><br><span class="line">└──────────────────────┬──────────────────────────────────┘</span><br><span class="line">                       │</span><br><span class="line">┌──────────────────────▼──────────────────────────────────┐</span><br><span class="line">│                   io_context (事件循环)                   │</span><br><span class="line">│                                                         │</span><br><span class="line">│  ┌──────────────────────────────────────────────────┐   │</span><br><span class="line">│  │  worker_meta                                      │   │</span><br><span class="line">│  │  ┌─────────────┐  ┌──────────────────────────┐   │   │</span><br><span class="line">│  │  │  reap_swap   │  │  proactor*               │   │   │</span><br><span class="line">│  │  │  (SPSC Ring) │  │  (平台抽象)              │   │   │</span><br><span class="line">│  │  └─────────────┘  └───────────┬──────────────┘   │   │</span><br><span class="line">│  └──────────────────────────────────────────────────┘   │</span><br><span class="line">└──────────────────────┬──────────────────────────────────┘</span><br><span class="line">                       │</span><br><span class="line">          ┌────────────┴────────────┐</span><br><span class="line">          ▼                         ▼</span><br><span class="line">┌──────────────────┐    ┌──────────────────┐</span><br><span class="line">│ io_uring_proactor│    │ iocp_proactor    │</span><br><span class="line">│   (Linux)        │    │   (Windows)      │</span><br><span class="line">│                  │    │                  │</span><br><span class="line">│ • get_sq_entry() │    │ • GetQueued-     │</span><br><span class="line">│ • submit_and_wait│    │   Completion-    │</span><br><span class="line">│ • peek_cq_entry()│    │   Status         │</span><br><span class="line">│ • cq_advance()   │    │ • PostQueued-    │</span><br><span class="line">│                  │    │   Completion-    │</span><br><span class="line">│                  │    │   Status         │</span><br><span class="line">└──────────────────┘    └──────────────────┘</span><br></pre></td></tr></table></figure>
-<h3 id="核心组件"><a class="markdownIt-Anchor" href="#核心组件"></a> 核心组件</h3>
+<h2 id="快速开始"><a class="markdownIt-Anchor" href="#快速开始"></a> ⚡ 快速开始</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 克隆</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/lsqyling/coronet.git &amp;&amp; <span class="built_in">cd</span> coronet</span><br><span class="line"></span><br><span class="line"><span class="comment"># Linux — 默认 epoll 后端(Release)</span></span><br><span class="line">cmake -S . -B build -G Ninja</span><br><span class="line">    </span><br><span class="line">cmake --build build</span><br><span class="line"><span class="built_in">cd</span> build &amp;&amp; ctest --output-on-failure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 io_uring</span></span><br><span class="line">cmake -S . -B build-uring -G Ninja -DCORONET_IOURING=ON</span><br><span class="line">cmake --build build-uring</span><br><span class="line">ctest --test-dir build-uring --output-on-failure</span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows MSVC (Developer Command Prompt)</span></span><br><span class="line">cmake -S . -B build -G <span class="string">&quot;Visual Studio 17 2022&quot;</span> -A x64</span><br><span class="line">cmake --build build --config Release</span><br><span class="line">ctest --test-dir build -C Release --output-on-failure</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install coronet</span></span><br><span class="line">cmake --install build --prefix D:/dev/local <span class="comment"># windows msvc </span></span><br><span class="line">cmake --install build --prefix /usr/local    <span class="comment"># linux </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># how to use</span></span><br><span class="line">find_package(coronet REQUIRED)</span><br><span class="line">add_executable(your_timer your_timer.cpp)</span><br><span class="line">target_link_libraries(your_timer PRIVATE coronet::coronet)</span><br></pre></td></tr></table></figure>
+<h2 id="30-秒示例"><a class="markdownIt-Anchor" href="#30-秒示例"></a> 📖 30 秒示例</h2>
+<h3 id="echo-server"><a class="markdownIt-Anchor" href="#echo-server"></a> Echo Server</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coronet/coronet.hpp&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> coronet;</span><br><span class="line"></span><br><span class="line">task&lt;&gt; <span class="built_in">session</span>(<span class="type">int</span> fd) &#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="type">int</span> n = <span class="keyword">co_await</span> async::<span class="built_in">recv</span>(fd, buf);</span><br><span class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">        <span class="function"><span class="keyword">co_await</span> <span class="title">async::send</span><span class="params">(fd, &#123;buf, (<span class="type">size_t</span>)n&#125;)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task&lt;&gt; <span class="built_in">server</span>(<span class="type">uint16_t</span> port) &#123;</span><br><span class="line">    acceptor ac&#123;inet_address&#123;port&#125;&#125;;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">        <span class="built_in">co_spawn</span>(<span class="built_in">session</span>(<span class="keyword">co_await</span> ac.<span class="built_in">accept</span>()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    io_context ctx;</span><br><span class="line">    ctx.<span class="built_in">co_spawn</span>(<span class="built_in">server</span>(<span class="number">8080</span>));</span><br><span class="line">    ctx.<span class="built_in">start</span>(); ctx.<span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="同步原语"><a class="markdownIt-Anchor" href="#同步原语"></a> 同步原语</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 互斥锁</span></span><br><span class="line">mutex mtx;</span><br><span class="line">task&lt;&gt; <span class="built_in">critical</span>() &#123;</span><br><span class="line">    <span class="keyword">auto</span> g = <span class="keyword">co_await</span> mtx.<span class="built_in">lock_guard</span>();</span><br><span class="line">    <span class="comment">/* 临界区 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 信号量 — 10 协程竞争 3 槽位</span></span><br><span class="line">counting_semaphore sem&#123;<span class="number">3</span>&#125;;</span><br><span class="line">task&lt;&gt; <span class="built_in">worker</span>() &#123; <span class="keyword">co_await</span> sem.<span class="built_in">acquire</span>(); <span class="comment">/* ... */</span> sem.<span class="built_in">release</span>(); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 条件变量</span></span><br><span class="line">condition_variable cv; mutex m;</span><br><span class="line">task&lt;&gt; <span class="built_in">waiter</span>() &#123;</span><br><span class="line">    <span class="keyword">auto</span> lk = <span class="keyword">co_await</span> m.<span class="built_in">lock_guard</span>();</span><br><span class="line">    <span class="keyword">co_await</span> cv.<span class="built_in">wait</span>(m, [] &#123; <span class="keyword">return</span> ready; &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// CSP 通道 — 生产者/消费者</span></span><br><span class="line">channel&lt;std::string, <span class="number">4</span>&gt; ch;</span><br><span class="line">task&lt;&gt; <span class="built_in">producer</span>() &#123; <span class="keyword">co_await</span> ch.<span class="built_in">release</span>(<span class="string">&quot;msg&quot;</span>); &#125;</span><br><span class="line">task&lt;&gt; <span class="built_in">consumer</span>() &#123; <span class="keyword">auto</span> s = <span class="keyword">co_await</span> ch.<span class="built_in">acquire</span>(); &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="协程组合器-链式-io"><a class="markdownIt-Anchor" href="#协程组合器-链式-io"></a> 协程组合器 + 链式 I/O</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 等待全部完成</span></span><br><span class="line"><span class="keyword">auto</span> [r0, r1] = <span class="keyword">co_await</span> <span class="built_in">all</span>(<span class="built_in">taskA</span>(), <span class="built_in">taskB</span>(), <span class="built_in">taskC</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 首个完成者胜出</span></span><br><span class="line"><span class="keyword">auto</span> [idx, var] = <span class="keyword">co_await</span> <span class="built_in">any</span>(<span class="built_in">taskA</span>(), <span class="built_in">taskB</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 链式 co_await — 发送 PONG 同时接收下一条 PING</span></span><br><span class="line"><span class="built_in">co_await</span> (async::<span class="built_in">send</span>(fd, pong) &amp;&amp; async::<span class="built_in">recv</span>(fd, buf));</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="️-架构"><a class="markdownIt-Anchor" href="#️-架构"></a> 🏗️ 架构</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">用户代码: task&lt;&gt; / shared_task&lt;&gt; / generator&lt;&gt;</span><br><span class="line">   ↓ co_await</span><br><span class="line">async::recv / send / accept / connect / timeout / ...</span><br><span class="line">   ↓ 工厂函数 (编译期分派)</span><br><span class="line">┌──────────┬──────────────┬──────────┐</span><br><span class="line">│  epoll   │   io_uring   │   IOCP   │  ← 三后端, 编译期选择</span><br><span class="line">│ (默认)   │ (CORONET_   │ (Windows │</span><br><span class="line">│          │   IOURING=ON)│  自动)   │</span><br><span class="line">└──────────┴──────────────┴──────────┘</span><br><span class="line">   ↓</span><br><span class="line">io_context (单线程事件循环)</span><br><span class="line">   ├─ drain_cross_thread()   跨线程队列 → SPSC 环</span><br><span class="line">   ├─ do_worker_part()       SPSC 环 → resume 协程</span><br><span class="line">   ├─ do_submission_part()   提交 I/O (仅 io_uring)</span><br><span class="line">   └─ do_completion_part()   收割完成事件</span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
@@ -313,316 +407,118 @@
 </thead>
 <tbody>
 <tr>
-<td><strong><code>io_context</code></strong></td>
-<td>事件循环调度器，每线程一个实例</td>
+<td><code>io_context</code></td>
+<td>单线程事件循环，栈上 Proactor</td>
 </tr>
 <tr>
-<td><strong><code>worker_meta</code></strong></td>
-<td>管理 ready 队列 + I/O 提交/收割</td>
+<td><code>worker_meta</code></td>
+<td>SPSC 无锁环 + 跨线程队列 + I/O 计数器</td>
 </tr>
 <tr>
-<td><strong><code>proactor</code></strong></td>
-<td>平台抽象基类（io_uring / IOCP）</td>
+<td><code>task&lt;T&gt;</code></td>
+<td>惰性协程，父链内联恢复（零调度开销）</td>
 </tr>
 <tr>
-<td><strong><code>task&lt;T&gt;</code></strong></td>
-<td>惰性协程任务，move-only，parent-chain</td>
-</tr>
-<tr>
-<td><strong><code>shared_task&lt;T&gt;</code></strong></td>
+<td><code>shared_task&lt;T&gt;</code></td>
 <td>引用计数多等待者</td>
 </tr>
 <tr>
-<td><strong><code>lazy_*</code> awaiters</strong></td>
-<td>具体 I/O awaitable（recv/send/accept/…）</td>
+<td><code>epoll_awaiter_base&lt;D&gt;</code></td>
+<td>CRTP 编译期多态（非虚函数）</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="核心技术要点"><a class="markdownIt-Anchor" href="#核心技术要点"></a> 核心技术要点</h2>
-<h3 id="1-惰性执行-lazy-execution"><a class="markdownIt-Anchor" href="#1-惰性执行-lazy-execution"></a> 1. 惰性执行 (Lazy Execution)</h3>
-<p><code>task&lt;T&gt;</code> 在 <code>initial_suspend()</code> 返回 <code>suspend_always</code>，协程体不会自动开始执行。只有被 <code>co_await</code> 时才会运行：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task&lt;<span class="type">int</span>&gt; <span class="title">compute</span><span class="params">()</span> </span>&#123; <span class="keyword">co_return</span> <span class="number">42</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task&lt;<span class="type">void</span>&gt; <span class="title">example</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = <span class="built_in">compute</span>();     <span class="comment">// ❌ 尚未开始执行</span></span><br><span class="line">    <span class="type">int</span> v = <span class="keyword">co_await</span> t;     <span class="comment">// ✅ 开始执行并等待结果</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-零开销父链-zero-overhead-parent-chain"><a class="markdownIt-Anchor" href="#2-零开销父链-zero-overhead-parent-chain"></a> 2. 零开销父链 (Zero-Overhead Parent Chain)</h3>
-<p><code>task_final_awaiter::await_suspend()</code> 直接返回父协程句柄，控制权同步转移，无需调度器介入：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 编译器展开后的流程：</span></span><br><span class="line">child 完成 → final_suspend → <span class="keyword">return</span> parent_handle → 恢复父协程</span><br><span class="line"><span class="comment">// 全程无调度器、无锁、无原子操作</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-无锁-spsc-环形队列"><a class="markdownIt-Anchor" href="#3-无锁-spsc-环形队列"></a> 3. 无锁 SPSC 环形队列</h3>
-<p><code>reap_swap</code> 是一个单生产者单消费者的无锁环形缓冲区，用于从 I/O 完成事件到协程恢复的传递：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">生产者（I/O 完成）： push(handle) → tail++</span><br><span class="line">消费者（事件循环）： pop() → head++</span><br><span class="line">当 head == tail 时，队列为空</span><br></pre></td></tr></table></figure>
-<h3 id="4-平台抽象-proactor静态多态"><a class="markdownIt-Anchor" href="#4-平台抽象-proactor静态多态"></a> 4. 平台抽象 Proactor（静态多态）</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++20 concept — 编译期类型检查，零虚函数开销</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> proactor_concept = <span class="built_in">requires</span>(T p, completion_info* info) &#123;</span><br><span class="line">    &#123; p.<span class="built_in">init</span>(entries) &#125; -&gt; std::same_as&lt;<span class="type">void</span>&gt;;</span><br><span class="line">    &#123; p.<span class="built_in">submit</span>(<span class="literal">false</span>) &#125; -&gt; std::same_as&lt;<span class="type">int</span>&gt;;</span><br><span class="line">    &#123; p.<span class="built_in">wait_completion</span>(info) &#125; -&gt; std::same_as&lt;<span class="type">int</span>&gt;;</span><br><span class="line">    &#123; p.<span class="built_in">wakeup</span>() &#125; -&gt; std::same_as&lt;<span class="type">void</span>&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>Linux</strong>: <code>io_uring_proactor</code> — 直接操作 io_uring SQ/CQ 环形缓冲区，eventfd 唤醒</li>
-<li><strong>Windows</strong>: <code>iocp_proactor</code> — 封装 IOCP (CreateIoCompletionPort, GetQueuedCompletionStatus)，per-thread operation recycling</li>
-</ul>
-<h3 id="5-平台无关-io-工厂"><a class="markdownIt-Anchor" href="#5-平台无关-io-工厂"></a> 5. 平台无关 I/O 工厂</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> coronet::async &#123;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">recv</span><span class="params">(<span class="type">int</span> fd, std::span&lt;<span class="type">char</span>&gt; buf, <span class="type">int</span> flags = <span class="number">0</span>)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">send</span><span class="params">(<span class="type">int</span> fd, std::span&lt;<span class="type">const</span> <span class="type">char</span>&gt; buf, <span class="type">int</span> flags = <span class="number">0</span>)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">accept</span><span class="params">(<span class="type">int</span> fd, sockaddr* addr, <span class="type">socklen_t</span>* addrlen, <span class="type">int</span> flags)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">connect</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> sockaddr* addr, <span class="type">socklen_t</span> addrlen)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">close</span><span class="params">(<span class="type">int</span> fd)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">yield</span><span class="params">()</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">timeout</span><span class="params">(<span class="keyword">auto</span> dur)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>每个工厂函数在编译期根据平台宏分派到具体实现：</p>
-<ul>
-<li>Linux → <code>detail::io_uring_recv&#123;fd, buf, flags&#125;</code>（直接填充 SQE）</li>
-<li>Windows → <code>detail::win_recv&#123;(uintptr_t)fd, buf, flags&#125;</code>（记录参数，await_suspend 时发起 WSARecv）</li>
-</ul>
-<hr />
-<h2 id="快速开始"><a class="markdownIt-Anchor" href="#快速开始"></a> 快速开始</h2>
-<h3 id="依赖"><a class="markdownIt-Anchor" href="#依赖"></a> 依赖</h3>
-<ul>
-<li>C++20 编译器（GCC 13+, MSVC 19.41+, Clang 14+）</li>
-<li>CMake 3.20+</li>
-<li>Linux: 内核 5.19+（推荐 6.1+）</li>
-<li>Windows: Windows 8+（IOCP）</li>
-</ul>
-<h3 id="构建"><a class="markdownIt-Anchor" href="#构建"></a> 构建</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Linux</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/your/coronet.git</span><br><span class="line"><span class="built_in">cd</span> coronet</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..</span><br><span class="line">cmake --build .</span><br><span class="line">ctest --output-on-failure</span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows (需先执行 vcvars64.bat)</span></span><br><span class="line">cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..</span><br><span class="line">cmake --build .</span><br><span class="line">ctest --output-on-failure</span><br></pre></td></tr></table></figure>
-<h3 id="cmake-选项"><a class="markdownIt-Anchor" href="#cmake-选项"></a> CMake 选项</h3>
+<h2 id="cmake-选项"><a class="markdownIt-Anchor" href="#cmake-选项"></a> 📦 CMake 选项</h2>
 <table>
 <thead>
 <tr>
 <th>选项</th>
-<th>默认</th>
+<th style="text-align:center">默认</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><code>CORONET_IOURING</code></td>
+<td style="text-align:center">OFF</td>
+<td>启用 io_uring 替代 epoll</td>
+</tr>
+<tr>
 <td><code>CORONET_BUILD_TESTS</code></td>
-<td>ON</td>
-<td>构建 gtest 单元测试</td>
+<td style="text-align:center">ON*</td>
+<td>21 项单元+集成测试 (CTest)</td>
 </tr>
 <tr>
 <td><code>CORONET_BUILD_BENCHMARKS</code></td>
-<td>OFF</td>
-<td>构建 Google Benchmark</td>
+<td style="text-align:center">ON</td>
+<td>Google Benchmark 微基准</td>
+</tr>
+<tr>
+<td><code>CORONET_BUILD_STRESS_TESTS</code></td>
+<td style="text-align:center">OFF</td>
+<td>压力测试 (redis-benchmark + redis_loadgen)</td>
 </tr>
 <tr>
 <td><code>CORONET_BUILD_EXAMPLES</code></td>
-<td>ON</td>
-<td>构建示例程序</td>
-</tr>
-<tr>
-<td><code>CORONET_USE_MIMALLOC</code></td>
-<td>OFF</td>
-<td>使用 mimalloc 优化分配</td>
+<td style="text-align:center">ON*</td>
+<td>示例程序</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>* <code>PROJECT_IS_TOP_LEVEL</code> 时默认 ON</p>
+</blockquote>
 <hr />
-<h2 id="协程应用示例"><a class="markdownIt-Anchor" href="#协程应用示例"></a> 协程应用示例</h2>
-<h3 id="echo-server"><a class="markdownIt-Anchor" href="#echo-server"></a> Echo Server</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coronet/coronet.hpp&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> coronet;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单个连接的处理协程</span></span><br><span class="line">task&lt;&gt; <span class="built_in">session</span>(<span class="type">int</span> fd) &#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="type">int</span> n = <span class="keyword">co_await</span> async::<span class="built_in">recv</span>(fd, buf);</span><br><span class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) <span class="keyword">break</span>;           <span class="comment">// 连接关闭或错误</span></span><br><span class="line">        <span class="function"><span class="keyword">co_await</span> <span class="title">async::send</span><span class="params">(fd, &#123;buf, (<span class="type">size_t</span>)n&#125;)</span></span>;  <span class="comment">// 回显</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">co_await</span> <span class="title">async::close</span><span class="params">(fd)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主监听协程</span></span><br><span class="line">task&lt;&gt; <span class="built_in">server</span>(<span class="type">uint16_t</span> port) &#123;</span><br><span class="line">    acceptor ac&#123;inet_address&#123;port&#125;&#125;;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="type">int</span> fd = <span class="keyword">co_await</span> ac.<span class="built_in">accept</span>();           <span class="comment">// await 新连接</span></span><br><span class="line">        <span class="built_in">co_spawn</span>(<span class="built_in">session</span>(fd));                   <span class="comment">// spawn 处理协程</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    io_context ctx;</span><br><span class="line">    ctx.<span class="built_in">co_spawn</span>(<span class="built_in">server</span>(<span class="number">8080</span>));</span><br><span class="line">    ctx.<span class="built_in">start</span>();</span><br><span class="line">    ctx.<span class="built_in">join</span>();    <span class="comment">// 永不返回（除非收到停止信号）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="多线程并发"><a class="markdownIt-Anchor" href="#多线程并发"></a> 多线程并发</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建多个 io_context，每个运行在自己的线程上</span></span><br><span class="line"><span class="function">std::vector&lt;io_context&gt; <span class="title">ctxs</span><span class="params">(<span class="number">4</span>)</span></span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span>&amp; ctx : ctxs) ctx.<span class="built_in">start</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过 shared_task 在多个 context 间共享结果</span></span><br><span class="line">shared_task&lt;<span class="type">int</span>&gt; shared = <span class="built_in">compute</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可在任意线程 co_await 同一个 shared_task</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span>&amp; ctx : ctxs) &#123;</span><br><span class="line">    ctx.<span class="built_in">co_spawn</span>(<span class="built_in">worker</span>(shared));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span>&amp; ctx : ctxs) ctx.<span class="built_in">join</span>();</span><br></pre></td></tr></table></figure>
-<h3 id="定时器"><a class="markdownIt-Anchor" href="#定时器"></a> 定时器</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">task&lt;&gt; <span class="built_in">tick</span>() &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;tick\n&quot;</span>);</span><br><span class="line">        <span class="function"><span class="keyword">co_await</span> <span class="title">async::timeout</span><span class="params">(std::chrono::seconds(<span class="number">1</span>))</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="同步原语"><a class="markdownIt-Anchor" href="#同步原语"></a> 同步原语</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 mutex 保护共享资源</span></span><br><span class="line">mutex mtx;</span><br><span class="line"><span class="type">int</span> shared_counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">task&lt;&gt; <span class="built_in">increment</span>() &#123;</span><br><span class="line">    <span class="keyword">auto</span> guard = <span class="keyword">co_await</span> mtx.<span class="built_in">lock_guard</span>();  <span class="comment">// RAII 锁</span></span><br><span class="line">    ++shared_counter;</span><br><span class="line">&#125;   <span class="comment">// 自动释放</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 channel 在协程间通信</span></span><br><span class="line">channel&lt;<span class="type">int</span>, <span class="number">64</span>&gt; ch;</span><br><span class="line"></span><br><span class="line">task&lt;&gt; <span class="built_in">producer</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; ++i)</span><br><span class="line">        <span class="keyword">co_await</span> ch.<span class="built_in">release</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task&lt;&gt; <span class="built_in">consumer</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> v = <span class="keyword">co_await</span> ch.<span class="built_in">acquire</span>();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;got %d\n&quot;</span>, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h2 id="api-参考"><a class="markdownIt-Anchor" href="#api-参考"></a> API 参考</h2>
-<p>完整 API 手册（14 节，含代码示例）→ <strong><a target="_blank" rel="noopener" href="https://github.com/lsqyling/coronet/blob/main/doc/api_Manual.md">doc/api_Manual.md</a></strong></p>
+<h2 id="ctest-测试矩阵"><a class="markdownIt-Anchor" href="#ctest-测试矩阵"></a> 🧪 CTest 测试矩阵</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行全部</span></span><br><span class="line">ctest --output-on-failure -j4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分类运行</span></span><br><span class="line">ctest -R gtest          <span class="comment"># 单元测试 (18 用例)</span></span><br><span class="line">ctest -R benchmark      <span class="comment"># Google Benchmark</span></span><br><span class="line">ctest -R stress_driver  <span class="comment"># 压测 (ST / MT)</span></span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
-<th>类别</th>
-<th>关键 API</th>
+<th style="text-align:left">平台 / 编译器</th>
+<th style="text-align:left">后端</th>
+<th style="text-align:center">测试数</th>
+<th style="text-align:center">结果</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>核心</strong></td>
-<td><code>task&lt;T&gt;</code>, <code>io_context</code>, <code>shared_task&lt;T&gt;</code>, <code>generator&lt;T&gt;</code></td>
+<td style="text-align:left">Linux GCC 13.3</td>
+<td style="text-align:left">epoll</td>
+<td style="text-align:center">22/22</td>
+<td style="text-align:center">✅</td>
 </tr>
 <tr>
-<td><strong>I/O</strong></td>
-<td><code>async::recv/send/accept/connect/close/timeout/yield/read/write</code></td>
+<td style="text-align:left">Linux Clang 18.1</td>
+<td style="text-align:left">epoll</td>
+<td style="text-align:center">22/22</td>
+<td style="text-align:center">✅</td>
 </tr>
 <tr>
-<td><strong>网络</strong></td>
-<td><code>socket</code>, <code>acceptor</code>, <code>inet_address</code></td>
+<td style="text-align:left">Linux GCC 13.3</td>
+<td style="text-align:left">io_uring</td>
+<td style="text-align:center">22/22</td>
+<td style="text-align:center">✅</td>
 </tr>
 <tr>
-<td><strong>同步</strong></td>
-<td><code>mutex</code>, <code>condition_variable</code>, <code>counting_semaphore</code>, <code>channel&lt;T,N&gt;</code></td>
-</tr>
-<tr>
-<td><strong>组合</strong></td>
-<td><code>all()</code>, <code>any()</code>, <code>some()</code>, <code>defer&#123;&#125;</code></td>
+<td style="text-align:left">Windows MSVC 19.41</td>
+<td style="text-align:left">IOCP</td>
+<td style="text-align:center">21/21</td>
+<td style="text-align:center">✅</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="双平台支持"><a class="markdownIt-Anchor" href="#双平台支持"></a> 双平台支持</h2>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>Linux</th>
-<th>Windows</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>异步 I/O 后端</td>
-<td>io_uring</td>
-<td>IOCP</td>
-</tr>
-<tr>
-<td>Proactor 实现</td>
-<td><code>io_uring_proactor</code></td>
-<td><code>iocp_proactor</code></td>
-</tr>
-<tr>
-<td>事件提交</td>
-<td><code>io_uring_enter()</code> / <code>submit_and_wait()</code></td>
-<td><code>PostQueuedCompletionStatus()</code></td>
-</tr>
-<tr>
-<td>事件收割</td>
-<td><code>peek_cq_entry()</code> / <code>cq_advance()</code></td>
-<td><code>GetQueuedCompletionStatus()</code></td>
-</tr>
-<tr>
-<td>socket 创建</td>
-<td><code>socket()</code> + SOCK_CLOEXEC</td>
-<td><code>WSASocketW()</code> + WSA_FLAG_OVERLAPPED</td>
-</tr>
-<tr>
-<td>socket I/O</td>
-<td><code>prep_recv()</code> / <code>prep_send()</code></td>
-<td><code>WSARecv()</code> / <code>WSASend()</code></td>
-</tr>
-<tr>
-<td>close</td>
-<td><code>close()</code></td>
-<td><code>closesocket()</code></td>
-</tr>
-<tr>
-<td>地址族</td>
-<td><code>sa_family_t</code></td>
-<td><code>u_short</code></td>
-</tr>
-<tr>
-<td>地址长度</td>
-<td><code>socklen_t</code></td>
-<td><code>int</code></td>
-</tr>
-</tbody>
-</table>
+<h2 id="压力测试"><a class="markdownIt-Anchor" href="#压力测试"></a> 🔬 压力测试</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建</span></span><br><span class="line">cmake -S . -B build -DCORONET_BUILD_STRESS_TESTS=ON</span><br><span class="line">cmake --build build</span><br><span class="line"></span><br><span class="line"><span class="comment"># CTest 单线程对比</span></span><br><span class="line">ctest -R stress_driver_ST</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手动 — 自定义服务端</span></span><br><span class="line">./stress_driver \</span><br><span class="line">  --server <span class="string">&quot;coronet_ST:redis_echo_ST:6380&quot;</span> \</span><br><span class="line">  --server <span class="string">&quot;ASIO_ST:redis_echo_asio_ST:6382&quot;</span> \</span><br><span class="line">  -n 100000 -c 100 -v</span><br></pre></td></tr></table></figure>
+<p>添加新服务端<strong>无需改 stress_driver 代码</strong> — 在 CMakeLists 中追加 <code>--server name:binary:port</code> 即可。</p>
 <hr />
-<h2 id="构建指南"><a class="markdownIt-Anchor" href="#构建指南"></a> 构建指南</h2>
-<h3 id="linux-wsl-原生"><a class="markdownIt-Anchor" href="#linux-wsl-原生"></a> Linux (WSL / 原生)</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 依赖：g++-13, cmake, ninja</span></span><br><span class="line"><span class="built_in">sudo</span> apt install g++-13 cmake ninja-build</span><br><span class="line">cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">cmake --build build</span><br><span class="line">ctest --test-dir build --output-on-failure</span><br></pre></td></tr></table></figure>
-<h3 id="windows-visual-studio-2022"><a class="markdownIt-Anchor" href="#windows-visual-studio-2022"></a> Windows (Visual Studio 2022)</h3>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 Visual Studio Developer Command Prompt (x64) 运行</span></span><br><span class="line">cmake <span class="literal">-S</span> . <span class="literal">-B</span> build <span class="literal">-G</span> Ninja <span class="literal">-DCMAKE_BUILD_TYPE</span>=Release</span><br><span class="line">cmake <span class="literal">--build</span> build</span><br><span class="line">ctest <span class="literal">--test-dir</span> build <span class="literal">--output-on-failure</span></span><br></pre></td></tr></table></figure>
+<h2 id="目录"><a class="markdownIt-Anchor" href="#目录"></a> 📂 目录</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">coronet/</span><br><span class="line">├── include/coronet/       # 公共头文件</span><br><span class="line">│   ├── task.hpp           #   惰性协程</span><br><span class="line">│   ├── async_io.hpp       #   跨平台 I/O 工厂</span><br><span class="line">│   ├── io_context.hpp     #   事件循环</span><br><span class="line">│   ├── net/               #   socket / acceptor</span><br><span class="line">│   ├── co/                #   mutex / cv / sem / channel</span><br><span class="line">│   ├── platform/          #   epoll / io_uring / IOCP</span><br><span class="line">│   └── detail/            #   内部实现</span><br><span class="line">├── src/coronet/           # .cpp 实现</span><br><span class="line">├── test/                  # 21 项 CTest</span><br><span class="line">├── bench/                 # Google Benchmark</span><br><span class="line">├── stress-test/           # 压测驱动 + 服务端</span><br><span class="line">├── examples/              # 示例程序</span><br><span class="line">├── doc/                   # 性能报告 / API 手册</span><br><span class="line">└── cmake/                 # CMake 模块</span><br></pre></td></tr></table></figure>
 <hr />
-<h2 id="三平台性能-redis-ping-服务-100k-请求"><a class="markdownIt-Anchor" href="#三平台性能-redis-ping-服务-100k-请求"></a> 三平台性能 (Redis PING 服务, 100K 请求)</h2>
-<h3 id="单线程"><a class="markdownIt-Anchor" href="#单线程"></a> 单线程</h3>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">c</th>
-<th style="text-align:center">coronet GCC</th>
-<th style="text-align:center">co_context GCC</th>
-<th style="text-align:center">ASIO GCC</th>
-<th style="text-align:center">coronet Clang</th>
-<th style="text-align:center">coronet MSVC</th>
-<th style="text-align:center">ASIO MSVC</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">10</td>
-<td style="text-align:center">37,764</td>
-<td style="text-align:center">42,680</td>
-<td style="text-align:center"><strong>43,630</strong></td>
-<td style="text-align:center">40,800</td>
-<td style="text-align:center"><strong>53,361</strong></td>
-<td style="text-align:center">54,957</td>
-</tr>
-<tr>
-<td style="text-align:center">50</td>
-<td style="text-align:center">43,197</td>
-<td style="text-align:center"><strong>49,850</strong></td>
-<td style="text-align:center">47,192</td>
-<td style="text-align:center"><strong>47,304</strong></td>
-<td style="text-align:center"><strong>58,384</strong> 🏆</td>
-<td style="text-align:center">47,045</td>
-</tr>
-<tr>
-<td style="text-align:center">200</td>
-<td style="text-align:center">38,197</td>
-<td style="text-align:center">43,011</td>
-<td style="text-align:center"><strong>53,591</strong></td>
-<td style="text-align:center">41,085</td>
-<td style="text-align:center"><strong>46,463</strong></td>
-<td style="text-align:center">44,876</td>
-</tr>
-<tr>
-<td style="text-align:center">500</td>
-<td style="text-align:center"><strong>48,662</strong></td>
-<td style="text-align:center">42,517</td>
-<td style="text-align:center">42,391</td>
-<td style="text-align:center">41,754</td>
-<td style="text-align:center"><strong>44,210</strong></td>
-<td style="text-align:center">44,134</td>
-</tr>
-</tbody>
-</table>
-<h3 id="多线程-6线程"><a class="markdownIt-Anchor" href="#多线程-6线程"></a> 多线程 (6线程)</h3>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">c</th>
-<th style="text-align:center">coronet GCC</th>
-<th style="text-align:center">ASIO GCC</th>
-<th style="text-align:center">coronet Clang</th>
-<th style="text-align:center">ASIO Clang</th>
-<th style="text-align:center">coronet MSVC</th>
-<th style="text-align:center">ASIO MSVC</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">10</td>
-<td style="text-align:center">18,005</td>
-<td style="text-align:center"><strong>29,700</strong></td>
-<td style="text-align:center">25,439</td>
-<td style="text-align:center"><strong>30,303</strong></td>
-<td style="text-align:center"><strong>56,101</strong></td>
-<td style="text-align:center">52,961</td>
-</tr>
-<tr>
-<td style="text-align:center">100</td>
-<td style="text-align:center">35,651</td>
-<td style="text-align:center"><strong>37,750</strong></td>
-<td style="text-align:center">33,979</td>
-<td style="text-align:center">25,681</td>
-<td style="text-align:center"><strong>51,571</strong></td>
-<td style="text-align:center">49,545</td>
-</tr>
-<tr>
-<td style="text-align:center">500</td>
-<td style="text-align:center">32,992</td>
-<td style="text-align:center"><strong>34,626</strong></td>
-<td style="text-align:center"><strong>38,226</strong></td>
-<td style="text-align:center">30,039</td>
-<td style="text-align:center"><strong>44,115</strong></td>
-<td style="text-align:center">41,062</td>
-</tr>
-</tbody>
-</table>
-<p><strong>三平台 70 次压测零崩溃</strong>。完整报告：<a target="_blank" rel="noopener" href="https://github.com/lsqyling/coronet/blob/main/doc/aio_PR.md">doc/aio_PR.md</a></p>
-<hr />
-<h2 id="项目结构"><a class="markdownIt-Anchor" href="#项目结构"></a> 项目结构</h2>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">coronet/</span><br><span class="line">├── include/coronet/           # 公共 API 头文件</span><br><span class="line">│   ├── task.hpp               # 惰性协程任务</span><br><span class="line">│   ├── generator.hpp          # P2502R2 生成器</span><br><span class="line">│   ├── shared_task.hpp        # 引用计数多等待者</span><br><span class="line">│   ├── io_context.hpp         # 事件循环调度器</span><br><span class="line">│   ├── async_io.hpp           # 跨平台 I/O 工厂</span><br><span class="line">│   ├── net/                   # socket/acceptor/inet_address</span><br><span class="line">│   ├── co/                    # mutex/CV/semaphore/channel</span><br><span class="line">│   ├── platform/              # proactor 抽象 + 平台实现</span><br><span class="line">│   └── detail/                # 内部实现细节</span><br><span class="line">├── lib/coronet/               # 编译后实现 (.cpp)</span><br><span class="line">├── extern/                    # 第三方依赖</span><br><span class="line">│   ├── liburingcxx/           # io_uring C++ wrapper</span><br><span class="line">│   ├── googletest/            # 单元测试框架</span><br><span class="line">│   └── benchmark/             # 性能基准框架</span><br><span class="line">├── test/                      # 单元测试</span><br><span class="line">├── bench/                     # 性能基准</span><br><span class="line">├── examples/                  # 示例程序</span><br><span class="line">├── script/                    # 构建脚本</span><br><span class="line">└── doc/                       # 文档</span><br></pre></td></tr></table></figure>
-<hr />
-<h2 id="license"><a class="markdownIt-Anchor" href="#license"></a> License</h2>
-<p>MIT License</p>
-<h2 id="acknowledgments"><a class="markdownIt-Anchor" href="#acknowledgments"></a> Acknowledgments</h2>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/Codesire-Deng/co_context">co_context</a> — Architecture reference</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Codesire-Deng/co_context/tree/master/extern/liburingcxx">liburingcxx</a> — io_uring C++ wrapper</li>
-<li><a target="_blank" rel="noopener" href="https://think-async.com/Asio/">ASIO</a> — IOCP patterns reference</li>
-<li><a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2502r2.pdf">P2502R2</a> — <code>std::generator</code> reference implementation</li>
-</ul>
+<h2 id="许可"><a class="markdownIt-Anchor" href="#许可"></a> 📜 许可</h2>
+<h2 id="apache-license"><a class="markdownIt-Anchor" href="#apache-license"></a> <a href="./LICENSE">Apache License</a></h2>
+<p><sub>本项目代码由 <strong>Claude Code</strong> (Deepseek) 辅助生成，采用 AI Vibe Coding 开发方式。人工进行需求定义、架构设计审核、代码审查及测试验证。</sub></p>
 
     </div>
 
@@ -648,8 +544,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
               <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 协程</a>
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
               <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 网络编程</a>
           </div>
 
@@ -724,7 +620,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#coronet"><span class="nav-number">1.</span> <span class="nav-text"> coronet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.1.</span> <span class="nav-text"> 目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6"><span class="nav-number">1.2.</span> <span class="nav-text"> 设计哲学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-proactor"><span class="nav-number">1.2.1.</span> <span class="nav-text"> 为什么是 Proactor？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%BA%A7%E8%B0%83%E5%BA%A6"><span class="nav-number">1.2.2.</span> <span class="nav-text"> 两级调度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E6%80%BB%E8%A7%88"><span class="nav-number">1.3.</span> <span class="nav-text"> 架构总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 核心组件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E8%A6%81%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text"> 核心技术要点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%83%B0%E6%80%A7%E6%89%A7%E8%A1%8C-lazy-execution"><span class="nav-number">1.4.1.</span> <span class="nav-text"> 1. 惰性执行 (Lazy Execution)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%9B%B6%E5%BC%80%E9%94%80%E7%88%B6%E9%93%BE-zero-overhead-parent-chain"><span class="nav-number">1.4.2.</span> <span class="nav-text"> 2. 零开销父链 (Zero-Overhead Parent Chain)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%97%A0%E9%94%81-spsc-%E7%8E%AF%E5%BD%A2%E9%98%9F%E5%88%97"><span class="nav-number">1.4.3.</span> <span class="nav-text"> 3. 无锁 SPSC 环形队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B9%B3%E5%8F%B0%E6%8A%BD%E8%B1%A1-proactor%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81"><span class="nav-number">1.4.4.</span> <span class="nav-text"> 4. 平台抽象 Proactor（静态多态）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%B9%B3%E5%8F%B0%E6%97%A0%E5%85%B3-io-%E5%B7%A5%E5%8E%82"><span class="nav-number">1.4.5.</span> <span class="nav-text"> 5. 平台无关 I&#x2F;O 工厂</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="nav-number">1.5.</span> <span class="nav-text"> 快速开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake-%E9%80%89%E9%A1%B9"><span class="nav-number">1.5.3.</span> <span class="nav-text"> CMake 选项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.6.</span> <span class="nav-text"> 协程应用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#echo-server"><span class="nav-number">1.6.1.</span> <span class="nav-text"> Echo Server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91"><span class="nav-number">1.6.2.</span> <span class="nav-text"> 多线程并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">1.6.3.</span> <span class="nav-text"> 定时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%8E%9F%E8%AF%AD"><span class="nav-number">1.6.4.</span> <span class="nav-text"> 同步原语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api-%E5%8F%82%E8%80%83"><span class="nav-number">1.7.</span> <span class="nav-text"> API 参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E5%B9%B3%E5%8F%B0%E6%94%AF%E6%8C%81"><span class="nav-number">1.8.</span> <span class="nav-text"> 双平台支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97"><span class="nav-number">1.9.</span> <span class="nav-text"> 构建指南</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-wsl-%E5%8E%9F%E7%94%9F"><span class="nav-number">1.9.1.</span> <span class="nav-text"> Linux (WSL &#x2F; 原生)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#windows-visual-studio-2022"><span class="nav-number">1.9.2.</span> <span class="nav-text"> Windows (Visual Studio 2022)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%B9%B3%E5%8F%B0%E6%80%A7%E8%83%BD-redis-ping-%E6%9C%8D%E5%8A%A1-100k-%E8%AF%B7%E6%B1%82"><span class="nav-number">1.10.</span> <span class="nav-text"> 三平台性能 (Redis PING 服务, 100K 请求)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.10.1.</span> <span class="nav-text"> 单线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B-6%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.10.2.</span> <span class="nav-text"> 多线程 (6线程)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.11.</span> <span class="nav-text"> 项目结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#license"><span class="nav-number">1.12.</span> <span class="nav-text"> License</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#acknowledgments"><span class="nav-number">1.13.</span> <span class="nav-text"> Acknowledgments</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#coronet"><span class="nav-number">1.</span> <span class="nav-text"> coronet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E4%BA%AE%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text"> ✨ 核心亮点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E9%80%9F%E8%A7%88"><span class="nav-number">1.2.</span> <span class="nav-text"> 🚀 性能速览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="nav-number">1.3.</span> <span class="nav-text"> ⚡ 快速开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#30-%E7%A7%92%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.4.</span> <span class="nav-text"> 📖 30 秒示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#echo-server"><span class="nav-number">1.4.1.</span> <span class="nav-text"> Echo Server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%8E%9F%E8%AF%AD"><span class="nav-number">1.4.2.</span> <span class="nav-text"> 同步原语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E7%BB%84%E5%90%88%E5%99%A8-%E9%93%BE%E5%BC%8F-io"><span class="nav-number">1.4.3.</span> <span class="nav-text"> 协程组合器 + 链式 I&#x2F;O</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EF%B8%8F-%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text"> 🏗️ 架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmake-%E9%80%89%E9%A1%B9"><span class="nav-number">1.6.</span> <span class="nav-text"> 📦 CMake 选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ctest-%E6%B5%8B%E8%AF%95%E7%9F%A9%E9%98%B5"><span class="nav-number">1.7.</span> <span class="nav-text"> 🧪 CTest 测试矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95"><span class="nav-number">1.8.</span> <span class="nav-text"> 🔬 压力测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.9.</span> <span class="nav-text"> 📂 目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B8%E5%8F%AF"><span class="nav-number">1.10.</span> <span class="nav-text"> 📜 许可</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apache-license"><span class="nav-number">1.11.</span> <span class="nav-text"> Apache License</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -740,14 +636,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

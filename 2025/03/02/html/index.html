@@ -37,8 +37,8 @@
 <meta property="article:published_time" content="2025-03-02T07:35:36.000Z">
 <meta property="article:modified_time" content="2025-08-25T01:41:09.787Z">
 <meta property="article:author" content="lsqyling">
-<meta property="article:tag" content="前端">
 <meta property="article:tag" content="HTML">
+<meta property="article:tag" content="前端">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://lsqyling.github.io/images/img%E6%A0%87%E7%AD%BE.png">
 
@@ -95,6 +95,27 @@
       startOnLoad: true,
     );
     </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -771,8 +792,8 @@ checked属性：让该复选框默认选中。</p>
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
               <a href="/tags/HTML/" rel="tag"><i class="fa fa-tag"></i> HTML</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
           </div>
 
         
@@ -862,14 +883,14 @@ checked属性：让该复选框默认选中。</p>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

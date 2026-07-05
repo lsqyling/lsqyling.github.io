@@ -97,6 +97,27 @@
       startOnLoad: true,
     );
     </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -937,14 +958,14 @@ IEEE 754浮点数的格式如下：</p>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
