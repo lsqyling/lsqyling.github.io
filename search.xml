@@ -13134,7 +13134,7 @@ x_3
 <h3 id="21-架构分层"><a class="markdownIt-Anchor" href="#21-架构分层"></a> 2.1 架构分层</h3>
 <p>项目自顶向下分为三层：</p>
 <ul>
-<li><strong>业务层</strong>：实现具体协议（<code>ConnectionHandler</code>、<code>RedisEchoHandler</code>），由工厂创建，运行在从 Reactor 线程中。</li>
+<li><strong>业务层</strong>：实现具体协议（<code>EchoHandler</code>、<code>RedisEchoHandler</code>），由工厂创建，运行在从 Reactor 线程中。</li>
 <li><strong>事件处理层</strong>：核心 Reactor 引擎，负责事件循环、多路复用、定时器管理、任务投递。</li>
 <li><strong>系统调用层</strong>：封装 epoll、timerfd、eventfd，直接与内核交互。</li>
 </ul>
@@ -13187,7 +13187,7 @@ graph TB
 </ul>
 <h3 id="34-handler事件处理器"><a class="markdownIt-Anchor" href="#34-handler事件处理器"></a> 3.4 Handler（事件处理器）</h3>
 <ul>
-<li>抽象基类定义 <code>handle_read/write/error/close</code>。业务 Handler（如 <code>ConnectionHandler</code>、<code>RedisEchoHandler</code>）实现这些接口，处理具体协议。</li>
+<li>抽象基类定义 <code>handle_read/write/error/close</code>。业务 Handler（如 <code>EchoHandler</code>、<code>RedisEchoHandler</code>）实现这些接口，处理具体协议。</li>
 <li><strong>资源管理</strong>：使用 <code>std::enable_shared_from_this</code> 确保异步回调中对象有效。</li>
 </ul>
 <h3 id="35-timerqueue定时器队列"><a class="markdownIt-Anchor" href="#35-timerqueue定时器队列"></a> 3.5 TimerQueue（定时器队列）</h3>
@@ -13330,7 +13330,7 @@ sequenceDiagram
 <ul>
 <li><strong>零拷贝</strong>（可选）：可扩展使用 <code>sendfile</code> 或 <code>MSG_ZEROCOPY</code>。</li>
 <li><strong>减少系统调用</strong>：一次性读取多个事件（<code>epoll_wait</code> 返回数组）并批量处理。</li>
-<li><strong>对象池</strong>（可选）：复用 <code>ConnectionHandler</code> 对象，减少构造/析构开销。</li>
+<li><strong>对象池</strong>（可选）：复用 <code>EchoHandler</code> 对象，减少构造/析构开销。</li>
 <li><strong>锁粒度</strong>：仅在必要处加锁（任务队列、全局线程池），尽可能无锁或细粒度锁。</li>
 </ul>
 <hr />
