@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言: Tmux—终端复用器，用于在一个终端窗口中管理多个会话、窗口和面板。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tmux 手册">
+<meta property="og:url" content="https://lsqyling.github.io/2026/07/17/tmux%E6%89%8B%E5%86%8C/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言: Tmux—终端复用器，用于在一个终端窗口中管理多个会话、窗口和面板。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-07-17T12:28:22.000Z">
+<meta property="article:modified_time" content="2026-07-26T02:03:49.875Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lsqyling.github.io/2026/07/17/tmux%E6%89%8B%E5%86%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Tmux 手册 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.esm.min.mjs">
+    mermaid.initialize(
+      startOnLoad: true,
+    );
+    </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2026/07/17/tmux%E6%89%8B%E5%86%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tmux 手册
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-07-17 20:28:22" itemprop="dateCreated datePublished" datetime="2026-07-17T20:28:22+08:00">2026-07-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-26 10:03:49" itemprop="dateModified" datetime="2026-07-26T10:03:49+08:00">2026-07-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>前言: Tmux—终端复用器，用于在一个终端窗口中管理多个会话、窗口和面板。</p>
+</blockquote>
+<span id="more"></span>
+<hr />
+<h2 id="核心概念黏滞模式"><a class="markdownIt-Anchor" href="#核心概念黏滞模式"></a> 核心概念：黏滞模式</h2>
+<p><strong>按下 <code>C-b</code> 进入黏滞命令模式，连续输入命令，<code>Enter</code> 或 <code>Esc</code> 退出。</strong></p>
+<p>传统 tmux 需要每次 <code>C-b + 命令</code>，本配置已改为类似 vim 的模态操作：按一次 <code>C-b</code> 进入模式，之后可连续按下多个命令（如 <code>j j k k</code>），最后 <code>Enter</code> 退出。</p>
+<blockquote>
+<p>备用传统前缀：<code>F12</code>（使用标准 tmux 前缀模式）</p>
+</blockquote>
+<h3 id="状态提示"><a class="markdownIt-Anchor" href="#状态提示"></a> 状态提示</h3>
+<p>进入黏滞模式后，<strong>状态栏左侧会显示白字红底的 <code>[STICKY]</code></strong> 提示，退出后自动消失。</p>
+<hr />
+<h2 id="进入与退出"><a class="markdownIt-Anchor" href="#进入与退出"></a> 进入与退出</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C-b</code></td>
+<td>进入黏滞模式（同时显示 <code>[STICKY]</code> 提示）</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>确认并退出黏滞模式</td>
+</tr>
+<tr>
+<td><code>Esc</code></td>
+<td>取消并退出黏滞模式</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="面板导航"><a class="markdownIt-Anchor" href="#面板导航"></a> 面板导航</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>h</code></td>
+<td>切换到左边面板</td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td>切换到下边面板</td>
+</tr>
+<tr>
+<td><code>k</code></td>
+<td>切换到上边面板</td>
+</tr>
+<tr>
+<td><code>l</code></td>
+<td>切换到右边面板</td>
+</tr>
+<tr>
+<td><code>o</code></td>
+<td>按顺序切换到下一个面板</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>显示面板编号（按编号跳转）</td>
+</tr>
+<tr>
+<td><code>;</code></td>
+<td>切换到上一个面板</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="面板大小调整"><a class="markdownIt-Anchor" href="#面板大小调整"></a> 面板大小调整</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>H</code></td>
+<td>向左扩大 5 列</td>
+</tr>
+<tr>
+<td><code>J</code></td>
+<td>向下扩大 5 行</td>
+</tr>
+<tr>
+<td><code>K</code></td>
+<td>向上扩大 5 行</td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>向右扩大 5 列</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="面板分割"><a class="markdownIt-Anchor" href="#面板分割"></a> 面板分割</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%</code></td>
+<td>垂直分割（左右）</td>
+</tr>
+<tr>
+<td><code>|</code></td>
+<td>垂直分割（左右，同 <code>%</code>）</td>
+</tr>
+<tr>
+<td><code>&quot;</code></td>
+<td>水平分割（上下）</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>水平分割（上下，同 <code>&quot;</code>）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="面板操作"><a class="markdownIt-Anchor" href="#面板操作"></a> 面板操作</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td>🔴 关闭当前面板（需按 <code>y</code> 确认）</td>
+</tr>
+<tr>
+<td><code>X</code></td>
+<td>🔴 关闭当前窗口（需按 <code>y</code> 确认）</td>
+</tr>
+<tr>
+<td><code>z</code></td>
+<td>全屏 / 还原当前面板</td>
+</tr>
+<tr>
+<td><code>!</code></td>
+<td>将面板拆分为独立窗口</td>
+</tr>
+<tr>
+<td><code>&#123;</code></td>
+<td>与上一个面板交换位置</td>
+</tr>
+<tr>
+<td><code>&#125;</code></td>
+<td>与下一个面板交换位置</td>
+</tr>
+<tr>
+<td><code>Space</code></td>
+<td>循环切换面板布局</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="窗口管理"><a class="markdownIt-Anchor" href="#窗口管理"></a> 窗口管理</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>c</code></td>
+<td>🟡 新建窗口（需按 <code>y</code> 确认，防误触）</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>下一个窗口</td>
+</tr>
+<tr>
+<td><code>p</code></td>
+<td>上一个窗口</td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>交互式选择窗口</td>
+</tr>
+<tr>
+<td><code>0</code> - <code>9</code></td>
+<td>切换到指定编号的窗口</td>
+</tr>
+<tr>
+<td><code>,</code></td>
+<td>重命名当前窗口</td>
+</tr>
+<tr>
+<td><code>.</code></td>
+<td>移动当前窗口（按编号）</td>
+</tr>
+<tr>
+<td><code>g</code></td>
+<td>按编号跳转到窗口</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="会话管理"><a class="markdownIt-Anchor" href="#会话管理"></a> 会话管理</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s</code></td>
+<td>交互式选择会话</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>🔴 分离当前会话（提示 <code>detach the session? (yes/n)</code>，必须输入完整 <code>yes</code>）</td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td>🔴 杀死当前会话（提示 <code>kill the session? (yes/n)</code>，必须输入完整 <code>yes</code>）</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>重命名当前会话</td>
+</tr>
+<tr>
+<td><code>(</code></td>
+<td>上一个会话</td>
+</tr>
+<tr>
+<td><code>)</code></td>
+<td>下一个会话</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="滚动与搜索copy-mode"><a class="markdownIt-Anchor" href="#滚动与搜索copy-mode"></a> 滚动与搜索（Copy Mode）</h2>
+<p>进入黏滞模式（<code>C-b</code>），再按 <code>[</code> 进入 Copy Mode。</p>
+<h3 id="进入与退出-2"><a class="markdownIt-Anchor" href="#进入与退出-2"></a> 进入与退出</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[</code></td>
+<td>进入 Copy Mode</td>
+</tr>
+<tr>
+<td><code>q</code> 或 <code>Esc</code></td>
+<td>退出 Copy Mode</td>
+</tr>
+</tbody>
+</table>
+<h3 id="滚动"><a class="markdownIt-Anchor" href="#滚动"></a> 滚动</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>j</code></td>
+<td>向下滚一行</td>
+</tr>
+<tr>
+<td><code>k</code></td>
+<td>向上滚一行</td>
+</tr>
+<tr>
+<td><code>Ctrl+u</code></td>
+<td>向上翻半页</td>
+</tr>
+<tr>
+<td><code>Ctrl+d</code></td>
+<td>向下翻半页</td>
+</tr>
+<tr>
+<td><code>Ctrl+b</code></td>
+<td>向上翻一页</td>
+</tr>
+<tr>
+<td><code>Ctrl+f</code></td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td><code>g</code></td>
+<td>滚到顶部</td>
+</tr>
+<tr>
+<td><code>G</code></td>
+<td>滚到底部</td>
+</tr>
+</tbody>
+</table>
+<h3 id="搜索"><a class="markdownIt-Anchor" href="#搜索"></a> 搜索</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td>向前搜索</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>向后搜索</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>下一个匹配</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>上一个匹配</td>
+</tr>
+</tbody>
+</table>
+<h3 id="选择与复制"><a class="markdownIt-Anchor" href="#选择与复制"></a> 选择与复制</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v</code></td>
+<td>开始选择文本</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>复制选中文本到 tmux 缓冲区</td>
+</tr>
+<tr>
+<td><code>Ctrl+c</code></td>
+<td>复制选中文本到 Windows 剪贴板（WSL）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="复制-粘贴"><a class="markdownIt-Anchor" href="#复制-粘贴"></a> 复制 / 粘贴</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[</code></td>
+<td>进入 Copy Mode</td>
+</tr>
+<tr>
+<td><code>]</code></td>
+<td>粘贴 tmux 缓冲区内容</td>
+</tr>
+<tr>
+<td><code>=</code></td>
+<td>交互式选择缓冲区</td>
+</tr>
+<tr>
+<td><code>#</code></td>
+<td>列出所有缓冲区</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:</code></td>
+<td>打开 tmux 命令提示符</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>列出当前所有按键绑定</td>
+</tr>
+<tr>
+<td><code>r</code></td>
+<td>刷新终端显示</td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>显示时钟</td>
+</tr>
+<tr>
+<td><code>m</code></td>
+<td>显示消息历史</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>显示当前窗口信息</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="防御策略说明"><a class="markdownIt-Anchor" href="#防御策略说明"></a> 防御策略说明</h2>
+<p>为<strong>防止黏滞模式中误触破坏性操作</strong>，以下按键配置了确认机制：</p>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>方式</th>
+<th>按键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟡 标准确认</td>
+<td>按 <code>y</code> 确认，<code>n</code> 取消</td>
+<td><code>c</code> <code>x</code> <code>X</code></td>
+<td>新建窗口、关闭面板/窗口</td>
+</tr>
+<tr>
+<td>🔴 严格确认</td>
+<td>必须输入完整 <code>yes</code> 才执行</td>
+<td><code>d</code> <code>D</code></td>
+<td>分离会话、断开客户端</td>
+</tr>
+</tbody>
+</table>
+<h3 id="典型案例"><a class="markdownIt-Anchor" href="#典型案例"></a> 典型案例</h3>
+<ul>
+<li>黏滞模式中想导航到 Claude 面板：<code>C-b → j → j → l</code>，安全</li>
+<li>若误触 <code>d</code> 再按 <code>y</code>：不会触发 detach（必须完整输入 <code>yes</code>）</li>
+<li>若误触 <code>x</code>：弹窗提示，按 <code>n</code> 可取消</li>
+</ul>
+<hr />
+<h2 id="会话管理shell-命令"><a class="markdownIt-Anchor" href="#会话管理shell-命令"></a> 会话管理（Shell 命令）</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tmux new -s &lt;name&gt;</code></td>
+<td>创建名为 name 的会话</td>
+</tr>
+<tr>
+<td><code>tmux ls</code></td>
+<td>列出所有会话</td>
+</tr>
+<tr>
+<td><code>tmux attach -t &lt;name&gt;</code></td>
+<td>重新连接到指定会话</td>
+</tr>
+<tr>
+<td><code>tmux kill-session -t &lt;name&gt;</code></td>
+<td>删除指定会话</td>
+</tr>
+<tr>
+<td><code>tmux kill-server</code></td>
+<td>删除所有会话（退出 tmux）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="复制到系统剪贴板"><a class="markdownIt-Anchor" href="#复制到系统剪贴板"></a> 复制到系统剪贴板</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># WSL 中直接使用 clip.exe</span></span><br><span class="line">tmux show-buffer | clip.exe</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="操作流程示例"><a class="markdownIt-Anchor" href="#操作流程示例"></a> 操作流程示例</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># 切换到右边面板</span><br><span class="line">C-b  →  l  →  Enter</span><br><span class="line"></span><br><span class="line"># 连续移动到目标面板</span><br><span class="line">C-b  →  j  →  j  →  l  →  Enter</span><br><span class="line"></span><br><span class="line"># 调整面板大小后再切换</span><br><span class="line">C-b  →  L  →  L  →  K  →  j  →  Enter</span><br><span class="line"></span><br><span class="line"># 分割窗口并移动</span><br><span class="line">C-b  →  %  →  l  →  Enter</span><br><span class="line"></span><br><span class="line"># 新建窗口（需确认）</span><br><span class="line">C-b  →  c  →  y</span><br><span class="line"></span><br><span class="line"># 关闭当前面板（需确认）</span><br><span class="line">C-b  →  x  →  y</span><br><span class="line"></span><br><span class="line"># 分离会话（需输入完整 yes）</span><br><span class="line">C-b  →  d  →  yes  →  Enter</span><br><span class="line"></span><br><span class="line"># 滚动查看历史输出</span><br><span class="line">C-b  →  [  →  滚动/搜索  →  q</span><br><span class="line"></span><br><span class="line"># 从 Copy Mode 复制文本</span><br><span class="line">C-b  →  [  →  v 选择文本  →  y 复制</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="配置说明"><a class="markdownIt-Anchor" href="#配置说明"></a> 配置说明</h2>
+<p>配置文件路径：<code>~/.tmux.conf</code></p>
+<ul>
+<li><strong>tmux 版本</strong>：3.6</li>
+<li><strong>前缀键</strong>：<code>F12</code>（保留为标准前缀备用）</li>
+<li><strong>黏滞模式进入键</strong>：<code>C-b</code></li>
+<li><strong>按键表</strong>：<code>pane-ctrl</code></li>
+<li><strong>模式键</strong>：vi 风格</li>
+<li><strong>鼠标</strong>：启用</li>
+</ul>
+<p>刷新配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux source-file ~/.tmux.conf</span><br></pre></td></tr></table></figure>
+<hr />
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag"></i> Tools</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/07/17/Vim%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/" rel="prev" title="Vim 使用手册">
+      <i class="fa fa-chevron-left"></i> Vim 使用手册
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/07/17/neovim%E6%89%8B%E5%86%8C/" rel="next" title="NeoVim 使用手册">
+      NeoVim 使用手册 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E9%BB%8F%E6%BB%9E%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text"> 核心概念：黏滞模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA"><span class="nav-number">1.1.</span> <span class="nav-text"> 状态提示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E4%B8%8E%E9%80%80%E5%87%BA"><span class="nav-number">2.</span> <span class="nav-text"> 进入与退出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E6%9D%BF%E5%AF%BC%E8%88%AA"><span class="nav-number">3.</span> <span class="nav-text"> 面板导航</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E6%9D%BF%E5%A4%A7%E5%B0%8F%E8%B0%83%E6%95%B4"><span class="nav-number">4.</span> <span class="nav-text"> 面板大小调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E6%9D%BF%E5%88%86%E5%89%B2"><span class="nav-number">5.</span> <span class="nav-text"> 面板分割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E6%9D%BF%E6%93%8D%E4%BD%9C"><span class="nav-number">6.</span> <span class="nav-text"> 面板操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text"> 窗口管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86"><span class="nav-number">8.</span> <span class="nav-text"> 会话管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%9A%E5%8A%A8%E4%B8%8E%E6%90%9C%E7%B4%A2copy-mode"><span class="nav-number">9.</span> <span class="nav-text"> 滚动与搜索（Copy Mode）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E4%B8%8E%E9%80%80%E5%87%BA-2"><span class="nav-number">9.1.</span> <span class="nav-text"> 进入与退出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%9A%E5%8A%A8"><span class="nav-number">9.2.</span> <span class="nav-text"> 滚动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2"><span class="nav-number">9.3.</span> <span class="nav-text"> 搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E4%B8%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">9.4.</span> <span class="nav-text"> 选择与复制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6-%E7%B2%98%E8%B4%B4"><span class="nav-number">10.</span> <span class="nav-text"> 复制 &#x2F; 粘贴</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">11.</span> <span class="nav-text"> 其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E7%AD%96%E7%95%A5%E8%AF%B4%E6%98%8E"><span class="nav-number">12.</span> <span class="nav-text"> 防御策略说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E6%A1%88%E4%BE%8B"><span class="nav-number">12.1.</span> <span class="nav-text"> 典型案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86shell-%E5%91%BD%E4%BB%A4"><span class="nav-number">13.</span> <span class="nav-text"> 会话管理（Shell 命令）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%88%B0%E7%B3%BB%E7%BB%9F%E5%89%AA%E8%B4%B4%E6%9D%BF"><span class="nav-number">14.</span> <span class="nav-text"> 复制到系统剪贴板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">15.</span> <span class="nav-text"> 操作流程示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="nav-number">16.</span> <span class="nav-text"> 配置说明</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

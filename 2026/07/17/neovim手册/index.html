@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言: Neovim 是基于 Vim 的一个现代化分支（fork），它的定位是“hyperextensible Vim-based text editor”——一个基于 Vim、具备超强扩展能力的文本编辑器。 简单来说，Neovim 不是对 Vim 的重写，而是延续和扩展。它保留了 Vim 的核心操作哲学——高效、快速、键盘驱动、极简，同时通过架构层面的革新，让这个经典的编辑器能够更好地适应现代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NeoVim 使用手册">
+<meta property="og:url" content="https://lsqyling.github.io/2026/07/17/neovim%E6%89%8B%E5%86%8C/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言: Neovim 是基于 Vim 的一个现代化分支（fork），它的定位是“hyperextensible Vim-based text editor”——一个基于 Vim、具备超强扩展能力的文本编辑器。 简单来说，Neovim 不是对 Vim 的重写，而是延续和扩展。它保留了 Vim 的核心操作哲学——高效、快速、键盘驱动、极简，同时通过架构层面的革新，让这个经典的编辑器能够更好地适应现代">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-07-17T12:31:56.000Z">
+<meta property="article:modified_time" content="2026-07-27T10:44:39.643Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lsqyling.github.io/2026/07/17/neovim%E6%89%8B%E5%86%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>NeoVim 使用手册 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.esm.min.mjs">
+    mermaid.initialize(
+      startOnLoad: true,
+    );
+    </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2026/07/17/neovim%E6%89%8B%E5%86%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NeoVim 使用手册
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-07-17 20:31:56" itemprop="dateCreated datePublished" datetime="2026-07-17T20:31:56+08:00">2026-07-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-27 18:44:39" itemprop="dateModified" datetime="2026-07-27T18:44:39+08:00">2026-07-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>前言: Neovim 是基于 Vim 的一个现代化分支（fork），它的定位是“hyperextensible Vim-based text editor”——一个基于 Vim、具备超强扩展能力的文本编辑器。 简单来说，Neovim 不是对 Vim 的重写，而是延续和扩展。它保留了 Vim 的核心操作哲学——高效、快速、键盘驱动、极简，同时通过架构层面的革新，让这个经典的编辑器能够更好地适应现代开发需求。</p>
+</blockquote>
+<span id="more"></span>
+<hr />
+<h1 id="neovim-使用手册"><a class="markdownIt-Anchor" href="#neovim-使用手册"></a> NeoVim 使用手册</h1>
+<blockquote>
+<p>轻量 C++ Vibe Coding 配置 | lazy.nvim + clangd + Telescope + Oil</p>
+<p>配置文件：<code>~/.config/nvim/init.lua</code> + <code>~/.config/nvim/lua/plugins/lsp.lua</code></p>
+<p>AI 辅助由 Claude Code CLI（接入 DeepSeek）在 tmux pane 中独立运行，未集成到 nvim 内部。</p>
+</blockquote>
+<hr />
+<h2 id="目录"><a class="markdownIt-Anchor" href="#目录"></a> 目录</h2>
+<ul>
+<li><a href="#%E6%8F%92%E4%BB%B6%E4%B8%80%E8%A7%88">插件一览</a></li>
+<li><a href="#telescope--%E6%A8%A1%E7%B3%8A%E6%90%9C%E7%B4%A2">Telescope — 模糊搜索</a></li>
+<li><a href="#oil--%E6%96%87%E4%BB%B6%E6%B5%8F%E8%A7%88%E5%99%A8">Oil — 文件浏览器</a></li>
+<li><a href="#nvim-cmp--%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8">nvim-cmp — 自动补全</a></li>
+<li><a href="#lsp--clangd--c-%E8%AF%AD%E8%A8%80%E6%9C%8D%E5%8A%A1">LSP / clangd — C++ 语言服务</a></li>
+<li><a href="#treesitter--%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE">Treesitter — 语法高亮</a></li>
+<li><a href="#c-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BF%AB%E6%8D%B7%E9%94%AE">C++ 工作流快捷键</a></li>
+<li><a href="#tmux-%E8%81%94%E5%8A%A8">Tmux 联动</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86">插件管理</a></li>
+<li><a href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">常见问题</a></li>
+</ul>
+<hr />
+<h2 id="插件一览"><a class="markdownIt-Anchor" href="#插件一览"></a> 插件一览</h2>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>用途</th>
+<th>加载方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nvim-treesitter</code></td>
+<td>语义级语法高亮 + 缩进</td>
+<td>启动加载</td>
+</tr>
+<tr>
+<td><code>nvim-lspconfig</code></td>
+<td>LSP 客户端（clangd）</td>
+<td>打开 C/C++ 文件时</td>
+</tr>
+<tr>
+<td><code>nvim-cmp</code></td>
+<td>自动补全弹窗</td>
+<td>进入插入模式时</td>
+</tr>
+<tr>
+<td><code>telescope.nvim</code></td>
+<td>模糊搜索文件/内容/符号</td>
+<td>调用 <code>:Telescope</code> 命令时</td>
+</tr>
+<tr>
+<td><code>oil.nvim</code></td>
+<td>目录文件浏览器</td>
+<td>按 <code>-</code> 时</td>
+</tr>
+<tr>
+<td><code>LuaSnip</code></td>
+<td>代码片段引擎</td>
+<td>插入模式补全时</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="telescope-模糊搜索"><a class="markdownIt-Anchor" href="#telescope-模糊搜索"></a> Telescope — 模糊搜索</h2>
+<p>Telescope 是你在 Vibe Coding 中最高频使用的工具，用于快速定位文件和代码。</p>
+<h3 id="快捷键"><a class="markdownIt-Anchor" href="#快捷键"></a> 快捷键</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;leader&gt;ff</code></td>
+<td><strong>Find Files</strong></td>
+<td>按文件名搜索（基于 fd）</td>
+</tr>
+<tr>
+<td><code>&lt;leader&gt;fw</code></td>
+<td><strong>Live Grep</strong></td>
+<td>按文件内容搜索（基于 ripgrep）</td>
+</tr>
+<tr>
+<td><code>&lt;leader&gt;fb</code></td>
+<td><strong>Buffers</strong></td>
+<td>在已打开的 buffer 间切换</td>
+</tr>
+<tr>
+<td><code>gr</code></td>
+<td><strong>LSP References</strong></td>
+<td>查看光标下符号的所有引用位置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="常用操作"><a class="markdownIt-Anchor" href="#常用操作"></a> 常用操作</h3>
+<p>按下快捷键后，底部会出现 Telescope 输入框：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Find Files              (按 &lt;leader&gt;ff)</span><br><span class="line">─────────────────────────────────────</span><br><span class="line">&gt; main_wi               ← 输入关键词，实时过滤</span><br><span class="line">  src/main_window.cpp</span><br><span class="line">  src/main_window.h</span><br><span class="line">  tests/test_main.cpp</span><br><span class="line">─────────────────────────────────────</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>按键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上下选择结果</td>
+<td><code>&lt;C-n&gt;</code> / <code>&lt;C-p&gt;</code> 或方向键</td>
+</tr>
+<tr>
+<td>打开选中文件</td>
+<td><code>&lt;CR&gt;</code></td>
+</tr>
+<tr>
+<td>预览文件内容</td>
+<td>自动显示在右侧预览窗</td>
+</tr>
+<tr>
+<td>在新的垂直分屏打开</td>
+<td><code>&lt;C-v&gt;</code></td>
+</tr>
+<tr>
+<td>在新的水平分屏打开</td>
+<td><code>&lt;C-x&gt;</code></td>
+</tr>
+<tr>
+<td>在新 tab 打开</td>
+<td><code>&lt;C-t&gt;</code></td>
+</tr>
+<tr>
+<td>关闭 Telescope</td>
+<td><code>&lt;Esc&gt;</code> 或 <code>&lt;C-c&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>技巧</strong>：Live Grep 支持正则搜索，输入 <code>class.*Window</code> 可以搜索包含该模式的代码行。</p>
+</blockquote>
+<hr />
+<h2 id="oil-文件浏览器"><a class="markdownIt-Anchor" href="#oil-文件浏览器"></a> Oil — 文件浏览器</h2>
+<p>Oil 用纯 vim buffer 的方式展示目录，你在里面操作文件就像编辑文本一样自然。不使用侧边栏式的文件树（nvim-tree）。</p>
+<h3 id="打开"><a class="markdownIt-Anchor" href="#打开"></a> 打开</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-</code></td>
+<td>打开 Oil，浏览当前文件所在目录</td>
+</tr>
+</tbody>
+</table>
+<h3 id="界面"><a class="markdownIt-Anchor" href="#界面"></a> 界面</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">❯ oil:///home/user/project/src</span><br><span class="line">──────────────────────────────────</span><br><span class="line">.cache/</span><br><span class="line">build/</span><br><span class="line">main.cpp</span><br><span class="line">main.h</span><br><span class="line">utils/</span><br><span class="line">  string_helpers.cpp</span><br><span class="line">  string_helpers.h</span><br><span class="line">──────────────────────────────────</span><br></pre></td></tr></table></figure>
+<p>这就是一个普通的 vim buffer，所有操作都和编辑文本一致。</p>
+<h3 id="基本操作"><a class="markdownIt-Anchor" href="#基本操作"></a> 基本操作</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>j</code> / <code>k</code></td>
+<td>上下移动</td>
+</tr>
+<tr>
+<td><code>&lt;CR&gt;</code></td>
+<td>打开文件 / 进入目录</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>返回上级目录</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>关闭 Oil</td>
+</tr>
+<tr>
+<td><code>dd</code></td>
+<td><strong>删除</strong>文件/目录</td>
+</tr>
+<tr>
+<td><code>yy</code></td>
+<td><strong>复制</strong>文件/目录</td>
+</tr>
+<tr>
+<td><code>p</code></td>
+<td><strong>粘贴</strong>文件/目录</td>
+</tr>
+<tr>
+<td><code>r</code></td>
+<td><strong>重命名</strong>文件/目录</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>跳转到 home 目录</td>
+</tr>
+<tr>
+<td><code>g?</code></td>
+<td>显示 Oil 帮助（所有按键绑定）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="新建文件目录"><a class="markdownIt-Anchor" href="#新建文件目录"></a> 新建文件/目录</h3>
+<p>把光标停在一个目录上，按 <code>o</code> 或 <code>a</code> 进入插入模式，输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new_file.cpp          ← 新建文件</span><br><span class="line">new_directory/        ← 末尾加 / 表示新建目录</span><br></pre></td></tr></table></figure>
+<p>按 <code>&lt;Esc&gt;</code> 回到普通模式，Oil 会自动创建对应的文件/目录。</p>
+<blockquote>
+<p><strong>设计理念</strong>：Oil 会把你的文件编辑操作（dd/yy/p/r）直接映射为文件系统操作。比如 <code>dd</code> 一个文件不会删除文本，而是会删除这个文件（确认后）。比 nvim-tree 更快更轻量。</p>
+</blockquote>
+<hr />
+<h2 id="nvim-cmp-自动补全"><a class="markdownIt-Anchor" href="#nvim-cmp-自动补全"></a> nvim-cmp — 自动补全</h2>
+<p>进入插入模式后，输入代码时会自动弹出补全建议框。</p>
+<h3 id="补全来源"><a class="markdownIt-Anchor" href="#补全来源"></a> 补全来源</h3>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nvim_lsp</code></td>
+<td>clangd 提供的语义补全（类型准确）</td>
+</tr>
+<tr>
+<td><code>luasnip</code></td>
+<td>代码片段展开</td>
+</tr>
+<tr>
+<td><code>buffer</code></td>
+<td>当前 buffer 中已有的单词</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>文件路径补全（<code>#include</code> 时很有用）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="操作"><a class="markdownIt-Anchor" href="#操作"></a> 操作</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">main_window.cpp</span><br><span class="line">────────────────────────────────────</span><br><span class="line">auto win = std::</span><br><span class="line">  [ standard ]───────────  ← 自动弹出</span><br><span class="line">  std::string            ← &lt;C-n&gt;/&lt;C-p&gt; 选择</span><br><span class="line">  std::vector</span><br><span class="line">  std::cout</span><br><span class="line">  std::unique_ptr</span><br><span class="line">────────────────────────────────────</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>按键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>选择下一项</td>
+<td><code>&lt;C-n&gt;</code> 或 <code>&lt;Tab&gt;</code></td>
+</tr>
+<tr>
+<td>选择上一项</td>
+<td><code>&lt;C-p&gt;</code> 或 <code>&lt;S-Tab&gt;</code></td>
+</tr>
+<tr>
+<td>确认选择</td>
+<td><code>&lt;C-y&gt;</code></td>
+</tr>
+<tr>
+<td>关闭补全框</td>
+<td><code>&lt;C-e&gt;</code></td>
+</tr>
+<tr>
+<td>滚动文档</td>
+<td><code>&lt;C-f&gt;</code> / <code>&lt;C-d&gt;</code></td>
+</tr>
+<tr>
+<td>展开/跳转 snippet</td>
+<td><code>&lt;Tab&gt;</code>（在补全框关闭时）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="lsp-clangd-c-语言服务"><a class="markdownIt-Anchor" href="#lsp-clangd-c-语言服务"></a> LSP / clangd — C++ 语言服务</h2>
+<p>clangd 提供 C++ 的精准语义分析，需要项目生成 <code>compile_commands.json</code>。</p>
+<h3 id="准备工作"><a class="markdownIt-Anchor" href="#准备工作"></a> 准备工作</h3>
+<p>项目根目录下要有 <code>compile_commands.json</code>，CMake 项目只需要在配置时加上 flag：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法一：cmake 配置时直接生成</span></span><br><span class="line">cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法二：在项目根目录建立软链接（推荐，一劳永逸）</span></span><br><span class="line"><span class="built_in">ln</span> -s build/compile_commands.json .</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果 build 目录在项目外，调整软链接路径即可。</p>
+</blockquote>
+<h3 id="lsp-快捷键"><a class="markdownIt-Anchor" href="#lsp-快捷键"></a> LSP 快捷键</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>K</code></td>
+<td><strong>悬停查看</strong>：在浮动窗口显示类型、文档和参数</td>
+</tr>
+<tr>
+<td><code>gd</code></td>
+<td><strong>跳转到定义</strong>（Go to Definition）</td>
+</tr>
+<tr>
+<td><code>gD</code></td>
+<td><strong>跳转到声明</strong>（Go to Declaration）</td>
+</tr>
+<tr>
+<td><code>gi</code></td>
+<td><strong>跳转到实现</strong>（Go to Implementation）</td>
+</tr>
+<tr>
+<td><code>gr</code></td>
+<td><strong>查找引用</strong>（用 Telescope 展示所有引用位置）</td>
+</tr>
+<tr>
+<td><code>&lt;F2&gt;</code></td>
+<td><strong>重命名符号</strong>：修改所有引用处</td>
+</tr>
+<tr>
+<td><code>&lt;F4&gt;</code></td>
+<td><strong>代码操作</strong>：显示 clangd 建议的修复</td>
+</tr>
+<tr>
+<td><code>&lt;leader&gt;e</code></td>
+<td><strong>查看诊断</strong>：打开当前行的错误/警告详情</td>
+</tr>
+<tr>
+<td><code>[d</code></td>
+<td><strong>跳转到上一个诊断</strong></td>
+</tr>
+<tr>
+<td><code>]d</code></td>
+<td><strong>跳转到下一个诊断</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="内联提示inlay-hints"><a class="markdownIt-Anchor" href="#内联提示inlay-hints"></a> 内联提示（Inlay Hints）</h3>
+<p>Neovim 0.10+ 自动启用。在代码中显示推导类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> it = vec.<span class="built_in">begin</span>();              <span class="comment">// → auto it = /* std::vector&lt;int&gt;::iterator */ vec.begin();</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> [k, v] : map) &#123; ... &#125;    <span class="comment">// → for (auto [/* const Key&amp; */ k, /* Value&amp; */ v] : map) &#123; ... &#125;</span></span><br></pre></td></tr></table></figure>
+<p>可随时用以下命令开关：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">lua</span> <span class="keyword">vim</span>.lsp.inlay_hint.enable(not <span class="keyword">vim</span>.lsp.inlay_hint.is_enabled(), nil)</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="treesitter-语法高亮"><a class="markdownIt-Anchor" href="#treesitter-语法高亮"></a> Treesitter — 语法高亮</h2>
+<p>Treesitter 自动提供比 vim 正则高亮更准确的语法着色、代码折叠增强和缩进感知。</p>
+<h3 id="管理-treesitter-解析器"><a class="markdownIt-Anchor" href="#管理-treesitter-解析器"></a> 管理 Treesitter 解析器</h3>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:TSInstall cpp          <span class="comment">&quot; 手动安装 C++ 解析器（已自动安装）</span></span><br><span class="line">:TSUpdate               <span class="comment">&quot; 更新所有解析器</span></span><br><span class="line">:TSInstallInfo          <span class="comment">&quot; 查看各解析器状态</span></span><br></pre></td></tr></table></figure>
+<h3 id="代码折叠可选"><a class="markdownIt-Anchor" href="#代码折叠可选"></a> 代码折叠（可选）</h3>
+<p>如果需要代码折叠，在 <code>~/.config/nvim/init.lua</code> 的 treesitter 配置中添加：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">highlight = &#123; enable = <span class="literal">true</span> &#125;,</span><br><span class="line">indent = &#123; enable = <span class="literal">true</span> &#125;,</span><br><span class="line"><span class="comment">-- 添加下面两行启用 treesitter-based folding</span></span><br><span class="line">incremental_selection = &#123; enable = <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;)</span><br><span class="line">vim.opt.foldmethod = <span class="string">&#x27;expr&#x27;</span></span><br><span class="line">vim.opt.foldexpr = <span class="string">&#x27;v:lua.vim.treesitter.foldexpr()&#x27;</span></span><br><span class="line">vim.opt.foldenable = <span class="literal">false</span>   <span class="comment">-- 默认不折叠，按 zM 折叠</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="c-工作流快捷键"><a class="markdownIt-Anchor" href="#c-工作流快捷键"></a> C++ 工作流快捷键</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+<th>详细说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;F7&gt;</code></td>
+<td><strong>头/源文件切换</strong></td>
+<td>在 <code>main.cpp</code> ↔ <code>main.h</code> 之间跳转。支持 <code>.cpp</code>/<code>.cc</code>/<code>.cxx</code>/<code>.c</code> ↔ <code>.h</code>/<code>.hpp</code></td>
+</tr>
+<tr>
+<td><code>&lt;F5&gt;</code></td>
+<td><strong>构建项目</strong></td>
+<td>保存当前文件 → 通过 tmux 向<strong>右侧 pane</strong> 发送 <code>cmake -B build -G Ninja &amp;&amp; ninja -C build</code> 命令</td>
+</tr>
+<tr>
+<td><code>&lt;F6&gt;</code></td>
+<td><strong>运行测试</strong></td>
+<td>保存当前文件 → 通过 tmux 向右侧 pane 发送 <code>ctest --output-on-failure</code></td>
+</tr>
+<tr>
+<td><code>&lt;leader&gt;b</code></td>
+<td><strong>运行 :make</strong></td>
+<td>使用 neovim 内置的 <code>:make</code> 命令（基于 <code>makeprg</code> 设置）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="调整-f5-发送到的-tmux-pane"><a class="markdownIt-Anchor" href="#调整-f5-发送到的-tmux-pane"></a> 调整 F5 发送到的 tmux pane</h3>
+<p>默认发送到右侧 pane（<code>-t right</code>）。如果你的 tmux 布局不同，编辑 <code>init.lua</code> 中对应行：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 修改 -t 后的目标：</span></span><br><span class="line"><span class="comment">--   -t build        → 指定 pane 名称</span></span><br><span class="line"><span class="comment">--   -t &#123;left-of&#125;    → 左侧 pane</span></span><br><span class="line"><span class="comment">--   -t &#123;bottom-right&#125; → 特定位置</span></span><br><span class="line"><span class="comment">--   -t 2            → pane 索引</span></span><br><span class="line">vim.fn.system(<span class="string">&quot;tmux send-keys -t right &#x27;&quot;</span> .. cmd .. <span class="string">&quot;&#x27; Enter&quot;</span>)</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="tmux-联动"><a class="markdownIt-Anchor" href="#tmux-联动"></a> Tmux 联动</h2>
+<p>本配置未安装 <code>vim-tmux-navigator</code> 插件，使用原生 tmux prefix 键管理 pane。</p>
+<p>推荐 tmux 布局：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────┬─────────────────────┐</span><br><span class="line">│  Pane 1: Neovim      │  Pane 2: 终端       │</span><br><span class="line">│  (主编辑区)           │  (编译 / git /      │</span><br><span class="line">│                       │   Claude Code CLI)  │</span><br><span class="line">│                       │                     │</span><br><span class="line">│  &lt;Space&gt;ff 搜索文件    │  F5 编译命令发到这里 │</span><br><span class="line">│  &lt;Space&gt;fw 搜索内容    │                     │</span><br><span class="line">│  K/gd  LSP导航          │                     │</span><br><span class="line">│  F7  切头源          │                     │</span><br><span class="line">│  -    Oil文件浏览     │                     │</span><br><span class="line">└──────────────────────┴─────────────────────┘</span><br></pre></td></tr></table></figure>
+<p>在 nvim 内部，窗口间导航使用 <code>&lt;C-w&gt;h/j/k/l</code>（vim 原生）、跨 tmux pane 则用 <code>&lt;prefix&gt; o</code> 或方向键。</p>
+<hr />
+<h2 id="插件管理"><a class="markdownIt-Anchor" href="#插件管理"></a> 插件管理</h2>
+<p>使用 <code>lazy.nvim</code> 管理插件。</p>
+<h3 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h3>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:Lazy              <span class="comment">&quot; 打开插件管理界面（查看状态、更新）</span></span><br><span class="line">:Lazy <span class="keyword">sync</span>         <span class="comment">&quot; 同步插件（安装新添加的、移除删除的）</span></span><br><span class="line">:Lazy <span class="keyword">update</span>       <span class="comment">&quot; 更新所有插件</span></span><br><span class="line">:Lazy clean        <span class="comment">&quot; 清理不再使用的插件目录</span></span><br><span class="line">:Lazy check        <span class="comment">&quot; 检查插件更新</span></span><br></pre></td></tr></table></figure>
+<h3 id="添加新插件"><a class="markdownIt-Anchor" href="#添加新插件"></a> 添加新插件</h3>
+<p>编辑 <code>~/.config/nvim/init.lua</code>，在 <code>require('lazy').setup(&#123; ... &#125;)</code> 的插件列表中添加：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&#x27;作者/插件名&#x27;</span>,        <span class="comment">-- GitHub 地址</span></span><br><span class="line">  cmd = &#123; <span class="string">&#x27;CmdName&#x27;</span> &#125;,  <span class="comment">-- 懒加载：仅在执行此命令时加载</span></span><br><span class="line">  <span class="comment">-- 或</span></span><br><span class="line">  event = <span class="string">&#x27;InsertEnter&#x27;</span>, <span class="comment">-- 懒加载：在进入插入模式时加载</span></span><br><span class="line">  <span class="comment">-- 或</span></span><br><span class="line">  ft = &#123; <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;cpp&#x27;</span> &#125;,  <span class="comment">-- 懒加载：仅在打开 C/C++ 文件时加载</span></span><br><span class="line">  <span class="built_in">config</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">    <span class="comment">-- 插件的配置代码</span></span><br><span class="line">  <span class="keyword">end</span>,</span><br><span class="line">  dependencies = &#123;</span><br><span class="line">    <span class="comment">-- 依赖的插件</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>添加后执行 <code>:Lazy sync</code> 安装。</p>
+<h3 id="移除插件"><a class="markdownIt-Anchor" href="#移除插件"></a> 移除插件</h3>
+<ol>
+<li>从 <code>init.lua</code> 中删除对应的插件定义</li>
+<li>重启 nvim 或执行 <code>:Lazy sync</code></li>
+<li>执行 <code>:Lazy clean</code> 清理残留文件</li>
+</ol>
+<hr />
+<h2 id="常见问题"><a class="markdownIt-Anchor" href="#常见问题"></a> 常见问题</h2>
+<h3 id="clangd-不工作-没有补全"><a class="markdownIt-Anchor" href="#clangd-不工作-没有补全"></a> clangd 不工作 / 没有补全</h3>
+<p><strong>原因</strong>：<code>compile_commands.json</code> 缺失。</p>
+<p><strong>解决</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 确认文件存在</span></span><br><span class="line"><span class="built_in">ls</span> -la compile_commands.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果没有，生成</span></span><br><span class="line">cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</span><br><span class="line"><span class="built_in">ln</span> -s build/compile_commands.json .</span><br></pre></td></tr></table></figure>
+<p>完成后关闭 nvim 重开，或执行 <code>:LspRestart</code>。</p>
+<h3 id="telescope-报错-no-file-finder"><a class="markdownIt-Anchor" href="#telescope-报错-no-file-finder"></a> Telescope 报错 “No file finder”</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 fd 和 ripgrep</span></span><br><span class="line"><span class="built_in">sudo</span> apt install fd-find ripgrep</span><br></pre></td></tr></table></figure>
+<h3 id="已安装的插件不生效"><a class="markdownIt-Anchor" href="#已安装的插件不生效"></a> 已安装的插件不生效</h3>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Lazy <span class="keyword">sync</span>    <span class="comment">&quot; 确保插件已安装</span></span><br><span class="line">:checkhealth  <span class="comment">&quot; 检查是否有配置错误</span></span><br></pre></td></tr></table></figure>
+<h3 id="nvim-启动慢"><a class="markdownIt-Anchor" href="#nvim-启动慢"></a> nvim 启动慢？</h3>
+<p>当前配置启动时间约 <strong>18ms</strong>。如果发现变慢，排查：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:StartupTime</span><br><span class="line"><span class="comment">&quot; 或</span></span><br><span class="line">:Lazy <span class="keyword">profile</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag"></i> Tools</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/07/17/tmux%E6%89%8B%E5%86%8C/" rel="prev" title="Tmux 手册">
+      <i class="fa fa-chevron-left"></i> Tmux 手册
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/07/25/yidaoyunTrainingSummary/" rel="next" title="易道云 C++ 培训学习总结">
+      易道云 C++ 培训学习总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#neovim-%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C"><span class="nav-number">1.</span> <span class="nav-text"> NeoVim 使用手册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.1.</span> <span class="nav-text"> 目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E4%B8%80%E8%A7%88"><span class="nav-number">1.2.</span> <span class="nav-text"> 插件一览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#telescope-%E6%A8%A1%E7%B3%8A%E6%90%9C%E7%B4%A2"><span class="nav-number">1.3.</span> <span class="nav-text"> Telescope — 模糊搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">1.3.2.</span> <span class="nav-text"> 常用操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oil-%E6%96%87%E4%BB%B6%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="nav-number">1.4.</span> <span class="nav-text"> Oil — 文件浏览器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%BC%80"><span class="nav-number">1.4.1.</span> <span class="nav-text"> 打开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2"><span class="nav-number">1.4.2.</span> <span class="nav-text"> 界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">1.4.3.</span> <span class="nav-text"> 基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="nav-number">1.4.4.</span> <span class="nav-text"> 新建文件&#x2F;目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nvim-cmp-%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="nav-number">1.5.</span> <span class="nav-text"> nvim-cmp — 自动补全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%A8%E6%9D%A5%E6%BA%90"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 补全来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lsp-clangd-c-%E8%AF%AD%E8%A8%80%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.6.</span> <span class="nav-text"> LSP &#x2F; clangd — C++ 语言服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.6.1.</span> <span class="nav-text"> 准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lsp-%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">1.6.2.</span> <span class="nav-text"> LSP 快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E8%81%94%E6%8F%90%E7%A4%BAinlay-hints"><span class="nav-number">1.6.3.</span> <span class="nav-text"> 内联提示（Inlay Hints）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#treesitter-%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE"><span class="nav-number">1.7.</span> <span class="nav-text"> Treesitter — 语法高亮</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86-treesitter-%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="nav-number">1.7.1.</span> <span class="nav-text"> 管理 Treesitter 解析器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0%E5%8F%AF%E9%80%89"><span class="nav-number">1.7.2.</span> <span class="nav-text"> 代码折叠（可选）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">1.8.</span> <span class="nav-text"> C++ 工作流快捷键</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%95%B4-f5-%E5%8F%91%E9%80%81%E5%88%B0%E7%9A%84-tmux-pane"><span class="nav-number">1.8.1.</span> <span class="nav-text"> 调整 F5 发送到的 tmux pane</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tmux-%E8%81%94%E5%8A%A8"><span class="nav-number">1.9.</span> <span class="nav-text"> Tmux 联动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-number">1.10.</span> <span class="nav-text"> 插件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.10.1.</span> <span class="nav-text"> 常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E6%8F%92%E4%BB%B6"><span class="nav-number">1.10.2.</span> <span class="nav-text"> 添加新插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E6%8F%92%E4%BB%B6"><span class="nav-number">1.10.3.</span> <span class="nav-text"> 移除插件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.11.</span> <span class="nav-text"> 常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clangd-%E4%B8%8D%E5%B7%A5%E4%BD%9C-%E6%B2%A1%E6%9C%89%E8%A1%A5%E5%85%A8"><span class="nav-number">1.11.1.</span> <span class="nav-text"> clangd 不工作 &#x2F; 没有补全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#telescope-%E6%8A%A5%E9%94%99-no-file-finder"><span class="nav-number">1.11.2.</span> <span class="nav-text"> Telescope 报错 “No file finder”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84%E6%8F%92%E4%BB%B6%E4%B8%8D%E7%94%9F%E6%95%88"><span class="nav-number">1.11.3.</span> <span class="nav-text"> 已安装的插件不生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nvim-%E5%90%AF%E5%8A%A8%E6%85%A2"><span class="nav-number">1.11.4.</span> <span class="nav-text"> nvim 启动慢？</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

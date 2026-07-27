@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言: 基于配置文件生成的 GlazeWM 平铺窗口管理器使用指南">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GlazeVM 使用手册">
+<meta property="og:url" content="https://lsqyling.github.io/2026/07/17/GlazeVM%E6%89%8B%E5%86%8C/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言: 基于配置文件生成的 GlazeWM 平铺窗口管理器使用指南">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-07-17T12:00:50.000Z">
+<meta property="article:modified_time" content="2026-07-26T02:14:17.247Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lsqyling.github.io/2026/07/17/GlazeVM%E6%89%8B%E5%86%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>GlazeVM 使用手册 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.esm.min.mjs">
+    mermaid.initialize(
+      startOnLoad: true,
+    );
+    </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2026/07/17/GlazeVM%E6%89%8B%E5%86%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GlazeVM 使用手册
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-07-17 20:00:50" itemprop="dateCreated datePublished" datetime="2026-07-17T20:00:50+08:00">2026-07-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-26 10:14:17" itemprop="dateModified" datetime="2026-07-26T10:14:17+08:00">2026-07-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>前言: 基于配置文件生成的 GlazeWM 平铺窗口管理器使用指南</p>
+</blockquote>
+<span id="more"></span>
+<hr />
+<h2 id="目录"><a class="markdownIt-Anchor" href="#目录"></a> 目录</h2>
+<ol>
+<li><a href="#1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5">基础概念</a></li>
+<li><a href="#2-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86">窗口管理</a></li>
+<li><a href="#3-%E7%AA%97%E5%8F%A3%E6%95%88%E6%9E%9C">窗口效果</a></li>
+<li><a href="#4-%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%AE%A1%E7%90%86">工作区管理</a></li>
+<li><a href="#5-%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE">全局设置</a></li>
+<li><a href="#6-%E9%94%AE%E7%9B%98%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5%E8%A1%A8">键盘快捷键速查表</a></li>
+</ol>
+<hr />
+<h2 id="1-基础概念"><a class="markdownIt-Anchor" href="#1-基础概念"></a> 1. 基础概念</h2>
+<h3 id="11-窗口状态"><a class="markdownIt-Anchor" href="#11-窗口状态"></a> 1.1 窗口状态</h3>
+<p>GlazeWM 中的窗口有三种状态：</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tiling（平铺）</strong></td>
+<td>窗口自动排列，互不重叠，充分利用屏幕空间</td>
+</tr>
+<tr>
+<td><strong>Floating（浮动）</strong></td>
+<td>窗口可自由移动和调整大小，悬浮在其他窗口之上</td>
+</tr>
+<tr>
+<td><strong>Fullscreen（全屏）</strong></td>
+<td>窗口占据整个屏幕</td>
+</tr>
+</tbody>
+</table>
+<p><strong>默认状态</strong>：<code>floating</code>（浮动），新窗口默认以浮动模式创建。</p>
+<h3 id="12-平铺方向"><a class="markdownIt-Anchor" href="#12-平铺方向"></a> 1.2 平铺方向</h3>
+<p>平铺方向决定了新窗口的插入位置：</p>
+<ul>
+<li><strong>水平</strong>（默认）：新窗口在右侧平铺</li>
+<li><strong>垂直</strong>：新窗口在下方平铺</li>
+</ul>
+<hr />
+<h2 id="2-窗口管理"><a class="markdownIt-Anchor" href="#2-窗口管理"></a> 2. 窗口管理</h2>
+<h3 id="21-焦点切换"><a class="markdownIt-Anchor" href="#21-焦点切换"></a> 2.1 焦点切换</h3>
+<p>使用以下快捷键在窗口之间移动焦点：</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + H</code> / <code>Alt + ←</code></td>
+<td>焦点向左移动</td>
+</tr>
+<tr>
+<td><code>Alt + L</code> / <code>Alt + →</code></td>
+<td>焦点向右移动</td>
+</tr>
+<tr>
+<td><code>Alt + K</code> / <code>Alt + ↑</code></td>
+<td>焦点向上移动</td>
+</tr>
+<tr>
+<td><code>Alt + J</code> / <code>Alt + ↓</code></td>
+<td>焦点向下移动</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-移动窗口"><a class="markdownIt-Anchor" href="#22-移动窗口"></a> 2.2 移动窗口</h3>
+<p>将当前焦点窗口移动到指定方向：</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Shift + H</code> / <code>Alt + Shift + ←</code></td>
+<td>窗口向左移动</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + L</code> / <code>Alt + Shift + →</code></td>
+<td>窗口向右移动</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + K</code> / <code>Alt + Shift + ↑</code></td>
+<td>窗口向上移动</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + J</code> / <code>Alt + Shift + ↓</code></td>
+<td>窗口向下移动</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-调整窗口大小"><a class="markdownIt-Anchor" href="#23-调整窗口大小"></a> 2.3 调整窗口大小</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + U</code></td>
+<td>宽度减少 2%</td>
+</tr>
+<tr>
+<td><code>Alt + P</code></td>
+<td>宽度增加 2%</td>
+</tr>
+<tr>
+<td><code>Alt + O</code></td>
+<td>高度增加 2%</td>
+</tr>
+<tr>
+<td><code>Alt + I</code></td>
+<td>高度减少 2%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>调整模式</strong>（入模式后使用 HJKL 或方向键）：</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + R</code></td>
+<td>进入/退出调整大小模式</td>
+</tr>
+</tbody>
+</table>
+<p>调整模式下可用按键：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>H</code> / <code>←</code></td>
+<td>宽度减少 2%</td>
+</tr>
+<tr>
+<td><code>L</code> / <code>→</code></td>
+<td>宽度增加 2%</td>
+</tr>
+<tr>
+<td><code>K</code> / <code>↑</code></td>
+<td>高度增加 2%</td>
+</tr>
+<tr>
+<td><code>J</code> / <code>↓</code></td>
+<td>高度减少 2%</td>
+</tr>
+<tr>
+<td><code>Esc</code> / <code>Enter</code></td>
+<td>退出调整模式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-窗口状态切换"><a class="markdownIt-Anchor" href="#24-窗口状态切换"></a> 2.4 窗口状态切换</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + V</code></td>
+<td>切换平铺方向（水平/垂直）</td>
+</tr>
+<tr>
+<td><code>Alt + Space</code></td>
+<td>循环切换焦点：平铺 → 浮动 → 全屏</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + Space</code></td>
+<td>切换当前窗口为浮动（居中）</td>
+</tr>
+<tr>
+<td><code>Alt + T</code></td>
+<td>切换当前窗口为平铺</td>
+</tr>
+<tr>
+<td><code>Alt + F</code></td>
+<td>切换当前窗口为全屏</td>
+</tr>
+<tr>
+<td><code>Alt + M</code></td>
+<td>最小化当前窗口</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + Q</code></td>
+<td>关闭当前窗口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-窗口规则"><a class="markdownIt-Anchor" href="#25-窗口规则"></a> 2.5 窗口规则</h3>
+<p>配置中包含以下自动忽略规则：</p>
+<table>
+<thead>
+<tr>
+<th>匹配条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zebar</code> 进程</td>
+<td>忽略 Zebar 窗口（任务栏/状态栏）</td>
+</tr>
+<tr>
+<td><code>Picture-in-Picture</code> 标题 + Chrome/Mozilla 类</td>
+<td>忽略浏览器画中画窗口</td>
+</tr>
+<tr>
+<td><code>PowerToys</code> 进程 + 特定类</td>
+<td>忽略 PowerToys 相关窗口</td>
+</tr>
+<tr>
+<td><code>Lively</code> 进程</td>
+<td>忽略 Lively 动态壁纸窗口</td>
+</tr>
+<tr>
+<td><code>EXCEL</code> 进程（非 XLMAIN 类）</td>
+<td>忽略 Excel 非主窗口</td>
+</tr>
+<tr>
+<td><code>WINWORD</code> 进程（非 OpusApp 类）</td>
+<td>忽略 Word 非主窗口</td>
+</tr>
+<tr>
+<td><code>POWERPNT</code> 进程（非 PPTFrameClass 类）</td>
+<td>忽略 PowerPoint 非主窗口</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-窗口效果"><a class="markdownIt-Anchor" href="#3-窗口效果"></a> 3. 窗口效果</h2>
+<h3 id="31-焦点窗口"><a class="markdownIt-Anchor" href="#31-焦点窗口"></a> 3.1 焦点窗口</h3>
+<table>
+<thead>
+<tr>
+<th>效果</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>边框</td>
+<td>启用，颜色 <code>#ff0000</code>（红色）</td>
+<td>高亮当前焦点窗口</td>
+</tr>
+<tr>
+<td>标题栏</td>
+<td>禁用（可启用）</td>
+<td>移除窗口标题栏</td>
+</tr>
+<tr>
+<td>圆角</td>
+<td>禁用</td>
+<td>可设为方角/圆角/小圆角（仅 Win11）</td>
+</tr>
+<tr>
+<td>透明度</td>
+<td>禁用</td>
+<td>可设置窗口透明度</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-非焦点窗口"><a class="markdownIt-Anchor" href="#32-非焦点窗口"></a> 3.2 非焦点窗口</h3>
+<table>
+<thead>
+<tr>
+<th>效果</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>边框</td>
+<td>启用，颜色 <code>#a1a1a1</code>（灰色）</td>
+<td>显示窗口边界</td>
+</tr>
+<tr>
+<td>标题栏</td>
+<td>禁用</td>
+<td>移除窗口标题栏</td>
+</tr>
+<tr>
+<td>圆角</td>
+<td>禁用</td>
+<td>可设为方角/圆角/小圆角（仅 Win11）</td>
+</tr>
+<tr>
+<td>透明度</td>
+<td><strong>启用</strong>，不透明度 <code>80%</code></td>
+<td>非焦点窗口半透明显示</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-工作区管理"><a class="markdownIt-Anchor" href="#4-工作区管理"></a> 4. 工作区管理</h2>
+<h3 id="41-工作区定义"><a class="markdownIt-Anchor" href="#41-工作区定义"></a> 4.1 工作区定义</h3>
+<p>配置了 9 个工作区，名称分别为 <code>1</code> 到 <code>9</code>。</p>
+<h3 id="42-切换工作区"><a class="markdownIt-Anchor" href="#42-切换工作区"></a> 4.2 切换工作区</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + 1</code> ~ <code>Alt + 9</code></td>
+<td>切换到对应编号的工作区</td>
+</tr>
+<tr>
+<td><code>Alt + S</code></td>
+<td>切换到下一个活跃工作区</td>
+</tr>
+<tr>
+<td><code>Alt + A</code></td>
+<td>切换到上一个活跃工作区</td>
+</tr>
+<tr>
+<td><code>Alt + D</code></td>
+<td>切换到最近使用的工作区</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-移动窗口到工作区"><a class="markdownIt-Anchor" href="#43-移动窗口到工作区"></a> 4.3 移动窗口到工作区</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Shift + 1</code> ~ <code>Alt + Shift + 9</code></td>
+<td>移动窗口到对应工作区并切换过去</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-跨显示器移动工作区"><a class="markdownIt-Anchor" href="#44-跨显示器移动工作区"></a> 4.4 跨显示器移动工作区</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Shift + A</code></td>
+<td>将当前工作区移到左侧显示器</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + F</code></td>
+<td>将当前工作区移到右侧显示器</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + D</code></td>
+<td>将当前工作区移到上方显示器</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + S</code></td>
+<td>将当前工作区移到下方显示器</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-全局设置"><a class="markdownIt-Anchor" href="#5-全局设置"></a> 5. 全局设置</h2>
+<h3 id="51-边距"><a class="markdownIt-Anchor" href="#51-边距"></a> 5.1 边距</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>窗口间间距</td>
+<td><code>1px</code></td>
+</tr>
+<tr>
+<td>屏幕顶部外边距</td>
+<td><code>1px</code></td>
+</tr>
+<tr>
+<td>屏幕右侧外边距</td>
+<td><code>1px</code></td>
+</tr>
+<tr>
+<td>屏幕底部外边距</td>
+<td><code>1px</code></td>
+</tr>
+<tr>
+<td>屏幕左侧外边距</td>
+<td><code>1px</code></td>
+</tr>
+<tr>
+<td>随 DPI 缩放</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-光标行为"><a class="markdownIt-Anchor" href="#52-光标行为"></a> 5.2 光标行为</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>光标跟随焦点</td>
+<td>禁用</td>
+</tr>
+<tr>
+<td>光标跳跃</td>
+<td>启用，切换显示器时跳转</td>
+</tr>
+<tr>
+<td>工作区重复聚焦切换</td>
+<td>启用</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-窗口隐藏方式"><a class="markdownIt-Anchor" href="#53-窗口隐藏方式"></a> 5.3 窗口隐藏方式</h3>
+<p><code>cloak</code>（推荐 Windows 模式），窗口切换工作区时自动隐藏。</p>
+<h3 id="54-任务栏显示"><a class="markdownIt-Anchor" href="#54-任务栏显示"></a> 5.4 任务栏显示</h3>
+<p>只显示当前工作区的窗口（<code>show_all_in_taskbar: false</code>）。</p>
+<hr />
+<h2 id="6-键盘快捷键速查表"><a class="markdownIt-Anchor" href="#6-键盘快捷键速查表"></a> 6. 键盘快捷键速查表</h2>
+<h3 id="焦点控制"><a class="markdownIt-Anchor" href="#焦点控制"></a> 焦点控制</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + H/←</code></td>
+<td>焦点向左</td>
+</tr>
+<tr>
+<td><code>Alt + L/→</code></td>
+<td>焦点向右</td>
+</tr>
+<tr>
+<td><code>Alt + K/↑</code></td>
+<td>焦点向上</td>
+</tr>
+<tr>
+<td><code>Alt + J/↓</code></td>
+<td>焦点向下</td>
+</tr>
+</tbody>
+</table>
+<h3 id="窗口移动"><a class="markdownIt-Anchor" href="#窗口移动"></a> 窗口移动</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Shift + H/←</code></td>
+<td>窗口向左移</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + L/→</code></td>
+<td>窗口向右移</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + K/↑</code></td>
+<td>窗口向上移</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + J/↓</code></td>
+<td>窗口向下移</td>
+</tr>
+</tbody>
+</table>
+<h3 id="窗口调整大小"><a class="markdownIt-Anchor" href="#窗口调整大小"></a> 窗口调整大小</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + U</code></td>
+<td>宽度 -2%</td>
+</tr>
+<tr>
+<td><code>Alt + P</code></td>
+<td>宽度 +2%</td>
+</tr>
+<tr>
+<td><code>Alt + O</code></td>
+<td>高度 +2%</td>
+</tr>
+<tr>
+<td><code>Alt + I</code></td>
+<td>高度 -2%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="窗口状态"><a class="markdownIt-Anchor" href="#窗口状态"></a> 窗口状态</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + V</code></td>
+<td>切换平铺方向</td>
+</tr>
+<tr>
+<td><code>Alt + Space</code></td>
+<td>循环切换焦点</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + Space</code></td>
+<td>切换为浮动</td>
+</tr>
+<tr>
+<td><code>Alt + T</code></td>
+<td>切换为平铺</td>
+</tr>
+<tr>
+<td><code>Alt + F</code></td>
+<td>切换为全屏</td>
+</tr>
+<tr>
+<td><code>Alt + M</code></td>
+<td>最小化</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + Q</code></td>
+<td>关闭窗口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工作区切换"><a class="markdownIt-Anchor" href="#工作区切换"></a> 工作区切换</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + 1</code> ~ <code>Alt + 9</code></td>
+<td>切换到工作区 1-9</td>
+</tr>
+<tr>
+<td><code>Alt + S</code></td>
+<td>下一个活跃工作区</td>
+</tr>
+<tr>
+<td><code>Alt + A</code></td>
+<td>上一个活跃工作区</td>
+</tr>
+<tr>
+<td><code>Alt + D</code></td>
+<td>最近使用的工作区</td>
+</tr>
+</tbody>
+</table>
+<h3 id="移动窗口到工作区"><a class="markdownIt-Anchor" href="#移动窗口到工作区"></a> 移动窗口到工作区</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Shift + 1</code> ~ <code>Alt + Shift + 9</code></td>
+<td>移动窗口到工作区 1-9</td>
+</tr>
+</tbody>
+</table>
+<h3 id="跨显示器"><a class="markdownIt-Anchor" href="#跨显示器"></a> 跨显示器</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Shift + A</code></td>
+<td>工作区移到左显示器</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + F</code></td>
+<td>工作区移到右显示器</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + D</code></td>
+<td>工作区移到上显示器</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + S</code></td>
+<td>工作区移到下显示器</td>
+</tr>
+</tbody>
+</table>
+<h3 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Alt + Enter</code></td>
+<td>打开 Windows Terminal</td>
+</tr>
+<tr>
+<td><code>Alt + R</code></td>
+<td>进入/退出调整大小模式</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + P</code></td>
+<td>暂停/恢复窗口管理</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + Q</code></td>
+<td>关闭窗口</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + E</code></td>
+<td>退出 GlazeWM</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + R</code></td>
+<td>重新加载配置</td>
+</tr>
+<tr>
+<td><code>Alt + Shift + W</code></td>
+<td>重绘所有窗口</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag"></i> Tools</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/07/14/RemoteCtrl/" rel="prev" title="RemoteCtrl项目">
+      <i class="fa fa-chevron-left"></i> RemoteCtrl项目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/07/17/Vimicum-C%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/" rel="next" title="Vimium C 使用手册">
+      Vimium C 使用手册 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text"> 目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text"> 1. 基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E7%AA%97%E5%8F%A3%E7%8A%B6%E6%80%81"><span class="nav-number">2.1.</span> <span class="nav-text"> 1.1 窗口状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%B9%B3%E9%93%BA%E6%96%B9%E5%90%91"><span class="nav-number">2.2.</span> <span class="nav-text"> 1.2 平铺方向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text"> 2. 窗口管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#21-%E7%84%A6%E7%82%B9%E5%88%87%E6%8D%A2"><span class="nav-number">3.1.</span> <span class="nav-text"> 2.1 焦点切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-%E7%A7%BB%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">3.2.</span> <span class="nav-text"> 2.2 移动窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#23-%E8%B0%83%E6%95%B4%E7%AA%97%E5%8F%A3%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.3.</span> <span class="nav-text"> 2.3 调整窗口大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#24-%E7%AA%97%E5%8F%A3%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2"><span class="nav-number">3.4.</span> <span class="nav-text"> 2.4 窗口状态切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#25-%E7%AA%97%E5%8F%A3%E8%A7%84%E5%88%99"><span class="nav-number">3.5.</span> <span class="nav-text"> 2.5 窗口规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AA%97%E5%8F%A3%E6%95%88%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text"> 3. 窗口效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#31-%E7%84%A6%E7%82%B9%E7%AA%97%E5%8F%A3"><span class="nav-number">4.1.</span> <span class="nav-text"> 3.1 焦点窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#32-%E9%9D%9E%E7%84%A6%E7%82%B9%E7%AA%97%E5%8F%A3"><span class="nav-number">4.2.</span> <span class="nav-text"> 3.2 非焦点窗口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%AE%A1%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text"> 4. 工作区管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#41-%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%AE%9A%E4%B9%89"><span class="nav-number">5.1.</span> <span class="nav-text"> 4.1 工作区定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#42-%E5%88%87%E6%8D%A2%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="nav-number">5.2.</span> <span class="nav-text"> 4.2 切换工作区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#43-%E7%A7%BB%E5%8A%A8%E7%AA%97%E5%8F%A3%E5%88%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="nav-number">5.3.</span> <span class="nav-text"> 4.3 移动窗口到工作区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#44-%E8%B7%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E7%A7%BB%E5%8A%A8%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="nav-number">5.4.</span> <span class="nav-text"> 4.4 跨显示器移动工作区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text"> 5. 全局设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#51-%E8%BE%B9%E8%B7%9D"><span class="nav-number">6.1.</span> <span class="nav-text"> 5.1 边距</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#52-%E5%85%89%E6%A0%87%E8%A1%8C%E4%B8%BA"><span class="nav-number">6.2.</span> <span class="nav-text"> 5.2 光标行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#53-%E7%AA%97%E5%8F%A3%E9%9A%90%E8%97%8F%E6%96%B9%E5%BC%8F"><span class="nav-number">6.3.</span> <span class="nav-text"> 5.3 窗口隐藏方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#54-%E4%BB%BB%E5%8A%A1%E6%A0%8F%E6%98%BE%E7%A4%BA"><span class="nav-number">6.4.</span> <span class="nav-text"> 5.4 任务栏显示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E9%94%AE%E7%9B%98%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">7.</span> <span class="nav-text"> 6. 键盘快捷键速查表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%84%A6%E7%82%B9%E6%8E%A7%E5%88%B6"><span class="nav-number">7.1.</span> <span class="nav-text"> 焦点控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E7%A7%BB%E5%8A%A8"><span class="nav-number">7.2.</span> <span class="nav-text"> 窗口移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E8%B0%83%E6%95%B4%E5%A4%A7%E5%B0%8F"><span class="nav-number">7.3.</span> <span class="nav-text"> 窗口调整大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E7%8A%B6%E6%80%81"><span class="nav-number">7.4.</span> <span class="nav-text"> 窗口状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%88%87%E6%8D%A2"><span class="nav-number">7.5.</span> <span class="nav-text"> 工作区切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E7%AA%97%E5%8F%A3%E5%88%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="nav-number">7.6.</span> <span class="nav-text"> 移动窗口到工作区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E6%98%BE%E7%A4%BA%E5%99%A8"><span class="nav-number">7.7.</span> <span class="nav-text"> 跨显示器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">7.8.</span> <span class="nav-text"> 其他</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>
