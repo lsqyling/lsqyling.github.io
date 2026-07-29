@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lsqyling.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言: 什么是 Git Worktree？ Git Worktree 允许你在同一个 Git 仓库中，同时拥有多个独立的工作目录，每个目录可以检出不同的分支.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git Worktree 完全手册">
+<meta property="og:url" content="https://lsqyling.github.io/2026/07/27/GitworktreeManual/index.html">
+<meta property="og:site_name" content="积累沉淀">
+<meta property="og:description" content="前言: 什么是 Git Worktree？ Git Worktree 允许你在同一个 Git 仓库中，同时拥有多个独立的工作目录，每个目录可以检出不同的分支.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-07-27T12:32:36.000Z">
+<meta property="article:modified_time" content="2026-07-29T03:24:47.385Z">
+<meta property="article:author" content="lsqyling">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lsqyling.github.io/2026/07/27/GitworktreeManual/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Git Worktree 完全手册 | 积累沉淀</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.esm.min.mjs">
+    mermaid.initialize(
+      startOnLoad: true,
+    );
+    </script><!-- hexo injector head_end end --></head>
+<script>
+  (function() {
+    // 只检测当前页面是否包含 mermaid 图表
+    if (document.querySelector('.mermaid')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.bootcdn.net/ajax/libs/mermaid/10.9.0/mermaid.min.js';
+      script.async = true;  // 异步加载，不阻塞渲染
+      script.onload = function() {
+        // 库加载完成后初始化并自动渲染
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          suppressErrorRendering: true
+        });
+        // 注意：不需要再调用 mermaid.run()，因为 startOnLoad: true 会自动处理
+      };
+      document.head.appendChild(script);
+    }
+  })();
+</script>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">积累沉淀</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">待山花烂漫，化茧成蝶</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-logs">
+
+    <a href="/logs/" rel="section"><i class="fa fa-sync-alt fa-fw"></i>Logs</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lsqyling.github.io/2026/07/27/GitworktreeManual/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rabbit_cartoon.jpeg">
+      <meta itemprop="name" content="lsqyling">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="积累沉淀">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git Worktree 完全手册
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-07-27 20:32:36" itemprop="dateCreated datePublished" datetime="2026-07-27T20:32:36+08:00">2026-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-29 11:24:47" itemprop="dateModified" datetime="2026-07-29T11:24:47+08:00">2026-07-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>前言: 什么是 Git Worktree？<br />
+Git Worktree 允许你在同一个 Git 仓库中，同时拥有多个独立的工作目录，每个目录可以检出不同的分支.</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="git-worktree-完全手册"><a class="markdownIt-Anchor" href="#git-worktree-完全手册"></a> Git Worktree 完全手册</h1>
+<blockquote>
+<p>基于实际对话整理，涵盖底层原理、工作流场景与常见误区。</p>
+</blockquote>
+<hr />
+<h2 id="目录"><a class="markdownIt-Anchor" href="#目录"></a> 目录</h2>
+<ol>
+<li><a href="#1-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86">底层原理</a></li>
+<li><a href="#2-%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6">核心机制</a></li>
+<li><a href="#3-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">工作流应用场景</a></li>
+<li><a href="#4-%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B%E7%B4%A7%E6%80%A5%E7%83%AD%E4%BF%AE%E5%A4%8D%E4%B8%8D%E4%B8%AD%E6%96%AD%E5%8A%9F%E8%83%BD%E5%BC%80%E5%8F%91">场景示例：紧急热修复不中断功能开发</a></li>
+<li><a href="#5-%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA%E5%88%A0%E9%99%A4-worktree-%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF">常见误区：删除 worktree 不等于合并分支</a></li>
+<li><a href="#6-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5">常用命令速查</a></li>
+</ol>
+<hr />
+<h2 id="1-底层原理"><a class="markdownIt-Anchor" href="#1-底层原理"></a> 1. 底层原理</h2>
+<h3 id="11-文件系统层面的实现"><a class="markdownIt-Anchor" href="#11-文件系统层面的实现"></a> 1.1 文件系统层面的实现</h3>
+<p>当你运行 <code>git worktree add &lt;path&gt; &lt;branch&gt;</code> 时，Git 并不会复制整个仓库，而是创建了一个<strong>轻量级的链接机制</strong>。</p>
+<p><strong>额外工作树的 <code>.git</code> 是一个文本文件，而非目录：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在 my-feature/.git 文件中</span><br><span class="line">gitdir: /path/to/main-repo/.git/worktrees/my-feature</span><br></pre></td></tr></table></figure>
+<p><strong>主仓库 <code>.git</code> 目录的变化：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.git/</span><br><span class="line">├── objects/          ← 所有 worktree 共享同一个对象数据库</span><br><span class="line">├── refs/             ← 共享引用命名空间</span><br><span class="line">├── worktrees/</span><br><span class="line">│   ├── my-feature/</span><br><span class="line">│   │   ├── HEAD      ← 该工作树独立的 HEAD 指针</span><br><span class="line">│   │   ├── index     ← 独立的暂存区（stage）</span><br><span class="line">│   │   ├── logs/HEAD ← 独立的 reflog</span><br><span class="line">│   │   ├── commondir ← 指向主 .git 目录</span><br><span class="line">│   │   └── gitdir    ← 指向该工作树的 .git 文件位置</span><br><span class="line">│   └── hotfix/</span><br><span class="line">│       └── ...</span><br></pre></td></tr></table></figure>
+<h3 id="12-与-git-clone-的本质区别"><a class="markdownIt-Anchor" href="#12-与-git-clone-的本质区别"></a> 1.2 与 <code>git clone</code> 的本质区别</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th><code>git clone</code></th>
+<th><code>git worktree</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Objects 数据库</td>
+<td>复制一份</td>
+<td><strong>共享</strong></td>
+</tr>
+<tr>
+<td>Refs 引用</td>
+<td>独立</td>
+<td><strong>共享</strong></td>
+</tr>
+<tr>
+<td>磁盘占用</td>
+<td>大（完整副本）</td>
+<td><strong>极小</strong>（仅工作目录差异）</td>
+</tr>
+<tr>
+<td>同步方式</td>
+<td>需 fetch/pull</td>
+<td>天然同步（共用 objects）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-核心机制"><a class="markdownIt-Anchor" href="#2-核心机制"></a> 2. 核心机制</h2>
+<table>
+<thead>
+<tr>
+<th>层面</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Objects 数据库</strong></td>
+<td>所有 worktree <strong>共享</strong> <code>.git/objects</code>，不重复存储</td>
+</tr>
+<tr>
+<td><strong>Refs 引用</strong></td>
+<td>共享 <code>.git/refs</code>，但每个 worktree 有独立的 <code>HEAD</code></td>
+</tr>
+<tr>
+<td><strong>Index 暂存区</strong></td>
+<td><strong>各自独立</strong>，每个 worktree 维护自己的索引</td>
+</tr>
+<tr>
+<td><strong>分支限制</strong></td>
+<td>同一个分支<strong>不能</strong>同时检出到多个 worktree（防止冲突）</td>
+</tr>
+<tr>
+<td><strong>裸仓库支持</strong></td>
+<td>可以从 bare repo 创建多个工作树，实现&quot;一个仓库多份检出&quot;</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-工作流应用场景"><a class="markdownIt-Anchor" href="#3-工作流应用场景"></a> 3. 工作流应用场景</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>痛点</th>
+<th>Worktree 解决方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>并行开发</strong></td>
+<td>开发到一半要切分支修 Bug，被迫 stash</td>
+<td>新目录直接检出 hotfix 分支，原目录完全不动</td>
+</tr>
+<tr>
+<td><strong>代码审查</strong></td>
+<td>Review 同事 PR 时需要切换分支，打断当前流</td>
+<td>单独 worktree 检出 PR 分支，主目录继续编码</td>
+</tr>
+<tr>
+<td><strong>多版本维护</strong></td>
+<td>同时维护 v2.x LTS 和 v3.x 主线</td>
+<td>两个 worktree 分别长期持有不同分支</td>
+</tr>
+<tr>
+<td><strong>长耗时构建</strong></td>
+<td>切分支后 <code>node_modules</code> 或构建缓存失效</td>
+<td>各 worktree 有独立的工作目录，依赖互不干扰</td>
+</tr>
+<tr>
+<td><strong>CI/CD 优化</strong></td>
+<td>流水线需要同时构建多个分支</td>
+<td>基于同一个裸仓库创建多个 worktree，节省磁盘和 clone 时间</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-场景示例紧急热修复不中断功能开发"><a class="markdownIt-Anchor" href="#4-场景示例紧急热修复不中断功能开发"></a> 4. 场景示例：紧急热修复不中断功能开发</h2>
+<h3 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h3>
+<p>你正在 <code>feature/payment-gateway</code> 分支上开发支付网关重构，修改了 20 个文件，但<strong>还没准备好提交</strong>。此时生产环境突发严重 Bug，需要立即修复。</p>
+<h3 id="传统方式的问题"><a class="markdownIt-Anchor" href="#传统方式的问题"></a> 传统方式的问题</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git stash push -m <span class="string">&quot;WIP: payment gateway&quot;</span>   <span class="comment"># 暂存当前工作</span></span><br><span class="line">git checkout main</span><br><span class="line">git pull</span><br><span class="line">git checkout -b hotfix/critical-bug         <span class="comment"># 修复 Bug</span></span><br><span class="line"><span class="comment"># ... 修复完合并后 ...</span></span><br><span class="line">git checkout feature/payment-gateway</span><br><span class="line">git stash pop                               <span class="comment"># 恢复，但可能冲突</span></span><br></pre></td></tr></table></figure>
+<p><strong>痛点</strong>：stash/restore 可能出错；如果功能分支有未跟踪文件，stash 不会保存；切换分支可能导致 IDE 重新索引、构建缓存失效。</p>
+<h3 id="worktree-方式"><a class="markdownIt-Anchor" href="#worktree-方式"></a> Worktree 方式</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前在 ~/projects/kimi 的 feature/payment-gateway 分支上开发中</span></span><br><span class="line"><span class="comment"># 无需 stash，直接创建热修复工作树</span></span><br><span class="line">git worktree add ../kimi-hotfix main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入热修复目录，它已经是 main 分支的最新状态</span></span><br><span class="line"><span class="built_in">cd</span> ../kimi-hotfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并切换到修复分支</span></span><br><span class="line">git checkout -b hotfix/critical-bug</span><br><span class="line"><span class="comment"># ... 修复代码、测试、提交 ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送并发起 PR</span></span><br><span class="line">git push origin hotfix/critical-bug</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修复完成后，清理这个工作树</span></span><br><span class="line"><span class="built_in">cd</span> ~/projects/kimi</span><br><span class="line">git worktree remove ../kimi-hotfix   <span class="comment"># 或手动删除目录后再 prune</span></span><br></pre></td></tr></table></figure>
+<h3 id="效果"><a class="markdownIt-Anchor" href="#效果"></a> 效果</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~/projects/</span><br><span class="line">├── kimi/                    ← 原工作树，feature/payment-gateway 分支</span><br><span class="line">│   ├── src/</span><br><span class="line">│   ├── node_modules/        ← 不受干扰</span><br><span class="line">│   └── .git/</span><br><span class="line">├── kimi-hotfix/             ← 新工作树，hotfix/critical-bug 分支</span><br><span class="line">│   ├── src/</span><br><span class="line">│   ├── node_modules/        ← 独立的，可单独安装依赖</span><br><span class="line">│   └── .git  (文本文件，指向主仓库)</span><br></pre></td></tr></table></figure>
+<p><strong>优势：</strong></p>
+<ul>
+<li>✅ <code>~/projects/kimi</code> 里的 20 个未提交修改<strong>完全不受影响</strong></li>
+<li>✅ IDE 保持打开，无需重新加载项目</li>
+<li>✅ 两个目录有独立的 <code>node_modules</code>，不会因分支差异导致依赖混乱</li>
+<li>✅ 修复完成后直接删除 <code>kimi-hotfix</code> 目录即可，零副作用</li>
+<li>✅ 磁盘占用极小，因为 objects 数据库共享</li>
+</ul>
+<hr />
+<h2 id="5-常见误区删除-worktree-不等于合并分支"><a class="markdownIt-Anchor" href="#5-常见误区删除-worktree-不等于合并分支"></a> 5. 常见误区：删除 worktree 不等于合并分支</h2>
+<h3 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题</h3>
+<blockquote>
+<p>当走到最后一步 <code>git worktree remove ../kimi-hotfix</code> 后，<code>kimi</code> 中是否已经更新了 <code>kimi-hotfix</code> 修改的内容？</p>
+</blockquote>
+<h3 id="答案不会"><a class="markdownIt-Anchor" href="#答案不会"></a> 答案：不会</h3>
+<p>删除 <code>kimi-hotfix</code> 工作树后，<code>kimi</code> 主工作树中的<strong>文件内容不会自动包含</strong> hotfix 的修改。</p>
+<h3 id="区分三个层面"><a class="markdownIt-Anchor" href="#区分三个层面"></a> 区分三个层面</h3>
+<table>
+<thead>
+<tr>
+<th>层面</th>
+<th>状态</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Git 对象数据库</strong></td>
+<td>✅ 已包含 hotfix 提交</td>
+<td>所有 worktree 共享同一个 <code>.git/objects</code>，commit 已经写入了</td>
+</tr>
+<tr>
+<td><strong>分支引用</strong></td>
+<td>✅ <code>hotfix/critical-bug</code> 分支存在</td>
+<td>共享 <code>.git/refs</code>，删除 worktree 不影响引用</td>
+</tr>
+<tr>
+<td><strong>主工作树的文件</strong></td>
+<td>❌ <strong>不包含 hotfix 修改</strong></td>
+<td><code>kimi</code> 检出的是 <code>feature/payment-gateway</code>，与 <code>hotfix/critical-bug</code> 是两个独立分支</td>
+</tr>
+</tbody>
+</table>
+<h3 id="为什么不会自动更新"><a class="markdownIt-Anchor" href="#为什么不会自动更新"></a> 为什么不会自动更新？</h3>
+<p>Worktree 的核心设计就是<strong>隔离的工作目录</strong>。每个 worktree 维护自己的 <code>HEAD</code> 和 <code>index</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kimi/                    HEAD → feature/payment-gateway</span><br><span class="line">kimi-hotfix/             HEAD → hotfix/critical-bug   (已删除，但分支仍在)</span><br></pre></td></tr></table></figure>
+<p>删除 <code>kimi-hotfix</code> 只是移除了一个<strong>工作目录的入口</strong>，并不会触发任何分支合并操作。<code>feature/payment-gateway</code> 分支的指针没有移动，所以 <code>kimi</code> 目录里的代码保持原样。</p>
+<h3 id="正确做法显式合并"><a class="markdownIt-Anchor" href="#正确做法显式合并"></a> 正确做法：显式合并</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 先确保 hotfix 合并到 main（通过 PR 或命令行）</span></span><br><span class="line"><span class="built_in">cd</span> ~/projects/kimi</span><br><span class="line">git checkout main</span><br><span class="line">git merge hotfix/critical-bug        <span class="comment"># 或 git pull origin main</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 回到功能分支，把 main 的最新修改同步进来</span></span><br><span class="line">git checkout feature/payment-gateway</span><br><span class="line">git rebase main                      <span class="comment"># 或 git merge main</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>💡 <strong>一句话总结</strong>：Worktree 让你<strong>并行检出</strong>多个分支，但从不帮你<strong>自动合并</strong>它们。删除 worktree ≠ 合并分支。</p>
+</blockquote>
+<hr />
+<h2 id="6-常用命令速查"><a class="markdownIt-Anchor" href="#6-常用命令速查"></a> 6. 常用命令速查</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看所有工作树</span></span><br><span class="line">git worktree list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于某分支创建工作树</span></span><br><span class="line">git worktree add ../foo branch-name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于 main 创建新分支并检出</span></span><br><span class="line">git worktree add -b feat ../foo main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除工作树</span></span><br><span class="line">git worktree remove ../foo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理已不存在目录的残留记录</span></span><br><span class="line">git worktree prune</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从裸仓库创建工作树（CI/CD 常用）</span></span><br><span class="line">git worktree add --track -b feature ../feature origin/feature</span><br></pre></td></tr></table></figure>
+<hr />
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee please.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="lsqyling WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag"></i> Tools</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/07/25/yidaoyunTrainingSummary/" rel="prev" title="易道云 C++ 培训学习总结">
+      <i class="fa fa-chevron-left"></i> 易道云 C++ 培训学习总结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git-worktree-%E5%AE%8C%E5%85%A8%E6%89%8B%E5%86%8C"><span class="nav-number">1.</span> <span class="nav-text"> Git Worktree 完全手册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">1.1.</span> <span class="nav-text"> 目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text"> 1. 底层原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%B1%82%E9%9D%A2%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text"> 1.1 文件系统层面的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E4%B8%8E-git-clone-%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.2.</span> <span class="nav-text"> 1.2 与 git clone 的本质区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="nav-number">1.3.</span> <span class="nav-text"> 2. 核心机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.4.</span> <span class="nav-text"> 3. 工作流应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B%E7%B4%A7%E6%80%A5%E7%83%AD%E4%BF%AE%E5%A4%8D%E4%B8%8D%E4%B8%AD%E6%96%AD%E5%8A%9F%E8%83%BD%E5%BC%80%E5%8F%91"><span class="nav-number">1.5.</span> <span class="nav-text"> 4. 场景示例：紧急热修复不中断功能开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E6%96%B9%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 传统方式的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#worktree-%E6%96%B9%E5%BC%8F"><span class="nav-number">1.5.3.</span> <span class="nav-text"> Worktree 方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">1.5.4.</span> <span class="nav-text"> 效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA%E5%88%A0%E9%99%A4-worktree-%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF"><span class="nav-number">1.6.</span> <span class="nav-text"> 5. 常见误区：删除 worktree 不等于合并分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.6.1.</span> <span class="nav-text"> 问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%94%E6%A1%88%E4%B8%8D%E4%BC%9A"><span class="nav-number">1.6.2.</span> <span class="nav-text"> 答案：不会</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%86%E4%B8%89%E4%B8%AA%E5%B1%82%E9%9D%A2"><span class="nav-number">1.6.3.</span> <span class="nav-text"> 区分三个层面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BC%9A%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0"><span class="nav-number">1.6.4.</span> <span class="nav-text"> 为什么不会自动更新？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E5%81%9A%E6%B3%95%E6%98%BE%E5%BC%8F%E5%90%88%E5%B9%B6"><span class="nav-number">1.6.5.</span> <span class="nav-text"> 正确做法：显式合并</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="nav-number">1.7.</span> <span class="nav-text"> 6. 常用命令速查</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lsqyling"
+      src="/images/rabbit_cartoon.jpeg">
+  <p class="site-author-name" itemprop="name">lsqyling</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lsqyling" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lsqyling" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1058018384@qq.com" title="E-Mail → 1058018384@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/354741030/favlist" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;354741030&#x2F;favlist" rel="noopener" target="_blank"><i class="fa custom bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/" title="Weibo → https:&#x2F;&#x2F;weibo.com" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lsqyling</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>
